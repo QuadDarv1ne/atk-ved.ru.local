@@ -8,6 +8,11 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<!-- Preloader -->
+<div class="preloader">
+    <div class="spinner"></div>
+</div>
+
 <header class="site-header">
     <div class="container">
         <div class="header-content">

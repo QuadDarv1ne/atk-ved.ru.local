@@ -35,29 +35,29 @@
 <!-- Services Section -->
 <section class="services-section" id="services">
     <div class="container">
-        <h2 class="section-title">НАШИ УСЛУГИ</h2>
+        <h2 class="section-title animate-on-scroll">НАШИ УСЛУГИ</h2>
         <div class="services-grid">
-            <div class="service-card">
+            <div class="service-card animate-on-scroll delay-100">
                 <h3>Поиск товаров</h3>
                 <p>Помогаем найти нужные товары на китайских площадках по вашим требованиям и бюджету</p>
             </div>
-            <div class="service-card">
+            <div class="service-card animate-on-scroll delay-200">
                 <h3>Проверка качества</h3>
                 <p>Контролируем качество продукции перед отправкой, делаем фото и видео отчеты</p>
             </div>
-            <div class="service-card">
+            <div class="service-card animate-on-scroll delay-300">
                 <h3>Доставка грузов</h3>
                 <p>Организуем доставку любым удобным способом: авиа, море, ж/д, авто</p>
             </div>
-            <div class="service-card">
+            <div class="service-card animate-on-scroll delay-400">
                 <h3>Таможенное оформление</h3>
                 <p>Берем на себя все вопросы таможенного оформления и сертификации</p>
             </div>
-            <div class="service-card">
+            <div class="service-card animate-on-scroll delay-500">
                 <h3>Складская логистика</h3>
                 <p>Предоставляем услуги хранения и обработки грузов на наших складах</p>
             </div>
-            <div class="service-card">
+            <div class="service-card animate-on-scroll delay-600">
                 <h3>Консультации</h3>
                 <p>Консультируем по всем вопросам работы с Китаем и маркетплейсами</p>
             </div>
