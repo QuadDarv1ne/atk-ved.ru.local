@@ -1,6 +1,35 @@
 /**
  * Дополнительные улучшения UI
+ * 
+ * @package ATK_VED
+ * @since 1.0.0
  */
+
+/* Honeypot Field - скрытое поле для защиты от спама */
+.hp-field {
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+}
+
+.hp-field input {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    border: 0 !important;
+    outline: none !important;
+}
 
 /* Preloader */
 .preloader {

@@ -1,0 +1,86 @@
+# robots.txt для АТК ВЭД
+# https://atk-ved.ru.local/robots.txt
+
+# Разрешить всем поисковым роботам
+User-agent: *
+
+# Разрешить индексацию основных страниц
+Allow: /
+Allow: /wp-content/uploads/
+Allow: /wp-content/themes/atk-ved/images/
+
+# Запретить индексацию административной части
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /wp-signup.php
+Disallow: /wp-activate.php
+
+# Запретить индексацию системных файлов
+Disallow: /wp-includes/
+Disallow: /xmlrpc.php
+Disallow: /wp-config.php
+Disallow: /wp-config-sample.php
+
+# Запретить индексацию временных и служебных директорий
+Disallow: /wp-content/cache/
+Disallow: /wp-content/upgrade/
+Disallow: /wp-content/debug.log
+
+# Запретить индексацию результатов поиска (избегаем дублирования)
+Disallow: /?s=
+Disallow: /search/
+
+# Запретить индексацию страниц с параметрами сортировки и фильтрации
+Disallow: /*?sort=
+Disallow: /*?order=
+Disallow: /*?filter=
+
+# Запретить индексацию версий для печати
+Disallow: /*print=
+
+# Запретить индексацию комментариев и треков
+Disallow: */trackback/
+Disallow: */feed/
+Disallow: */comments/
+Disallow: */attachment/
+
+# Запретить индексацию архивов по датам (опционально)
+Disallow: /*year=
+Disallow: /*month=
+Disallow: /*day=
+
+# Ссылка на XML sitemap
+Sitemap: https://atk-ved.ru.local/sitemap.xml
+
+# Дополнительные правила для конкретных поисковиков
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Яндекс
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+Clean-Param: utm_source&utm_medium&utm_campaign
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Социальные сети (для предпросмотра ссылок)
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Запретить всех остальных
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /wp-includes/

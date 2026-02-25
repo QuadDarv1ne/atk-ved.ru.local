@@ -69,9 +69,17 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; <?php echo date('Y'); ?> АТК ВЭД. Все права защищены.</p>
+            <p class="footer-developer">Разработано с <?php echo esc_html__('заботой', 'atk-ved'); ?> о вашем бизнесе</p>
         </div>
     </div>
 </footer>
+
+<!-- Кнопка "Наверх" -->
+<button class="scroll-to-top" id="scrollToTop" aria-label="<?php echo esc_attr__('Вернуться наверх', 'atk-ved'); ?>" style="display: none;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 15l-6-6-6 6"/>
+    </svg>
+</button>
 
 <?php wp_footer(); ?>
 </body>

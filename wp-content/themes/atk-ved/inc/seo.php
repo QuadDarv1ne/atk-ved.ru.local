@@ -1,18 +1,23 @@
 <?php
 /**
  * SEO оптимизация
+ * 
+ * @package ATK_VED
+ * @since 1.0.0
  */
 
+declare(strict_types=1);
+
 // Добавление Open Graph мета-тегов
-function atk_ved_add_og_tags() {
+function atk_ved_add_og_tags(): void {
     if (is_singular()) {
         global $post;
-        
+
         $title = get_the_title();
         $description = get_the_excerpt() ?: wp_trim_words(strip_tags($post->post_content), 30);
         $url = get_permalink();
-        $image = get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero-containers.jpg';
-        
+        $image = get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero/hero-boxes.jpg';
+
         echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
         echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
         echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
@@ -29,14 +34,14 @@ function atk_ved_add_og_tags() {
 add_action('wp_head', 'atk_ved_add_og_tags');
 
 // Добавление Twitter Card мета-тегов
-function atk_ved_add_twitter_cards() {
+function atk_ved_add_twitter_cards(): void {
     if (is_singular()) {
         global $post;
-        
+
         $title = get_the_title();
         $description = get_the_excerpt() ?: wp_trim_words(strip_tags($post->post_content), 30);
-        $image = get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero-containers.jpg';
-        
+        $image = get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero/hero-boxes.jpg';
+
         echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
         echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
         echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
@@ -45,15 +50,16 @@ function atk_ved_add_twitter_cards() {
 }
 add_action('wp_head', 'atk_ved_add_twitter_cards');
 
-// Добавление Schema.org разметки
-function atk_ved_add_schema_markup() {
+// Добавление расширенной Schema.org разметки
+function atk_ved_add_schema_markup(): void {
+    // Organization schema для главной страницы
     if (is_front_page()) {
         $schema = array(
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
             'name' => get_bloginfo('name'),
             'url' => home_url('/'),
-            'logo' => get_template_directory_uri() . '/images/logo.png',
+            'logo' => get_template_directory_uri() . '/images/logo/logo.png',
             'description' => get_bloginfo('description'),
             'address' => array(
                 '@type' => 'PostalAddress',
@@ -72,8 +78,73 @@ function atk_ved_add_schema_markup() {
                 get_theme_mod('atk_ved_whatsapp')
             ))
         );
-        
+
         echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+    
+    // FAQ Schema для главной страницы
+    if (is_front_page()) {
+        $faq_schema = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => array(
+                array(
+                    '@type' => 'Question',
+                    'name' => 'Какой минимальный объем заказа?',
+                    'acceptedAnswer' => array(
+                        '@type' => 'Answer',
+                        'text' => 'Мы работаем с заказами от 100 кг. Однако, для некоторых категорий товаров возможны исключения. Уточняйте у наших менеджеров.'
+                    )
+                ),
+                array(
+                    '@type' => 'Question',
+                    'name' => 'Сколько времени занимает доставка?',
+                    'acceptedAnswer' => array(
+                        '@type' => 'Answer',
+                        'text' => 'Сроки доставки зависят от выбранного способа: авиа — 5-10 дней, ж/д — 20-30 дней, море — 35-45 дней. Также учитывайте время на выкуп и таможенное оформление.'
+                    )
+                ),
+                array(
+                    '@type' => 'Question',
+                    'name' => 'Как происходит оплата?',
+                    'acceptedAnswer' => array(
+                        '@type' => 'Answer',
+                        'text' => 'Оплата производится в два этапа: 70% предоплата за товар и услуги, 30% после получения и проверки товара перед окончательной отгрузкой.'
+                    )
+                ),
+                array(
+                    '@type' => 'Question',
+                    'name' => 'Работаете ли вы с юридическими лицами?',
+                    'acceptedAnswer' => array(
+                        '@type' => 'Answer',
+                        'text' => 'Да, мы работаем как с юридическими, так и с физическими лицами. Предоставляем полный пакет документов для бухгалтерии.'
+                    )
+                )
+            )
+        );
+
+        echo '<script type="application/ld+json">' . json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+    
+    // LocalBusiness schema
+    if (is_front_page()) {
+        $local_schema = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'LocalBusiness',
+            'name' => get_bloginfo('name'),
+            'image' => get_template_directory_uri() . '/images/hero/hero-boxes.jpg',
+            'telephone' => get_theme_mod('atk_ved_phone', '+7 (XXX) XXX-XX-XX'),
+            'email' => get_theme_mod('atk_ved_email', 'info@atk-ved.ru'),
+            'address' => array(
+                '@type' => 'PostalAddress',
+                'addressCountry' => 'RU',
+                'addressLocality' => get_theme_mod('atk_ved_address', 'Москва')
+            ),
+            'openingHours' => 'Mo-Fr 09:00-18:00',
+            'priceRange' => '$$'
+        );
+
+        echo '<script type="application/ld+json">' . json_encode($local_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     }
 }
 add_action('wp_head', 'atk_ved_add_schema_markup');

@@ -2,12 +2,12 @@
 Theme Name: АТК ВЭД
 Theme URI: https://atk-ved.ru
 Author: Custom Theme
-Description: Современная тема для сайта АТК ВЭД - товары для маркетплейсов из Китая оптом. Полностью адаптивный дизайн с плавными анимациями, кастомными типами записей и AJAX функциями. v1.6: Добавлены статистика, отслеживание груза, галерея товаров, улучшенный FAQ.
-Version: 1.6
+Description: Современная тема для сайта АТК ВЭД - товары для маркетплейсов из Китая оптом. Полностью адаптивный дизайн с плавными анимациями, кастомными типами записей и AJAX функциями. v1.7: Полная оптимизация производительности, безопасности и SEO.
+Version: 1.7
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: atk-ved
-Tags: one-page, landing-page, business, custom-menu, custom-logo, responsive-layout, accessibility-ready, custom-post-types, ajax-ready, modal, calculator, tracking, gallery
+Tags: one-page, landing-page, business, custom-menu, custom-logo, responsive-layout, accessibility-ready, custom-post-types, ajax-ready, modal, calculator, tracking, gallery, optimized, fast
 */
 
 /* Reset & Base */
@@ -2409,6 +2409,50 @@ textarea:focus {
 .loading {
     opacity: 0.6;
     pointer-events: none;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: #e31e24;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(227, 30, 36, 0.4);
+}
+
+.scroll-to-top:hover {
+    background: #c01a1f;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(227, 30, 36, 0.5);
+}
+
+.scroll-to-top:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.scroll-to-top svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Footer Developer Credit */
+.footer-developer {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+    font-style: italic;
 }
 
 /* Print Styles */

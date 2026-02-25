@@ -1,0 +1,176 @@
+# Оптимизация для темы АТК ВЭД
+# Скопируйте эти правила в корневой .htaccess
+
+# ============================================
+# СЖАТИЕ GZIP
+# ============================================
+<IfModule mod_deflate.c>
+    # Сжатие текстовых файлов
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+    
+    # Исключения для старых браузеров
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    
+    # Не сжимать изображения
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|ico)$ no-gzip dont-vary
+</IfModule>
+
+# ============================================
+# КЭШИРОВАНИЕ БРАУЗЕРА
+# ============================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Изображения
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS и JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    
+    # Шрифты
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    
+    # HTML
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # По умолчанию
+    ExpiresDefault "access plus 1 month"
+</IfModule>
+
+# ============================================
+# CACHE-CONTROL HEADERS
+# ============================================
+<IfModule mod_headers.c>
+    # Кэш для статических файлов
+    <FilesMatch "\.(jpg|jpeg|png|gif|svg|webp|ico|css|js|woff|woff2|ttf|otf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # Кэш для HTML
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=3600"
+    </FilesMatch>
+    
+    # Безопасность
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Удаляем ETag (не нужен при использовании Cache-Control)
+    Header unset ETag
+    FileETag None
+</IfModule>
+
+# ============================================
+# ОПТИМИЗАЦИЯ ИЗОБРАЖЕНИЙ
+# ============================================
+<IfModule mod_headers.c>
+    # WebP для поддерживающих браузеров
+    <FilesMatch "\.(jpe?g|png)$">
+        Header append Vary Accept
+    </FilesMatch>
+</IfModule>
+
+# ============================================
+# БЕЗОПАСНОСТЬ
+# ============================================
+# Запрет доступа к важным файлам
+<FilesMatch "^(wp-config\.php|\.htaccess|readme\.html|license\.txt)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Защита от hotlinking изображений
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?atk-ved\.ru [NC]
+    RewriteRule \.(jpg|jpeg|png|gif|svg|webp)$ - [NC,F,L]
+</IfModule>
+
+# ============================================
+# ПРОИЗВОДИТЕЛЬНОСТЬ
+# ============================================
+# Отключение ETags
+<IfModule mod_headers.c>
+    Header unset ETag
+</IfModule>
+FileETag None
+
+# Отключение Server Signature
+ServerSignature Off
+
+# Ограничение размера загружаемых файлов
+LimitRequestBody 10485760
+
+# ============================================
+# РЕДИРЕКТЫ
+# ============================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Редирект с www на без www (или наоборот)
+    # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    
+    # Редирект на HTTPS
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ============================================
+# MIME TYPES
+# ============================================
+<IfModule mod_mime.c>
+    # Шрифты
+    AddType font/ttf .ttf
+    AddType font/otf .otf
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+    AddType application/font-woff .woff
+    AddType application/font-woff2 .woff2
+    
+    # SVG
+    AddType image/svg+xml .svg .svgz
+    AddEncoding gzip .svgz
+    
+    # WebP
+    AddType image/webp .webp
+    
+    # JavaScript
+    AddType application/javascript .js
+    AddType application/json .json
+</IfModule>
+
+# ============================================
+# ОТКЛЮЧЕНИЕ DIRECTORY BROWSING
+# ============================================
+Options -Indexes
+
+# ============================================
+# CHARSET
+# ============================================
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+</IfModule>

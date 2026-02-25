@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-    
+
     // Плавная прокрутка к якорям
     $('a[href^="#"]').on('click', function(e) {
         e.preventDefault();
@@ -8,18 +8,18 @@ jQuery(document).ready(function($) {
             $('html, body').stop().animate({
                 scrollTop: target.offset().top - 70
             }, 800, 'swing');
-            
+
             // Закрыть мобильное меню после клика
             $('.main-nav').removeClass('active');
             $('.menu-toggle').removeClass('active');
         }
     });
-    
+
     // Аккордеон для FAQ с улучшенной анимацией
     $('.faq-question').on('click', function() {
         var $item = $(this).parent('.faq-item');
         var $answer = $(this).next('.faq-answer');
-        
+
         if ($item.hasClass('active')) {
             $answer.slideUp(300);
             $item.removeClass('active');
@@ -30,28 +30,28 @@ jQuery(document).ready(function($) {
             $item.addClass('active');
         }
     });
-    
+
     // Липкая шапка при прокрутке с плавным переходом
     var lastScroll = 0;
     $(window).scroll(function() {
         var currentScroll = $(this).scrollTop();
-        
+
         if (currentScroll > 50) {
             $('.site-header').addClass('scrolled');
         } else {
             $('.site-header').removeClass('scrolled');
         }
-        
+
         lastScroll = currentScroll;
     });
-    
+
     // Анимация появления элементов при прокрутке (Intersection Observer)
     if ('IntersectionObserver' in window) {
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
                 }
             });
         }, observerOptions);
-        
+
         document.querySelectorAll('.service-card, .step-card, .review-card, .method-card').forEach(function(el) {
             observer.observe(el);
         });
@@ -72,17 +72,17 @@ jQuery(document).ready(function($) {
                 var elementBottom = elementTop + $(this).outerHeight();
                 var viewportTop = $(window).scrollTop();
                 var viewportBottom = viewportTop + $(window).height();
-                
+
                 if (elementBottom > viewportTop && elementTop < viewportBottom - 100) {
                     $(this).addClass('visible');
                 }
             });
         }
-        
+
         $(window).on('scroll resize', checkVisible);
         checkVisible();
     }
-    
+
     // Мобильное меню с улучшенной анимацией
     $('.menu-toggle').on('click', function(e) {
         e.stopPropagation();
@@ -90,7 +90,7 @@ jQuery(document).ready(function($) {
         $(this).toggleClass('active');
         $('body').toggleClass('menu-open');
     });
-    
+
     // Закрыть меню при клике вне его
     $(document).on('click', function(e) {
         if (!$(e.target).closest('.main-nav, .menu-toggle').length) {
@@ -99,13 +99,13 @@ jQuery(document).ready(function($) {
             $('body').removeClass('menu-open');
         }
     });
-    
+
     // Параллакс эффект для hero секции
     $(window).scroll(function() {
         var scrolled = $(window).scrollTop();
         $('.hero-image img').css('transform', 'translateY(' + (scrolled * 0.3) + 'px)');
     });
-    
+
     // Счетчик для статистики
     function animateCounter($elem, target) {
         $({ counter: 0 }).animate({ counter: target }, {
@@ -119,14 +119,14 @@ jQuery(document).ready(function($) {
             }
         });
     }
-    
+
     // Запуск счетчика при появлении в viewport
     var counterAnimated = false;
     $(window).scroll(function() {
         if (!counterAnimated && $('.hero-stats').length) {
             var heroTop = $('.hero-stats').offset().top;
             var viewportBottom = $(window).scrollTop() + $(window).height();
-            
+
             if (viewportBottom > heroTop) {
                 counterAnimated = true;
                 $('.stat-number').each(function() {
@@ -141,37 +141,49 @@ jQuery(document).ready(function($) {
             }
         }
     });
+
+    // Кнопка "Наверх" (Scroll to Top)
+    var $scrollToTop = $('#scrollToTop');
     
-    // Кнопка "Наверх"
-    var $backToTop = $('<button class="back-to-top" aria-label="Наверх"><span>↑</span></button>');
-    $('body').append($backToTop);
-    
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 300) {
-            $backToTop.addClass('visible');
-        } else {
-            $backToTop.removeClass('visible');
-        }
-    });
-    
-    $backToTop.on('click', function(e) {
-        e.preventDefault();
-        $('html, body').animate({ scrollTop: 0 }, 600);
-    });
-    
+    if ($scrollToTop.length) {
+        // Показ/скрытие кнопки при прокрутке
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 300) {
+                $scrollToTop.fadeIn();
+            } else {
+                $scrollToTop.fadeOut();
+            }
+        });
+
+        // Плавная прокрутка наверх
+        $scrollToTop.on('click', function(e) {
+            e.preventDefault();
+            $('html, body').stop().animate({
+                scrollTop: 0
+            }, 600, 'swing');
+        });
+
+        // Закрытие по Escape
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && $scrollToTop.is(':visible')) {
+                $scrollToTop.focus();
+            }
+        });
+    }
+
     // Обработка формы быстрого поиска
     $('#quickSearchForm').on('submit', function(e) {
         e.preventDefault();
-        
+
         var $form = $(this);
         var $button = $form.find('button[type="submit"]');
         var buttonText = $button.text();
-        
+
         // Валидация
         var name = $form.find('input[name="name"]').val().trim();
         var phone = $form.find('input[name="phone"]').val().trim();
         var privacy = $form.find('input[name="privacy"]').is(':checked');
-        
+
         if (!name || !phone || !privacy) {
             if (typeof atkShowToast === 'function') {
                 atkShowToast('Пожалуйста, заполните все поля и согласитесь с политикой конфиденциальности', 'warning');
@@ -180,10 +192,10 @@ jQuery(document).ready(function($) {
             }
             return;
         }
-        
+
         // Отправка данных
         $button.text('Отправка...').prop('disabled', true);
-        
+
         $.ajax({
             url: atkVedData.ajaxUrl,
             type: 'POST',
@@ -221,21 +233,21 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    
+
     // Обработка формы обратной связи
     $('#contactForm').on('submit', function(e) {
         e.preventDefault();
-        
+
         var $form = $(this);
         var $button = $form.find('button[type="submit"]');
         var buttonText = $button.text();
-        
+
         // Валидация
         var name = $form.find('input[name="name"]').val().trim();
         var phone = $form.find('input[name="phone"]').val().trim();
         var message = $form.find('textarea[name="message"]').val().trim();
         var privacy = $form.find('input[name="privacy"]').is(':checked');
-        
+
         if (!name || !phone || !privacy) {
             if (typeof atkShowToast === 'function') {
                 atkShowToast('Пожалуйста, заполните все обязательные поля и согласитесь с политикой конфиденциальности', 'warning');
@@ -244,10 +256,10 @@ jQuery(document).ready(function($) {
             }
             return;
         }
-        
+
         // Отправка данных
         $button.text('Отправка...').prop('disabled', true);
-        
+
         $.ajax({
             url: atkVedData.ajaxUrl,
             type: 'POST',
@@ -287,5 +299,5 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    
+
 });

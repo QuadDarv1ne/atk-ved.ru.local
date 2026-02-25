@@ -1,10 +1,15 @@
 <?php
 /**
  * Безопасность
+ * 
+ * @package ATK_VED
+ * @since 1.0.0
  */
 
+declare(strict_types=1);
+
 // Скрытие версии WordPress
-function atk_ved_remove_wp_version() {
+function atk_ved_remove_wp_version(): string {
     return '';
 }
 add_filter('the_generator', 'atk_ved_remove_wp_version');
@@ -14,8 +19,60 @@ if (!defined('DISALLOW_FILE_EDIT')) {
     define('DISALLOW_FILE_EDIT', true);
 }
 
+// Honeypot для защиты от спама в формах
+function atk_ved_add_honeypot_field(): void {
+    echo '<div class="hp-field" style="position:absolute;left:-9999px;" aria-hidden="true">';
+    echo '<label for="hp_website">Website</label>';
+    echo '<input type="text" name="hp_website" id="hp_website" value="" autocomplete="off" tabindex="-1">';
+    echo '</div>';
+    
+    // Добавляем timestamp для проверки времени заполнения
+    $timestamp = time();
+    $token = wp_hash($timestamp . NONCE_KEY);
+    echo '<input type="hidden" name="hp_timestamp" value="' . esc_attr($timestamp) . '">';
+    echo '<input type="hidden" name="hp_token" value="' . esc_attr($token) . '">';
+}
+add_action('wp_footer', 'atk_ved_add_honeypot_field');
+
+// Проверка honeypot
+function atk_ved_verify_honeypot(): bool {
+    // Если поле заполнено - это бот
+    if (!empty($_POST['hp_website'])) {
+        atk_ved_log_security_event('Honeypot сработал: заполнено скрытое поле');
+        return false;
+    }
+    
+    // Проверка timestamp (форма не должна быть отправлена быстрее чем за 3 секунды)
+    if (!empty($_POST['hp_timestamp'])) {
+        $time_diff = time() - (int) $_POST['hp_timestamp'];
+        if ($time_diff < 3) {
+            atk_ved_log_security_event('Honeypot сработал: слишком быстрая отправка формы');
+            return false;
+        }
+    }
+    
+    // Проверка токена
+    if (!empty($_POST['hp_token']) && !empty($_POST['hp_timestamp'])) {
+        $expected_token = wp_hash($_POST['hp_timestamp'] . NONCE_KEY);
+        if (!hash_equals($expected_token, $_POST['hp_token'])) {
+            atk_ved_log_security_event('Honeypot сработал: неверный токен');
+            return false;
+        }
+    }
+    
+    return true;
+}
+add_action('wp_ajax_nopriv_atk_ved_contact_form', 'atk_ved_check_honeypot_before_ajax', 1);
+add_action('wp_ajax_atk_ved_contact_form', 'atk_ved_check_honeypot_before_ajax', 1);
+
+function atk_ved_check_honeypot_before_ajax(): void {
+    if (!atk_ved_verify_honeypot()) {
+        wp_send_json_error(array('message' => 'Подозрительная активность'));
+    }
+}
+
 // Защита от SQL инъекций
-function atk_ved_sanitize_sql($input) {
+function atk_ved_sanitize_sql($input): string {
     global $wpdb;
     return $wpdb->prepare('%s', $input);
 }

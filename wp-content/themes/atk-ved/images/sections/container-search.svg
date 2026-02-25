@@ -1,0 +1,56 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#f8f9fa"/>
+  
+  <!-- Search/Magnifying Glass Circle Background -->
+  <circle cx="200" cy="200" r="120" fill="#fff" stroke="#e0e0e0" stroke-width="3"/>
+  
+  <!-- Container in magnifying glass -->
+  <g transform="translate(140, 150)">
+    <!-- Red Container -->
+    <rect x="0" y="0" width="50" height="60" fill="#e31e24" stroke="#c01a1f" stroke-width="2" rx="2"/>
+    <line x1="15" y1="0" x2="15" y2="60" stroke="#c01a1f" stroke-width="2"/>
+    <line x1="35" y1="0" x2="35" y2="60" stroke="#c01a1f" stroke-width="2"/>
+    <line x1="0" y1="20" x2="50" y2="20" stroke="#c01a1f" stroke-width="1"/>
+    <line x1="0" y1="40" x2="50" y2="40" stroke="#c01a1f" stroke-width="1"/>
+    
+    <!-- Blue Container -->
+    <rect x="55" y="0" width="50" height="60" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="2"/>
+    <line x1="70" y1="0" x2="70" y2="60" stroke="#2980b9" stroke-width="2"/>
+    <line x1="90" y1="0" x2="90" y2="60" stroke="#2980b9" stroke-width="2"/>
+    <line x1="55" y1="20" x2="105" y2="20" stroke="#2980b9" stroke-width="1"/>
+    <line x1="55" y1="40" x2="105" y2="40" stroke="#2980b9" stroke-width="1"/>
+    
+    <!-- Small boxes on top -->
+    <rect x="10" y="-15" width="20" height="12" fill="#f39c12" stroke="#e67e22" stroke-width="1" rx="1"/>
+    <rect x="70" y="-15" width="20" height="12" fill="#2ecc71" stroke="#27ae60" stroke-width="1" rx="1"/>
+  </g>
+  
+  <!-- Magnifying Glass Handle -->
+  <g transform="rotate(45, 200, 200)">
+    <rect x="200" y="280" width="15" height="80" fill="#7f8c8d" stroke="#5a6268" stroke-width="2" rx="7"/>
+    <ellipse cx="207.5" cy="280" rx="10" ry="8" fill="#95a5a6"/>
+  </g>
+  
+  <!-- Magnifying Glass Rim -->
+  <circle cx="200" cy="200" r="120" fill="none" stroke="#2c3e50" stroke-width="8"/>
+  <circle cx="200" cy="200" r="125" fill="none" stroke="#34495e" stroke-width="3"/>
+  
+  <!-- Sparkle effects -->
+  <g opacity="0.6">
+    <circle cx="280" cy="140" r="3" fill="#e31e24"/>
+    <circle cx="290" cy="150" r="2" fill="#e31e24"/>
+    <circle cx="120" cy="160" r="3" fill="#3498db"/>
+    <circle cx="110" cy="170" r="2" fill="#3498db"/>
+  </g>
+  
+  <!-- China flag small -->
+  <g transform="translate(320, 60)">
+    <rect width="40" height="27" fill="#DE2910" rx="2"/>
+    <polygon points="10,7 11,10 14,10 12,12 13,15 10,13 7,15 8,12 6,10 9,10" fill="#FFDE00"/>
+  </g>
+  
+  <!-- Text labels -->
+  <text x="200" y="360" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#2c3e50" text-anchor="middle">ПОИСК ТОВАРОВ</text>
+  <text x="200" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#7f8c8d" text-anchor="middle">В КИТАЕ</text>
+</svg>

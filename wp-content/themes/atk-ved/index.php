@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/hero/hero-boxes.svg" alt="Товары из Китая" loading="eager">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/hero/hero-boxes.jpg" alt="Товары из Китая" loading="eager">
             </div>
         </div>
     </div>
@@ -124,7 +124,7 @@
                 </form>
             </div>
             <div class="search-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/container-search.svg" alt="Поиск товаров в Китае">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/container-search.jpg" alt="Поиск товаров в Китае">
             </div>
         </div>
     </div>
@@ -136,7 +136,7 @@
         <h2 class="section-title">СПОСОБЫ И СРОКИ ДОСТАВКИ ГРУЗОВ</h2>
         <div class="delivery-content">
             <div class="delivery-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/container.svg" alt="Контейнер">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/container.png" alt="Контейнер">
             </div>
             <div class="delivery-info">
                 <p>Мы предлагаем различные варианты доставки грузов из Китая в зависимости от ваших потребностей, сроков и бюджета.</p>
@@ -430,7 +430,7 @@
                 </form>
             </div>
             <div class="contact-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/pagoda.svg" alt="Пагода">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/pagoda.png" alt="Пагода">
             </div>
         </div>
     </div>

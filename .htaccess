@@ -62,3 +62,67 @@ AddOutputFilterByType DEFLATE font/woff
 AddOutputFilterByType DEFLATE font/woff2
 </IfModule>
 # END Performance - GZIP
+
+# BEGIN Security - Security Headers
+<IfModule mod_headers.c>
+    # Защита от XSS атак
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Защита от MIME-sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Защита от clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Referrer Policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (базовая)
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://www.google.com https://maps.google.com;"
+    
+    # Permissions Policy (бывший Feature Policy)
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+    
+    # Удаление заголовка версии PHP
+    Header unset X-Powered-By
+    
+    # Удаление заголовка версии сервера
+    # Header unset Server
+    
+    # HTTPS заголовки (раскомментировать при использовании HTTPS)
+    # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+# END Security - Security Headers
+
+# BEGIN Security - Block Access to Sensitive Files
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "(^#|#$|\.htaccess$|\.htpasswd$|wp-config\.php|readme\.html|license\.txt|xmlrpc\.php)">
+    Require all denied
+</FilesMatch>
+
+# Запрет доступа к директориям
+<IfModule mod_alias.c>
+    RedirectMatch 403 /\.git
+    RedirectMatch 403 /\.svn
+    RedirectMatch 403 /\.env
+    RedirectMatch 403 /wp-content/upgrade
+    RedirectMatch 403 /wp-content/cache
+</IfModule>
+# END Security - Block Access to Sensitive Files
+
+# BEGIN Security - Block Bad Bots
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_USER_AGENT} (ahrefs|semrush|mj12bot|dotbot|rogerbot|blexbot|linkdex|botvinnik|seokicks|sistrix|ltx71|angus|simplepie|feed|java|wget|curl|python|perl|ruby|scan) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+# END Security - Block Bad Bots
+
+# BEGIN Security - Limit Request Methods
+<LimitExcept GET POST HEAD>
+    Require all denied
+</LimitExcept>
+# END Security - Limit Request Methods
