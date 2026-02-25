@@ -1,0 +1,91 @@
+# Docker Compose для разработки АТК ВЭД
+# Версия: 1.8.0
+
+version: '3.8'
+
+services:
+  # База данных MySQL
+  db:
+    image: mysql:8.0
+    container_name: atk-ved-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: atk_ved
+      MYSQL_USER: atk_user
+      MYSQL_PASSWORD: atk_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - atk_ved_network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # WordPress с темой
+  wordpress:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: atk-ved-wordpress
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: atk_user
+      WORDPRESS_DB_PASSWORD: atk_password
+      WORDPRESS_DB_NAME: atk_ved
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - ../wp-content/uploads:/var/www/html/wp-content/uploads
+      - ../wp-content/plugins:/var/www/html/wp-content/plugins
+      - ../wp-content/themes/atk-ved:/var/www/html/wp-content/themes/atk-ved
+    ports:
+      - "8080:80"
+    networks:
+      - atk_ved_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # phpMyAdmin для управления БД
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: atk-ved-phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      UPLOAD_LIMIT: 128M
+    volumes:
+      - phpmyadmin_data:/root/.phpmyadmin
+    ports:
+      - "8081:80"
+    networks:
+      - atk_ved_network
+
+  # Mailhog для тестирования email (опционально)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: atk-ved-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP порт
+      - "8025:8025"  # Web интерфейс
+    networks:
+      - atk_ved_network
+
+networks:
+  atk_ved_network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+  phpmyadmin_data:
+    driver: local

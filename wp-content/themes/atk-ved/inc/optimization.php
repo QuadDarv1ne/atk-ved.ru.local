@@ -1,11 +1,17 @@
 <?php
 /**
  * Дополнительная оптимизация темы
+ * 
+ * @package ATK_VED
+ * @since 1.0.0
+ * @version 1.8.0
  */
+
+declare(strict_types=1);
 
 // Отключение ненужных функций WordPress
 add_action('init', 'atk_ved_disable_unused_features');
-function atk_ved_disable_unused_features() {
+function atk_ved_disable_unused_features(): void {
     // Отключаем emoji
     remove_action('wp_head', 'print_emoji_detection_script', 7);
     remove_action('admin_print_scripts', 'print_emoji_detection_script');
@@ -14,11 +20,11 @@ function atk_ved_disable_unused_features() {
     remove_filter('the_content_feed', 'wp_staticize_emoji');
     remove_filter('comment_text_rss', 'wp_staticize_emoji');
     remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
-    
+
     // Отключаем embeds
     remove_action('wp_head', 'wp_oembed_add_discovery_links');
     remove_action('wp_head', 'wp_oembed_add_host_js');
-    
+
     // Отключаем REST API для неавторизованных
     if (!is_user_logged_in()) {
         remove_action('wp_head', 'rest_output_link_wp_head');
@@ -111,24 +117,108 @@ function atk_ved_minify_html($html) {
 
 // Оптимизация базы данных
 add_action('wp_scheduled_delete', 'atk_ved_cleanup_database');
-function atk_ved_cleanup_database() {
+function atk_ved_cleanup_database(): void {
     global $wpdb;
-    
+
     // Удаляем старые ревизии (старше 30 дней)
     $wpdb->query("DELETE FROM $wpdb->posts WHERE post_type = 'revision' AND post_modified < DATE_SUB(NOW(), INTERVAL 30 DAY)");
-    
+
     // Удаляем автосохранения
     $wpdb->query("DELETE FROM $wpdb->posts WHERE post_status = 'auto-draft'");
-    
+
     // Удаляем мусор из корзины (старше 7 дней)
     $wpdb->query("DELETE FROM $wpdb->posts WHERE post_status = 'trash' AND post_modified < DATE_SUB(NOW(), INTERVAL 7 DAY)");
-    
+
     // Оптимизируем таблицы
     $wpdb->query("OPTIMIZE TABLE $wpdb->posts");
     $wpdb->query("OPTIMIZE TABLE $wpdb->postmeta");
     $wpdb->query("OPTIMIZE TABLE $wpdb->comments");
     $wpdb->query("OPTIMIZE TABLE $wpdb->commentmeta");
 }
+
+/**
+ * WebP поддержка изображений
+ * Добавляет picture элемент с WebP источником
+ */
+function atk_ved_add_webp_support(string $html, int $attachment_id, array $attachment_meta): string {
+    // Не обрабатываем если это не изображение
+    if (!wp_attachment_is_image($attachment_id)) {
+        return $html;
+    }
+
+    // Получаем URL оригинала и его размеры
+    $original_url = wp_get_attachment_url($attachment_id);
+    $original_meta = wp_get_attachment_metadata($attachment_id);
+    
+    if (!$original_url || !$original_meta) {
+        return $html;
+    }
+
+    // Генерируем URL для WebP
+    $upload_dir = wp_upload_dir();
+    $relative_path = str_replace($upload_dir['baseurl'], '', $original_url);
+    $webp_url = $upload_dir['baseurl'] . '/webp' . dirname($relative_path) . '/' . wp_basename($original_url, '.' . pathinfo($original_url, PATHINFO_EXTENSION)) . '.webp';
+
+    // Проверяем существует ли WebP версия
+    $webp_path = $upload_dir['basedir'] . '/webp' . dirname($relative_path) . '/' . wp_basename($original_url, '.' . pathinfo($original_url, PATHINFO_EXTENSION)) . '.webp';
+    
+    if (!file_exists($webp_path)) {
+        return $html;
+    }
+
+    // Извлекаем alt, width, height из оригинального HTML
+    preg_match('/alt="([^"]*)"/', $html, $alt_matches);
+    $alt = $alt_matches[1] ?? '';
+
+    preg_match('/width="(\d+)"/', $html, $width_matches);
+    $width = $width_matches[1] ?? $original_meta['width'] ?? 'auto';
+
+    preg_match('/height="(\d+)"/', $html, $height_matches);
+    $height = $height_matches[1] ?? $original_meta['height'] ?? 'auto';
+
+    // Извлекаем классы
+    preg_match('/class="([^"]*)"/', $html, $class_matches);
+    $class = $class_matches[1] ?? '';
+
+    // Формируем picture элемент
+    $picture_html = '<picture>';
+    $picture_html .= '<source srcset="' . esc_url($webp_url) . '" type="image/webp">';
+    $picture_html .= '<img src="' . esc_url($original_url) . '" width="' . esc_attr($width) . '" height="' . esc_attr($height) . '" alt="' . esc_attr($alt) . '" class="' . esc_attr($class) . '" loading="lazy">';
+    $picture_html .= '</picture>';
+
+    return $picture_html;
+}
+add_filter('wp_get_attachment_image', 'atk_ved_add_webp_support', 10, 3);
+
+/**
+ * Автоматическая конвертация загруженных изображений в WebP
+ */
+function atk_ved_convert_to_webp(array $file_data): array {
+    $upload_dir = wp_upload_dir();
+    $relative_path = str_replace($upload_dir['basedir'], '', dirname($file_data['file']));
+    
+    // Создаём директорию для WebP если не существует
+    $webp_dir = $upload_dir['basedir'] . '/webp' . $relative_path;
+    if (!file_exists($webp_dir)) {
+        wp_mkdir_p($webp_dir);
+    }
+
+    // Генерируем имя файла WebP
+    $filename = wp_basename($file_data['file']);
+    $webp_filename = pathinfo($filename, PATHINFO_FILENAME) . '.webp';
+    $webp_path = $webp_dir . '/' . $webp_filename;
+
+    // Конвертируем изображение в WebP
+    $image = wp_get_image_editor($file_data['file']);
+    
+    if (!is_wp_error($image)) {
+        $image->set_quality(82);
+        $image->save($webp_path, 'image/webp');
+    }
+
+    return $file_data;
+}
+add_filter('wp_handle_upload', 'atk_ved_convert_to_webp');
 
 // Ограничение ревизий
 if (!defined('WP_POST_REVISIONS')) {

@@ -20,6 +20,8 @@ require_once get_template_directory() . '/inc/security.php';
 require_once get_template_directory() . '/inc/translations.php';
 require_once get_template_directory() . '/inc/analytics.php';
 require_once get_template_directory() . '/inc/cookie-banner.php';
+require_once get_template_directory() . '/inc/pwa.php';
+require_once get_template_directory() . '/inc/logger.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
@@ -35,7 +37,8 @@ function atk_ved_enqueue_scripts() {
     wp_enqueue_style('atk-ved-tracking', get_template_directory_uri() . '/css/tracking.css', array(), '1.9');
     wp_enqueue_style('atk-ved-gallery', get_template_directory_uri() . '/css/gallery.css', array(), '1.9');
     wp_enqueue_style('atk-ved-404', get_template_directory_uri() . '/css/404.css', array(), '1.9');
-    
+    wp_enqueue_style('atk-ved-thank-you', get_template_directory_uri() . '/css/thank-you.css', array(), '1.9');
+
     // UX Enhancements v1.9
     wp_enqueue_style('atk-ved-reviews-slider', get_template_directory_uri() . '/css/reviews-slider.css', array(), '1.9');
     wp_enqueue_style('atk-ved-callback-modal', get_template_directory_uri() . '/css/callback-modal.css', array(), '1.9');
