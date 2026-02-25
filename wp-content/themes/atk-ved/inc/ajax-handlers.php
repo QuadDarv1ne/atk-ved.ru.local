@@ -171,3 +171,53 @@ function atk_ved_register_contact_form_post_type() {
     ));
 }
 add_action('init', 'atk_ved_register_contact_form_post_type');
+
+// Обработчик формы быстрого поиска товаров
+function atk_ved_quick_search_handler() {
+    check_ajax_referer('atk_ved_nonce', 'nonce');
+    
+    $name = sanitize_text_field($_POST['name']);
+    $phone = sanitize_text_field($_POST['phone']);
+    
+    // Валидация
+    if (empty($name) || empty($phone)) {
+        wp_send_json_error(array('message' => 'Пожалуйста, заполните все поля'));
+    }
+    
+    // Отправка email администратору
+    $to = get_option('admin_email');
+    $subject = 'Новая заявка на поиск товара - ' . get_bloginfo('name');
+    $body = "Новая заявка на поиск товара в Китае\n\n";
+    $body .= "Имя: $name\n";
+    $body .= "Телефон: $phone\n";
+    $body .= "Дата: " . date('d.m.Y H:i') . "\n";
+    $body .= "IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
+    
+    $headers = array(
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>',
+    );
+    
+    $sent = wp_mail($to, $subject, $body, $headers);
+    
+    if ($sent) {
+        // Сохранение заявки в базу данных
+        $post_id = wp_insert_post(array(
+            'post_type' => 'contact_form',
+            'post_title' => 'Заявка на поиск товара - ' . $name . ' - ' . date('d.m.Y H:i'),
+            'post_content' => "Имя: $name\nТелефон: $phone",
+            'post_status' => 'private',
+            'meta_input' => array(
+                '_contact_name' => $name,
+                '_contact_phone' => $phone,
+                '_form_type' => 'quick_search',
+            ),
+        ));
+        
+        wp_send_json_success(array('message' => 'Спасибо! Ваша заявка принята.'));
+    } else {
+        wp_send_json_error(array('message' => 'Ошибка отправки. Попробуйте позже.'));
+    }
+}
+add_action('wp_ajax_atk_ved_quick_search', 'atk_ved_quick_search_handler');
+add_action('wp_ajax_nopriv_atk_ved_quick_search', 'atk_ved_quick_search_handler');

@@ -159,4 +159,133 @@ jQuery(document).ready(function($) {
         $('html, body').animate({ scrollTop: 0 }, 600);
     });
     
+    // Обработка формы быстрого поиска
+    $('#quickSearchForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $button = $form.find('button[type="submit"]');
+        var buttonText = $button.text();
+        
+        // Валидация
+        var name = $form.find('input[name="name"]').val().trim();
+        var phone = $form.find('input[name="phone"]').val().trim();
+        var privacy = $form.find('input[name="privacy"]').is(':checked');
+        
+        if (!name || !phone || !privacy) {
+            if (typeof atkShowToast === 'function') {
+                atkShowToast('Пожалуйста, заполните все поля и согласитесь с политикой конфиденциальности', 'warning');
+            } else {
+                alert('Пожалуйста, заполните все поля и согласитесь с политикой конфиденциальности');
+            }
+            return;
+        }
+        
+        // Отправка данных
+        $button.text('Отправка...').prop('disabled', true);
+        
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_quick_search',
+                nonce: atkVedData.nonce,
+                name: name,
+                phone: phone
+            },
+            success: function(response) {
+                if (response.success) {
+                    if (typeof atkShowToast === 'function') {
+                        atkShowToast('Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.', 'success', 4000);
+                    } else {
+                        alert('Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.');
+                    }
+                    $form[0].reset();
+                } else {
+                    if (typeof atkShowToast === 'function') {
+                        atkShowToast('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.', 'error');
+                    } else {
+                        alert('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.');
+                    }
+                }
+            },
+            error: function() {
+                if (typeof atkShowToast === 'function') {
+                    atkShowToast('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.', 'error');
+                } else {
+                    alert('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.');
+                }
+            },
+            complete: function() {
+                $button.text(buttonText).prop('disabled', false);
+            }
+        });
+    });
+    
+    // Обработка формы обратной связи
+    $('#contactForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $button = $form.find('button[type="submit"]');
+        var buttonText = $button.text();
+        
+        // Валидация
+        var name = $form.find('input[name="name"]').val().trim();
+        var phone = $form.find('input[name="phone"]').val().trim();
+        var message = $form.find('textarea[name="message"]').val().trim();
+        var privacy = $form.find('input[name="privacy"]').is(':checked');
+        
+        if (!name || !phone || !privacy) {
+            if (typeof atkShowToast === 'function') {
+                atkShowToast('Пожалуйста, заполните все обязательные поля и согласитесь с политикой конфиденциальности', 'warning');
+            } else {
+                alert('Пожалуйста, заполните все обязательные поля и согласитесь с политикой конфиденциальности');
+            }
+            return;
+        }
+        
+        // Отправка данных
+        $button.text('Отправка...').prop('disabled', true);
+        
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_contact_form',
+                nonce: atkVedData.nonce,
+                name: name,
+                phone: phone,
+                email: phone + '@placeholder.com',
+                message: message || 'Запрос на обратную связь'
+            },
+            success: function(response) {
+                if (response.success) {
+                    if (typeof atkShowToast === 'function') {
+                        atkShowToast('Спасибо! Ваше сообщение отправлено. Мы свяжемся с вами в течение 15 минут.', 'success', 4000);
+                    } else {
+                        alert('Спасибо! Ваше сообщение отправлено. Мы свяжемся с вами в течение 15 минут.');
+                    }
+                    $form[0].reset();
+                } else {
+                    if (typeof atkShowToast === 'function') {
+                        atkShowToast('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.', 'error');
+                    } else {
+                        alert('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.');
+                    }
+                }
+            },
+            error: function() {
+                if (typeof atkShowToast === 'function') {
+                    atkShowToast('Ошибка соединения. Попробуйте позже.', 'error');
+                } else {
+                    alert('Произошла ошибка. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.');
+                }
+            },
+            complete: function() {
+                $button.text(buttonText).prop('disabled', false);
+            }
+        });
+    });
+    
 });

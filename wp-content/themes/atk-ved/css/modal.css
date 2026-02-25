@@ -1,0 +1,315 @@
+/**
+ * Модальные окна и уведомления
+ */
+
+/* Modal Overlay */
+.atk-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.atk-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal */
+.atk-modal {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.atk-modal-overlay.active .atk-modal {
+    transform: scale(1) translateY(0);
+}
+
+.atk-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    line-height: 1;
+    color: #999;
+    cursor: pointer;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.atk-modal-close:hover {
+    background: #f5f5f5;
+    color: #e31e24;
+    transform: rotate(90deg);
+}
+
+.atk-modal-header {
+    padding: 30px 30px 20px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.atk-modal-header h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2c2c2c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.atk-modal-body {
+    padding: 30px;
+}
+
+/* Modal Form */
+.atk-modal-form .form-group {
+    margin-bottom: 25px;
+}
+
+.atk-modal-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c2c2c;
+}
+
+.atk-modal-form input[type="text"],
+.atk-modal-form input[type="tel"],
+.atk-modal-form input[type="email"],
+.atk-modal-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2c2c2c;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.atk-modal-form input:focus,
+.atk-modal-form textarea:focus {
+    outline: none;
+    border-color: #e31e24;
+    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+}
+
+.atk-modal-form input.error,
+.atk-modal-form textarea.error {
+    border-color: #e31e24;
+}
+
+.atk-modal-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.atk-modal-form .error-message {
+    display: block;
+    color: #e31e24;
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 18px;
+}
+
+.atk-modal-form .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.atk-modal-form .checkbox-label input[type="checkbox"] {
+    margin-top: 3px;
+    cursor: pointer;
+    width: auto;
+}
+
+.atk-modal-form .cta-button {
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.atk-modal-form .cta-button .button-loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-left: 10px;
+}
+
+.atk-modal-form .cta-button.loading .button-text {
+    opacity: 0.5;
+}
+
+.atk-modal-form .cta-button.loading .button-loader {
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Toast Notifications */
+.atk-toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.atk-toast {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    max-width: 400px;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    border-left: 4px solid;
+}
+
+.atk-toast.active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.atk-toast-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.atk-toast-message {
+    flex: 1;
+    font-size: 14px;
+    color: #2c2c2c;
+    line-height: 1.5;
+}
+
+/* Toast Types */
+.atk-toast-success {
+    border-left-color: #10b981;
+}
+
+.atk-toast-success .atk-toast-icon {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.atk-toast-error {
+    border-left-color: #e31e24;
+}
+
+.atk-toast-error .atk-toast-icon {
+    background: #fee;
+    color: #e31e24;
+}
+
+.atk-toast-info {
+    border-left-color: #3b82f6;
+}
+
+.atk-toast-info .atk-toast-icon {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.atk-toast-warning {
+    border-left-color: #f59e0b;
+}
+
+.atk-toast-warning .atk-toast-icon {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .atk-modal {
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+    
+    .atk-modal-overlay {
+        padding: 0;
+    }
+    
+    .atk-modal-header,
+    .atk-modal-body {
+        padding: 20px;
+    }
+    
+    .atk-toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .atk-toast {
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .atk-modal-overlay,
+    .atk-modal,
+    .atk-toast {
+        transition: none;
+    }
+}

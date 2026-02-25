@@ -5,28 +5,42 @@
     <div class="container">
         <div class="hero-content">
             <div class="hero-text">
+                <ul class="hero-features">
+                    <li>Опытные менеджеры</li>
+                    <li>Прозрачные цены</li>
+                    <li>Без минимальной цены</li>
+                    <li>База поставщиков</li>
+                </ul>
                 <h1>
                     ТОВАРЫ<br>
                     ДЛЯ МАРКЕТПЛЕЙСОВ<br>
-                    <span class="highlight">ИЗ КИТАЯ ОПТОМ</span>
+                    <span class="highlight">ИЗ КИТАЯ</span> ОПТОМ
                 </h1>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">КЛИЕНТОВ</div>
+                <div class="marketplaces">
+                    <div class="marketplace-item">
+                        <div class="marketplace-icon">М</div>
+                        <span>МЕГАМАРКЕТ</span>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">1000+</div>
-                        <div class="stat-label">ТОВАРОВ</div>
+                    <div class="marketplace-item">
+                        <div class="marketplace-icon">A</div>
+                        <span>Alibaba</span>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">5 ЛЕТ</div>
-                        <div class="stat-label">НА РЫНКЕ</div>
+                    <div class="marketplace-item">
+                        <div class="marketplace-icon">W</div>
+                        <span>WILDBERRIES</span>
+                    </div>
+                    <div class="marketplace-item">
+                        <div class="marketplace-icon">A</div>
+                        <span>AliExpress</span>
+                    </div>
+                    <div class="marketplace-item">
+                        <div class="marketplace-icon">O</div>
+                        <span>OZON</span>
                     </div>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/hero-containers.jpg" alt="Контейнеры">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/hero-boxes.jpg" alt="Товары из Китая">
             </div>
         </div>
     </div>
@@ -35,31 +49,57 @@
 <!-- Services Section -->
 <section class="services-section" id="services">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">НАШИ УСЛУГИ</h2>
+        <h2 class="section-title reveal">НАШИ УСЛУГИ</h2>
         <div class="services-grid">
-            <div class="service-card animate-on-scroll delay-100">
+            <div class="service-card animate-on-scroll delay-100" data-number="01">
                 <h3>Поиск товаров</h3>
                 <p>Помогаем найти нужные товары на китайских площадках по вашим требованиям и бюджету</p>
             </div>
-            <div class="service-card animate-on-scroll delay-200">
+            <div class="service-card animate-on-scroll delay-200" data-number="02">
                 <h3>Проверка качества</h3>
                 <p>Контролируем качество продукции перед отправкой, делаем фото и видео отчеты</p>
             </div>
-            <div class="service-card animate-on-scroll delay-300">
+            <div class="service-card animate-on-scroll delay-300" data-number="03">
                 <h3>Доставка грузов</h3>
                 <p>Организуем доставку любым удобным способом: авиа, море, ж/д, авто</p>
             </div>
-            <div class="service-card animate-on-scroll delay-400">
+            <div class="service-card animate-on-scroll delay-400" data-number="04">
                 <h3>Таможенное оформление</h3>
                 <p>Берем на себя все вопросы таможенного оформления и сертификации</p>
             </div>
-            <div class="service-card animate-on-scroll delay-500">
+            <div class="service-card animate-on-scroll delay-500" data-number="05">
                 <h3>Складская логистика</h3>
                 <p>Предоставляем услуги хранения и обработки грузов на наших складах</p>
             </div>
-            <div class="service-card animate-on-scroll delay-600">
+            <div class="service-card animate-on-scroll delay-600" data-number="06">
                 <h3>Консультации</h3>
                 <p>Консультируем по всем вопросам работы с Китаем и маркетплейсами</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section" id="search">
+    <div class="container">
+        <div class="search-content">
+            <div class="search-text">
+                <h2>НАЙДЕМ ТОВАР В КИТАЕ ПО ВАШЕМУ ЗАПРОСУ И ПОЛУЧИМ САМОЕ ВЫГОДНОЕ ПРЕДЛОЖЕНИЕ ОТ ПОСТАВЩИКА</h2>
+                <p>Мы поможем найти, выкупить и доставить товары из Китая на самых выгодных условиях</p>
+            </div>
+            <div class="search-form-block">
+                <form class="quick-search-form" id="quickSearchForm">
+                    <input type="text" name="name" placeholder="Ваше имя" required>
+                    <input type="tel" name="phone" placeholder="Ваш номер телефона" required>
+                    <button type="submit" class="cta-button">ОСТАВИТЬ ЗАЯВКУ</button>
+                    <label class="privacy-label">
+                        <input type="checkbox" name="privacy" required>
+                        <span>Отправляя ваши данные, вы соглашаетесь с политикой конфиденциальности</span>
+                    </label>
+                </form>
+            </div>
+            <div class="search-image">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/container-search.jpg" alt="Поиск товаров в Китае">
             </div>
         </div>
     </div>
@@ -71,7 +111,7 @@
         <h2 class="section-title">СПОСОБЫ И СРОКИ ДОСТАВКИ ГРУЗОВ</h2>
         <div class="delivery-content">
             <div class="delivery-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/container.jpg" alt="Контейнер">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/container.svg" alt="Контейнер">
             </div>
             <div class="delivery-info">
                 <p>Мы предлагаем различные варианты доставки грузов из Китая в зависимости от ваших потребностей, сроков и бюджета.</p>
@@ -118,6 +158,86 @@
     </div>
 </section>
 
+<!-- Calculator Section -->
+<section class="calculator-section" id="calculator">
+    <div class="container">
+        <h2 class="section-title">КАЛЬКУЛЯТОР СТОИМОСТИ ДОСТАВКИ</h2>
+        <div class="calculator-wrapper">
+            <div class="calculator-info">
+                <h3>Рассчитайте стоимость доставки вашего груза</h3>
+                <p>Наш калькулятор поможет вам быстро узнать приблизительную стоимость доставки груза из Китая. Укажите параметры вашего груза и выберите способ доставки.</p>
+                <div class="calculator-features">
+                    <div class="calculator-feature">
+                        <span class="calculator-feature-icon">📦</span>
+                        <span>Учет объемного веса</span>
+                    </div>
+                    <div class="calculator-feature">
+                        <span class="calculator-feature-icon">🛡️</span>
+                        <span>Страхование груза</span>
+                    </div>
+                    <div class="calculator-feature">
+                        <span class="calculator-feature-icon">📋</span>
+                        <span>Таможенное оформление</span>
+                    </div>
+                    <div class="calculator-feature">
+                        <span class="calculator-feature-icon">💼</span>
+                        <span>Услуги компании</span>
+                    </div>
+                </div>
+            </div>
+            <div class="calculator-form">
+                <h3>Параметры груза</h3>
+                <form id="calculator-form">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="calc-weight">
+                                Вес груза
+                                <span class="tooltip" title="Фактический вес груза в килограммах">ℹ️</span>
+                            </label>
+                            <div class="input-suffix" data-suffix="кг">
+                                <input type="text" id="calc-weight" placeholder="100" required>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="calc-volume">
+                                Объем груза
+                                <span class="tooltip" title="Объем в кубических метрах (длина × ширина × высота)">ℹ️</span>
+                            </label>
+                            <div class="input-suffix" data-suffix="м³">
+                                <input type="text" id="calc-volume" placeholder="1" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="calc-cost">
+                                Стоимость товара
+                                <span class="tooltip" title="Стоимость товара для расчета страховки и таможни">ℹ️</span>
+                            </label>
+                            <div class="input-suffix" data-suffix="₽">
+                                <input type="text" id="calc-cost" placeholder="50000" required>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="calc-method">Способ доставки</label>
+                            <select id="calc-method" required>
+                                <option value="air">Авиа (5-10 дней)</option>
+                                <option value="rail" selected>ЖД (15-20 дней)</option>
+                                <option value="sea">Море (30-45 дней)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calculator-actions">
+                        <button type="button" id="calc-submit" class="cta-button">Рассчитать</button>
+                        <button type="button" id="calc-compare" class="cta-button secondary">Сравнить все</button>
+                    </div>
+                    <div id="calc-result"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Advantages Section -->
 <section class="advantages-section">
     <div class="container">
@@ -153,32 +273,32 @@
         <h2 class="section-title">ЭТАПЫ СОТРУДНИЧЕСТВА</h2>
         <div class="steps-grid">
             <div class="step-card">
-                <div class="step-number">1</div>
+                <div class="step-number">01</div>
                 <h3>Заявка</h3>
                 <p>Вы оставляете заявку на сайте или связываетесь с нами любым удобным способом</p>
             </div>
             <div class="step-card">
-                <div class="step-number">2</div>
+                <div class="step-number">02</div>
                 <h3>Консультация</h3>
                 <p>Наш менеджер связывается с вами и уточняет все детали заказа</p>
             </div>
             <div class="step-card">
-                <div class="step-number">3</div>
+                <div class="step-number">03</div>
                 <h3>Поиск товара</h3>
                 <p>Находим нужные товары, согласовываем цены и условия с поставщиками</p>
             </div>
             <div class="step-card">
-                <div class="step-number">4</div>
+                <div class="step-number">04</div>
                 <h3>Оплата</h3>
                 <p>Вы вносите предоплату, мы выкупаем товар у поставщика</p>
             </div>
             <div class="step-card">
-                <div class="step-number">5</div>
+                <div class="step-number">05</div>
                 <h3>Контроль качества</h3>
                 <p>Проверяем товар на нашем складе в Китае, делаем фото/видео отчет</p>
             </div>
             <div class="step-card">
-                <div class="step-number">6</div>
+                <div class="step-number">06</div>
                 <h3>Доставка</h3>
                 <p>Организуем доставку выбранным способом и таможенное оформление</p>
             </div>
@@ -190,22 +310,27 @@
 <section class="faq-section" id="faq">
     <div class="container">
         <h2 class="section-title">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
-        <div class="faq-list">
-            <div class="faq-item">
-                <div class="faq-question">Какой минимальный заказ?</div>
-                <div class="faq-answer">Минимальный заказ зависит от типа товара и способа доставки. Обычно от 1000$.</div>
+        <div class="faq-content">
+            <div class="faq-image">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/china-map.jpg" alt="Карта Китая">
             </div>
-            <div class="faq-item">
-                <div class="faq-question">Сколько стоят ваши услуги?</div>
-                <div class="faq-answer">Стоимость услуг рассчитывается индивидуально в зависимости от объема и сложности заказа.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Как происходит оплата?</div>
-                <div class="faq-answer">Работаем по предоплате 50%, остаток после получения товара на складе в России.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Какие гарантии вы даете?</div>
-                <div class="faq-answer">Заключаем официальный договор, предоставляем все необходимые документы и отчеты.</div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">Какой минимальный заказ?</div>
+                    <div class="faq-answer">Минимальный заказ зависит от типа товара и способа доставки. Обычно от 1000$.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Сколько стоят ваши услуги?</div>
+                    <div class="faq-answer">Стоимость услуг рассчитывается индивидуально в зависимости от объема и сложности заказа.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Как происходит оплата?</div>
+                    <div class="faq-answer">Работаем по предоплате 50%, остаток после получения товара на складе в России.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Какие гарантии вы даете?</div>
+                    <div class="faq-answer">Заключаем официальный договор, предоставляем все необходимые документы и отчеты.</div>
+                </div>
             </div>
         </div>
     </div>
@@ -245,11 +370,23 @@
     <div class="container">
         <div class="contact-content">
             <div class="contact-info">
-                <h2>ОСТАЛИСЬ ВОПРОСЫ ИЛИ ХОТИТЕ ОФОРМИТЬ ЗАКАЗ?</h2>
-                <p>Свяжитесь с нами любым удобным способом, и наш менеджер ответит на все ваши вопросы</p>
+                <h2>НЕ НАШЛИ ОТВЕТ НА СВОЙ ВОПРОС?</h2>
+                <p>Оставьте свои контакты или задайте вопрос в форме.<br>
+                В течение 15 минут с вами свяжется наш менеджер и ответит на все ваши вопросы.</p>
+                
+                <form class="contact-form" id="contactForm">
+                    <input type="text" name="name" placeholder="Ваше имя" required>
+                    <input type="tel" name="phone" placeholder="Ваш номер телефона" required>
+                    <textarea name="message" placeholder="Задайте вопрос" rows="4"></textarea>
+                    <button type="submit" class="cta-button">Оставить заявку</button>
+                    <label class="privacy-label">
+                        <input type="checkbox" name="privacy" required>
+                        <span>Отправляя ваши данные, вы соглашаетесь с политикой конфиденциальности</span>
+                    </label>
+                </form>
             </div>
-            <div class="contact-form">
-                <?php echo do_shortcode('[contact-form-7 id="1" title="Контактная форма"]'); ?>
+            <div class="contact-image">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/pagoda.svg" alt="Пагода">
             </div>
         </div>
     </div>
