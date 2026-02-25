@@ -3,10 +3,21 @@
  * АТК ВЭД Theme Functions
  */
 
+// Подключение дополнительных файлов
+require_once get_template_directory() . '/inc/custom-post-types.php';
+require_once get_template_directory() . '/inc/helpers.php';
+require_once get_template_directory() . '/inc/ajax-handlers.php';
+
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
-    wp_enqueue_style('atk-ved-style', get_stylesheet_uri());
-    wp_enqueue_script('atk-ved-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0', true);
+    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array(), '1.1');
+    wp_enqueue_script('atk-ved-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.1', true);
+    
+    // Локализация скриптов
+    wp_localize_script('atk-ved-script', 'atkVedData', array(
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('atk_ved_nonce'),
+    ));
 }
 add_action('wp_enqueue_scripts', 'atk_ved_enqueue_scripts');
 

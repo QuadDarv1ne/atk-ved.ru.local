@@ -142,4 +142,21 @@ jQuery(document).ready(function($) {
         }
     });
     
+    // Кнопка "Наверх"
+    var $backToTop = $('<button class="back-to-top" aria-label="Наверх"><span>↑</span></button>');
+    $('body').append($backToTop);
+    
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 300) {
+            $backToTop.addClass('visible');
+        } else {
+            $backToTop.removeClass('visible');
+        }
+    });
+    
+    $backToTop.on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({ scrollTop: 0 }, 600);
+    });
+    
 });
