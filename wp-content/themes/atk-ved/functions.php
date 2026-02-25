@@ -7,17 +7,20 @@
 require_once get_template_directory() . '/inc/custom-post-types.php';
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/ajax-handlers.php';
+require_once get_template_directory() . '/inc/performance.php';
+require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/security.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
     // Стили
-    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array(), '1.2');
-    wp_enqueue_style('atk-ved-animations', get_template_directory_uri() . '/css/animations.css', array(), '1.2');
-    wp_enqueue_style('atk-ved-components', get_template_directory_uri() . '/css/components.css', array(), '1.2');
+    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array(), '1.3');
+    wp_enqueue_style('atk-ved-animations', get_template_directory_uri() . '/css/animations.css', array(), '1.3');
+    wp_enqueue_style('atk-ved-components', get_template_directory_uri() . '/css/components.css', array(), '1.3');
     
     // Скрипты
-    wp_enqueue_script('atk-ved-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.2', true);
-    wp_enqueue_script('atk-ved-ui', get_template_directory_uri() . '/js/ui-enhancements.js', array('jquery'), '1.2', true);
+    wp_enqueue_script('atk-ved-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.3', true);
+    wp_enqueue_script('atk-ved-ui', get_template_directory_uri() . '/js/ui-enhancements.js', array('jquery'), '1.3', true);
     
     // Локализация скриптов
     wp_localize_script('atk-ved-script', 'atkVedData', array(
@@ -59,8 +62,6 @@ function atk_ved_widgets_init() {
     ));
 }
 add_action('widgets_init', 'atk_ved_widgets_init');
-
-// Кастомные настройки темы
 function atk_ved_customize_register($wp_customize) {
     // Секция контактов
     $wp_customize->add_section('atk_ved_contacts', array(
@@ -192,33 +193,6 @@ add_action('customize_register', 'atk_ved_customize_register');
 // Добавление размеров изображений
 add_image_size('atk-ved-hero', 800, 600, true);
 add_image_size('atk-ved-service', 400, 300, true);
-
-// Отключение эмодзи
-function atk_ved_disable_emojis() {
-    remove_action('wp_head', 'print_emoji_detection_script', 7);
-    remove_action('admin_print_scripts', 'print_emoji_detection_script');
-    remove_action('wp_print_styles', 'print_emoji_styles');
-    remove_action('admin_print_styles', 'print_emoji_styles');
-}
-add_action('init', 'atk_ved_disable_emojis');
-
-// Оптимизация загрузки скриптов
-function atk_ved_optimize_scripts() {
-    // Удаление версий из URL
-    if (!is_admin()) {
-        wp_deregister_script('jquery');
-        wp_register_script('jquery', 'https://code.jquery.com/jquery-3.6.0.min.js', false, null, true);
-        wp_enqueue_script('jquery');
-    }
-}
-add_action('wp_enqueue_scripts', 'atk_ved_optimize_scripts', 1);
-
-// Добавление preload для критических ресурсов
-function atk_ved_add_preload() {
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
-    echo '<link rel="dns-prefetch" href="https://fonts.googleapis.com">';
-}
-add_action('wp_head', 'atk_ved_add_preload', 1);
 
 // Шорткод для кнопки
 function atk_ved_button_shortcode($atts, $content = null) {

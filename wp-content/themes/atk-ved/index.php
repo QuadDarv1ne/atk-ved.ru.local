@@ -8,7 +8,7 @@
                 <h1>
                     ТОВАРЫ<br>
                     ДЛЯ МАРКЕТПЛЕЙСОВ<br>
-                    <span class="highlight">ИЗ КИТАЯ</span> ОПТОМ
+                    <span class="highlight">ИЗ КИТАЯ ОПТОМ</span>
                 </h1>
                 <div class="hero-stats">
                     <div class="stat-item">
