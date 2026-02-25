@@ -32,14 +32,19 @@ require_once get_template_directory() . '/inc/calculator.php';
 require_once get_template_directory() . '/inc/calculator-advanced.php';
 require_once get_template_directory() . '/inc/multilingual.php';
 require_once get_template_directory() . '/inc/shipment-tracking.php';
+require_once get_template_directory() . '/inc/ui-components.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
+    // Modern Design System v2.0
+    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '2.0');
+    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '2.0');
+    
     // Критический CSS inline
     wp_add_inline_style('atk-ved-style', file_get_contents(get_template_directory() . '/css/critical.css'));
 
     // Стили
-    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array(), '2.0');
+    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array('atk-ved-modern-design'), '2.0');
     wp_enqueue_style('atk-ved-modal', get_template_directory_uri() . '/css/modal.css', array(), '1.9');
     wp_enqueue_style('atk-ved-calculator', get_template_directory_uri() . '/css/calculator.css', array(), '1.9');
     wp_enqueue_style('atk-ved-enhancements', get_template_directory_uri() . '/css/enhancements.css', array(), '1.9');
@@ -77,6 +82,10 @@ function atk_ved_enqueue_scripts() {
     // Shipment Tracking v2.0
     wp_enqueue_style('atk-ved-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', array(), '2.0');
     wp_enqueue_script('atk-ved-tracking-frontend', get_template_directory_uri() . '/js/shipment-tracking.js', array('jquery'), '2.0', true);
+
+    // UI Components v2.1
+    wp_enqueue_style('atk-ved-ui-components', get_template_directory_uri() . '/css/ui-components.css', array('atk-ved-modern-design'), '2.1');
+    wp_enqueue_script('atk-ved-ui-components', get_template_directory_uri() . '/js/ui-components.js', array('jquery'), '2.1', true);
 
     // UX Enhancements v1.9
     wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '2.0', true);

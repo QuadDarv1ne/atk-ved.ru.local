@@ -30,9 +30,15 @@
                 <?php 
                 $hero_image = get_theme_mod('atk_ved_hero_image');
                 if ($hero_image) {
-                    echo '<img src="' . esc_url($hero_image) . '" alt="' . esc_attr(get_bloginfo('name')) . '">';
+                    echo '<img src="' . esc_url($hero_image) . '" alt="' . esc_attr(get_bloginfo('name')) . '" loading="eager">';
                 } else {
-                    echo '<img src="' . get_template_directory_uri() . '/images/hero-containers.jpg" alt="Контейнеры">';
+                    // Используем logistics.png как основное изображение
+                    $logistics_image = get_template_directory_uri() . '/images/png/logistics.png';
+                    if (file_exists(get_template_directory() . '/images/png/logistics.png')) {
+                        echo '<img src="' . esc_url($logistics_image) . '" alt="Логистика из Китая" loading="eager">';
+                    } else {
+                        echo '<img src="' . get_template_directory_uri() . '/images/hero-containers.jpg" alt="Контейнеры" loading="eager">';
+                    }
                 }
                 ?>
             </div>
