@@ -2,8 +2,8 @@
 Theme Name: АТК ВЭД
 Theme URI: https://atk-ved.ru
 Author: Custom Theme
-Description: Современная тема для сайта АТК ВЭД - товары для маркетплейсов из Китая оптом. Полностью адаптивный дизайн с плавными анимациями, кастомными типами записей и AJAX функциями. v1.7: Полная оптимизация производительности, безопасности и SEO.
-Version: 1.7
+Description: Современная тема для сайта АТК ВЭД - товары для маркетплейсов из Китая оптом. Полностью адаптивный дизайн с плавными анимациями, кастомными типами записей и AJAX функциями. v2.8: Расширенная функциональность, улучшенная безопасность, оптимизация производительности и SEO.
+Version: 2.8
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: atk-ved
@@ -2890,4 +2890,131 @@ textarea:focus {
 
 .toast-info {
     background-color: #17a2b8;
+}
+
+/* ============================================================================
+   НОВЫЕ ОПТИМИЗАЦИИ CSS v2.8
+   ============================================================================ */
+
+/* Критические CSS для Above-the-Fold контента */
+.critical-css {
+    /* Ускоренная загрузка для первых элементов */
+    contain: layout style;
+}
+
+/* Оптимизация анимаций с will-change */
+.optimized-animation {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Улучшенные transition для производительности */
+.smooth-transition {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateZ(0);
+}
+
+/* Оптимизация скролла */
+.smooth-scroll {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+/* Критические стили для мобильных устройств */
+@media (max-width: 768px) {
+    .mobile-optimized {
+        contain: layout style;
+        content-visibility: auto;
+    }
+}
+
+/* Оптимизация изображений */
+.optimized-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Улучшенные эффекты hover */
+.enhanced-hover {
+    transition: all 0.3s ease;
+    transform: translateZ(0);
+}
+
+.enhanced-hover:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Оптимизация grid и flexbox */
+.optimized-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: start;
+}
+
+.optimized-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Улучшенные формы */
+.enhanced-form {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.enhanced-form:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Оптимизация загрузки шрифтов */
+@font-face {
+    font-family: 'OptimizedFont';
+    src: url('../fonts/optimized.woff2') format('woff2');
+    font-display: swap;
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* CSS containment для улучшения производительности */
+.performance-container {
+    contain: layout style paint;
+}
+
+/* Улучшенные анимации загрузки */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #e31e24;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Оптимизация для PWA */
+.pwa-optimized {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Улучшенные стили для темной темы */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a1a1a;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --accent-color: #e31e24;
+    }
 }

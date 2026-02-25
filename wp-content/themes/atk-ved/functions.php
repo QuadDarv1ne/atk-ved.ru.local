@@ -70,6 +70,7 @@ require_once get_template_directory() . '/inc/notifications.php';
 
 // UI улучшения
 require_once get_template_directory() . '/inc/enhanced-ui-components.php';
+require_once get_template_directory() . '/inc/advanced-ui-components.php';
 require_once get_template_directory() . '/inc/accessibility-enhancements.php';
 require_once get_template_directory() . '/inc/health-check.php';
 

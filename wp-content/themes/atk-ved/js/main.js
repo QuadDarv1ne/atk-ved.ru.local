@@ -544,5 +544,191 @@ jQuery(document).ready(function($) {
             }
         });
     });
+    
+    // ============================================================================
+    // НОВЫЕ ОПТИМИЗАЦИИ JAVASCRIPT v2.8
+    // ============================================================================
+    
+    // Оптимизированная система уведомлений
+    window.atkShowToast = function(message, type = 'info', duration = 3000) {
+        // Удаляем предыдущие уведомления
+        $('.toast-notification').remove();
+        
+        // Создаем новое уведомление
+        let toastClass = 'toast-notification toast-' + type;
+        let $toast = $('<div class="' + toastClass + '">' + message + '</div>');
+        
+        // Добавляем в DOM
+        $('body').append($toast);
+        
+        // Показываем
+        setTimeout(() => {
+            $toast.addClass('show');
+        }, 100);
+        
+        // Автоматически скрываем
+        if (duration > 0) {
+            setTimeout(() => {
+                $toast.removeClass('show');
+                setTimeout(() => {
+                    $toast.remove();
+                }, 300);
+            }, duration);
+        }
+        
+        return $toast;
+    };
+    
+    // Оптимизированная система lazy loading для изображений
+    function initLazyLoading() {
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.dataset.src;
+                        
+                        if (src) {
+                            img.src = src;
+                            img.classList.remove('lazy');
+                            img.classList.add('lazy-loaded');
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            });
+            
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    }
+    
+    // Оптимизированная система кэширования API запросов
+    const apiCache = new Map();
+    
+    window.atkCachedApiRequest = function(url, options = {}) {
+        const cacheKey = url + JSON.stringify(options);
+        const cached = apiCache.get(cacheKey);
+        
+        if (cached && Date.now() - cached.timestamp < 300000) { // 5 минут
+            return Promise.resolve(cached.data);
+        }
+        
+        return $.ajax({
+            url: url,
+            ...options
+        }).then(data => {
+            apiCache.set(cacheKey, {
+                data: data,
+                timestamp: Date.now()
+            });
+            return data;
+        });
+    };
+    
+    // Оптимизированная система обработки ошибок
+    window.atkHandleError = function(error, context = '') {
+        console.error('ATK Error [' + context + ']:', error);
+        
+        // Логируем в систему мониторинга
+        if (typeof atkVedData !== 'undefined' && atkVedData.logError) {
+            $.post(atkVedData.ajaxUrl, {
+                action: 'log_error',
+                error: error.toString(),
+                context: context,
+                nonce: atkVedData.nonce
+            });
+        }
+        
+        // Показываем пользователю дружелюбное сообщение
+        if (typeof atkShowToast === 'function') {
+            atkShowToast('Произошла ошибка. Пожалуйста, попробуйте позже.', 'error');
+        }
+    };
+    
+    // Оптимизированная система аналитики
+    window.atkTrackEvent = function(category, action, label = '', value = 0) {
+        // Google Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', action, {
+                event_category: category,
+                event_label: label,
+                value: value
+            });
+        }
+        
+        // Yandex Metrika
+        if (typeof ym !== 'undefined' && typeof atkVedData !== 'undefined' && atkVedData.ymId) {
+            ym(atkVedData.ymId, 'reachGoal', action);
+        }
+        
+        // Внутренняя аналитика
+        if (typeof atkVedData !== 'undefined') {
+            $.post(atkVedData.ajaxUrl, {
+                action: 'track_event',
+                category: category,
+                action: action,
+                label: label,
+                value: value,
+                nonce: atkVedData.nonce
+            });
+        }
+    };
+    
+    // Оптимизированная система предзагрузки критических ресурсов
+    function preloadCriticalResources() {
+        const criticalResources = [
+            '/wp-content/themes/atk-ved/css/critical.css',
+            '/wp-content/themes/atk-ved/js/critical.js'
+        ];
+        
+        criticalResources.forEach(resource => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.href = resource;
+            link.as = resource.endsWith('.css') ? 'style' : 'script';
+            document.head.appendChild(link);
+        });
+    }
+    
+    // Оптимизированная система обработки производительности
+    function measurePerformance() {
+        if ('performance' in window) {
+            const perfData = {
+                loadTime: performance.now(),
+                memory: performance.memory || null,
+                navigation: performance.navigation || null
+            };
+            
+            // Отправляем метрики производительности
+            if (typeof atkVedData !== 'undefined') {
+                setTimeout(() => {
+                    $.post(atkVedData.ajaxUrl, {
+                        action: 'log_performance',
+                        data: perfData,
+                        nonce: atkVedData.nonce
+                    });
+                }, 5000); // Отправляем через 5 секунд после загрузки
+            }
+        }
+    }
+    
+    // Инициализация оптимизированных систем
+    $(document).ready(function() {
+        initLazyLoading();
+        preloadCriticalResources();
+        measurePerformance();
+        
+        // Отслеживаем важные события
+        $(document).on('click', '[data-track]', function() {
+            const $el = $(this);
+            atkTrackEvent(
+                $el.data('track-category') || 'interaction',
+                $el.data('track-action') || 'click',
+                $el.data('track-label') || $el.text().trim()
+            );
+        });
+    });
 
 });
