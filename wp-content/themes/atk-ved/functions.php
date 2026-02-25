@@ -73,6 +73,9 @@ require_once get_template_directory() . '/inc/enhanced-ui-components.php';
 require_once get_template_directory() . '/inc/advanced-ui-components.php';
 require_once get_template_directory() . '/inc/accessibility-enhancements.php';
 require_once get_template_directory() . '/inc/health-check.php';
+require_once get_template_directory() . '/inc/rest-cache.php';
+require_once get_template_directory() . '/inc/demo-import.php';
+require_once get_template_directory() . '/inc/welcome-page.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {

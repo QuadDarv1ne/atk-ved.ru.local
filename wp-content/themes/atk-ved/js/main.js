@@ -730,5 +730,167 @@ jQuery(document).ready(function($) {
             );
         });
     });
+    
+    // ============================================================================
+    // JAVASCRIPT ДЛЯ НОВЫХ КОМПОНЕНТОВ v2.8
+    // ============================================================================
+    
+    // Слайдер отзывов
+    function initTestimonialsSlider() {
+        $('.enhanced-slider').each(function() {
+            const $slider = $(this);
+            const $wrapper = $slider.find('.slider-wrapper');
+            const $slides = $slider.find('.slider-slide');
+            const $prev = $slider.find('.slider-prev');
+            const $next = $slider.find('.slider-next');
+            const $indicators = $slider.find('.indicator');
+            
+            let currentIndex = 0;
+            const slideCount = $slides.length;
+            const slideWidth = 100;
+            
+            // Функция перехода к слайду
+            function goToSlide(index) {
+                if (index < 0) index = slideCount - 1;
+                if (index >= slideCount) index = 0;
+                
+                currentIndex = index;
+                const translateX = -index * slideWidth;
+                $wrapper.css('transform', `translateX(${translateX}%)`);
+                
+                // Обновляем индикаторы
+                $indicators.removeClass('active');
+                $indicators.eq(index).addClass('active');
+                
+                // Обновляем активные слайды
+                $slides.removeClass('active');
+                $slides.eq(index).addClass('active');
+            }
+            
+            // Навигация
+            $prev.on('click', function() {
+                goToSlide(currentIndex - 1);
+            });
+            
+            $next.on('click', function() {
+                goToSlide(currentIndex + 1);
+            });
+            
+            // Индикаторы
+            $indicators.on('click', function() {
+                const index = $(this).data('slide');
+                goToSlide(index);
+            });
+            
+            // Автопрокрутка
+            if ($slider.data('autoplay')) {
+                const interval = $slider.data('interval') || 5000;
+                let autoSlide = setInterval(() => {
+                    goToSlide(currentIndex + 1);
+                }, interval);
+                
+                // Останавливаем при наведении
+                $slider.hover(
+                    () => clearInterval(autoSlide),
+                    () => {
+                        autoSlide = setInterval(() => {
+                            goToSlide(currentIndex + 1);
+                        }, interval);
+                    }
+                );
+            }
+        });
+    }
+    
+    // Анимированные счетчики
+    function initAnimatedCounters() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const $counter = $(entry.target);
+                    const target = parseInt($counter.data('target'));
+                    let current = 0;
+                    const duration = 2000;
+                    const steps = 60;
+                    const increment = target / steps;
+                    const interval = duration / steps;
+                    
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        $counter.text(Math.floor(current));
+                    }, interval);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        $('.stat-number[data-target]').each(function() {
+            observer.observe(this);
+        });
+    }
+    
+    // Улучшенный аккордеон
+    function initEnhancedAccordion() {
+        $('.enhanced-accordion .faq-question').on('click', function() {
+            const $item = $(this).closest('.faq-item');
+            const $accordion = $(this).closest('.enhanced-accordion');
+            const allowMultiple = $accordion.data('multiple');
+            
+            if (!allowMultiple) {
+                $accordion.find('.faq-item').not($item).removeClass('active')
+                    .find('.faq-answer').css('max-height', '0');
+            }
+            
+            $item.toggleClass('active');
+            const $answer = $item.find('.faq-answer');
+            const isActive = $item.hasClass('active');
+            
+            if (isActive) {
+                $answer.css('max-height', $answer.prop('scrollHeight') + 'px');
+            } else {
+                $answer.css('max-height', '0');
+            }
+        });
+    }
+    
+    // Анимация при загрузке страницы
+    function initPageAnimations() {
+        // Анимация заголовков
+        gsap.from('.section-title', {
+            duration: 1,
+            y: 50,
+            opacity: 0,
+            ease: 'power3.out',
+            stagger: 0.2
+        });
+        
+        // Анимация карточек
+        gsap.from('.enhanced-card', {
+            duration: 0.8,
+            y: 30,
+            opacity: 0,
+            ease: 'power2.out',
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: '.enhanced-card',
+                start: 'top 85%'
+            }
+        });
+    }
+    
+    // Инициализация всех новых компонентов
+    $(document).ready(function() {
+        initTestimonialsSlider();
+        initAnimatedCounters();
+        initEnhancedAccordion();
+        
+        // Инициализация анимаций после загрузки страницы
+        setTimeout(initPageAnimations, 100);
+    });
 
 });
