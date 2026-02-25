@@ -134,40 +134,6 @@ function atk_ved_has_social_links() {
            get_theme_mod('atk_ved_vk');
 }
 
-// Вывод хлебных крошек
-function atk_ved_breadcrumbs() {
-    if (is_front_page()) {
-        return;
-    }
-    
-    $output = '<nav class="breadcrumbs" aria-label="Breadcrumb">';
-    $output .= '<a href="' . home_url('/') . '">Главная</a>';
-    
-    if (is_category() || is_single()) {
-        $output .= ' / ';
-        if (is_single()) {
-            $category = get_the_category();
-            if ($category) {
-                $output .= '<a href="' . get_category_link($category[0]->term_id) . '">' . $category[0]->name . '</a>';
-                $output .= ' / ';
-            }
-            $output .= '<span>' . get_the_title() . '</span>';
-        } else {
-            $output .= '<span>' . single_cat_title('', false) . '</span>';
-        }
-    } elseif (is_page()) {
-        $output .= ' / <span>' . get_the_title() . '</span>';
-    } elseif (is_search()) {
-        $output .= ' / <span>Поиск: ' . get_search_query() . '</span>';
-    } elseif (is_404()) {
-        $output .= ' / <span>Страница не найдена</span>';
-    }
-    
-    $output .= '</nav>';
-    
-    return $output;
-}
-
 // Получение SVG иконки
 function atk_ved_get_svg_icon($name) {
     $icons = array(

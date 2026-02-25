@@ -28,6 +28,10 @@ require_once get_template_directory() . '/inc/logger.php';
 require_once get_template_directory() . '/inc/recaptcha.php';
 require_once get_template_directory() . '/inc/sitemap.php';
 require_once get_template_directory() . '/inc/breadcrumbs.php';
+require_once get_template_directory() . '/inc/calculator.php';
+require_once get_template_directory() . '/inc/calculator-advanced.php';
+require_once get_template_directory() . '/inc/multilingual.php';
+require_once get_template_directory() . '/inc/shipment-tracking.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
@@ -54,6 +58,7 @@ function atk_ved_enqueue_scripts() {
     // Advanced Features v2.0
     wp_enqueue_style('atk-ved-calculator-advanced', get_template_directory_uri() . '/css/calculator-advanced.css', array(), '2.0');
     wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '2.0');
+    wp_enqueue_style('atk-ved-multilingual', get_template_directory_uri() . '/css/multilingual.css', array(), '2.0');
 
     // Скрипты
     wp_enqueue_script('atk-ved-loader', get_template_directory_uri() . '/js/loader.js', array(), '1.9', false);
@@ -64,7 +69,15 @@ function atk_ved_enqueue_scripts() {
     wp_enqueue_script('atk-ved-statistics', get_template_directory_uri() . '/js/statistics.js', array('jquery'), '1.9', true);
     wp_enqueue_script('atk-ved-tracking', get_template_directory_uri() . '/js/tracking.js', array('jquery'), '1.9', true);
     wp_enqueue_script('atk-ved-gallery', get_template_directory_uri() . '/js/gallery.js', array('jquery'), '1.9', true);
-    
+
+    // Calculator v2.0
+    wp_enqueue_style('atk-ved-calculator', get_template_directory_uri() . '/css/calculator.css', array(), '2.0');
+    wp_enqueue_script('atk-ved-calculator-frontend', get_template_directory_uri() . '/js/calculator-frontend.js', array('jquery'), '2.0', true);
+
+    // Shipment Tracking v2.0
+    wp_enqueue_style('atk-ved-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', array(), '2.0');
+    wp_enqueue_script('atk-ved-tracking-frontend', get_template_directory_uri() . '/js/shipment-tracking.js', array('jquery'), '2.0', true);
+
     // UX Enhancements v1.9
     wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '2.0', true);
     wp_enqueue_script('atk-ved-callback-modal', get_template_directory_uri() . '/js/callback-modal.js', array('jquery'), '2.0', true);
@@ -73,12 +86,15 @@ function atk_ved_enqueue_scripts() {
     
     // Advanced Features v2.0
     wp_enqueue_script('atk-ved-calculator-advanced', get_template_directory_uri() . '/js/calculator-advanced.js', array('jquery', 'atk-ved-calculator'), '2.0', true);
+    wp_enqueue_script('atk-ved-multilingual', get_template_directory_uri() . '/js/multilingual.js', array('jquery'), '2.0', true);
 
     // Локализация скриптов
     wp_localize_script('atk-ved-script', 'atkVedData', array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('atk_ved_nonce'),
         'siteUrl' => home_url('/'),
+        'metrikaId' => get_theme_mod('atk_ved_metrika_id', 0),
+        'gaId' => get_theme_mod('atk_ved_ga_id', ''),
     ));
     
     // Передаем ID Метрики для аналитики

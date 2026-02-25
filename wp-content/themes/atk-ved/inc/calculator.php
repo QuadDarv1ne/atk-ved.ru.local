@@ -1,7 +1,7 @@
 <?php
 /**
  * Калькулятор доставки
- * 
+ *
  * @package ATK_VED
  * @since 2.0.0
  */
@@ -15,13 +15,8 @@ if (!defined('ABSPATH')) {
 /**
  * Регистрация AJAX обработчиков
  */
-function atk_ved_calculator_ajax_handlers(): void {
-    // Для авторизованных и неавторизованных
-    add_action('wp_ajax_atk_ved_calculate_delivery', 'atk_ved_handle_calculate_delivery');
-    add_action('wp_ajax_nopriv_atk_ved_calculate_delivery', 'atk_ved_handle_calculate_delivery');
-}
-add_action('wp_ajax_atk_ved_calculate_delivery', 'atk_ved_calculator_ajax_handlers');
-add_action('wp_ajax_nopriv_atk_ved_calculate_delivery', 'atk_ved_calculator_ajax_handlers');
+add_action('wp_ajax_atk_ved_calculate_delivery', 'atk_ved_handle_calculate_delivery');
+add_action('wp_ajax_nopriv_atk_ved_calculate_delivery', 'atk_ved_handle_calculate_delivery');
 
 /**
  * Обработка запроса расчёта доставки
