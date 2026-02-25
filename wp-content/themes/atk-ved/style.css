@@ -3410,3 +3410,358 @@ textarea:focus {
         right: 10px;
     }
 }
+
+/* ============================================================================
+   СТИЛИ ДЛЯ WELCOME PAGE И DEMO IMPORT v2.9
+   ============================================================================ */
+
+/* Welcome Page */
+.atk-welcome-page {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.atk-welcome-header {
+    background: linear-gradient(135deg, #e31e24, #c01a1f);
+    color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(227, 30, 36, 0.3);
+}
+
+.atk-welcome-header h1 {
+    margin: 0 0 10px;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.atk-welcome-header .version {
+    font-size: 18px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* Onboarding Wizard */
+.atk-onboarding-wizard {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.atk-onboarding-wizard h2 {
+    margin-top: 0;
+    color: #2c2c2c;
+    font-size: 28px;
+}
+
+.onboarding-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.step {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: #e31e24;
+}
+
+.step-number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: #e31e24;
+    color: #fff;
+    border-radius: 50%;
+    line-height: 40px;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.step h3 {
+    margin: 15px 0 10px;
+    color: #2c2c2c;
+    font-size: 20px;
+}
+
+.step p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Features Grid */
+.atk-features-grid {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.atk-features-grid h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #2c2c2c;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+.feature-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    font-size: 32px;
+    min-width: 50px;
+    text-align: center;
+}
+
+.feature-card h3 {
+    margin: 0 0 10px;
+    color: #2c2c2c;
+    font-size: 20px;
+}
+
+.feature-card p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Quick Links */
+.atk-quick-links {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.atk-quick-links h2 {
+    margin-top: 0;
+    color: #2c2c2c;
+    font-size: 24px;
+    margin-bottom: 25px;
+}
+
+.quick-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.quick-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #2c2c2c;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.quick-link:hover {
+    background: #e31e24;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(227, 30, 36, 0.3);
+    border-color: #e31e24;
+}
+
+.quick-link .dashicons {
+    font-size: 20px;
+}
+
+/* Changelog Preview */
+.atk-changelog-preview {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.atk-changelog-preview h2 {
+    margin-top: 0;
+    color: #2c2c2c;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.changelog-content h3 {
+    color: #e31e24;
+    margin: 0 0 15px;
+    font-size: 20px;
+}
+
+.changelog-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+}
+
+.changelog-content li {
+    padding: 8px 0 8px 30px;
+    position: relative;
+    color: #666;
+}
+
+.changelog-content li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Demo Import Page */
+.atk-demo-import-page {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.atk-import-header {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.atk-import-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.import-steps {
+    margin: 30px 0;
+}
+
+.import-step {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background: #e31e24;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step-content h3 {
+    margin: 0 0 10px;
+    color: #2c2c2c;
+}
+
+.step-content p {
+    margin: 0;
+    color: #666;
+}
+
+.import-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.import-results h3 {
+    margin-top: 0;
+    color: #2c2c2c;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-success {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.result-error {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Адаптивность для админки */
+@media (max-width: 768px) {
+    .atk-welcome-header h1 {
+        font-size: 32px;
+    }
+    
+    .onboarding-steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .quick-links-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .import-step {
+        flex-direction: column;
+        text-align: center;
+    }
+}

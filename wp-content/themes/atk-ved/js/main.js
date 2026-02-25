@@ -892,5 +892,151 @@ jQuery(document).ready(function($) {
         // Инициализация анимаций после загрузки страницы
         setTimeout(initPageAnimations, 100);
     });
+    
+    // ============================================================================
+    // JAVASCRIPT ДЛЯ WELCOME PAGE И DEMO IMPORT v2.9
+    // ============================================================================
+    
+    // Анимация прогресса импорта
+    function initImportProgress() {
+        $('.import-progress').each(function() {
+            const $progress = $(this);
+            const $bar = $progress.find('.progress-bar');
+            const $text = $progress.find('.progress-text');
+            const totalSteps = $progress.data('total-steps') || 5;
+            let currentStep = 0;
+            
+            function updateProgress() {
+                currentStep++;
+                const percentage = (currentStep / totalSteps) * 100;
+                $bar.css('width', percentage + '%');
+                $text.text(`Шаг ${currentStep} из ${totalSteps}`);
+                
+                if (currentStep < totalSteps) {
+                    setTimeout(updateProgress, 1500);
+                } else {
+                    $text.text('Импорт завершен!');
+                    $progress.addClass('completed');
+                }
+            }
+            
+            // Начинаем при клике на кнопку импорта
+            $('.start-import').on('click', function(e) {
+                e.preventDefault();
+                $progress.addClass('active');
+                updateProgress();
+            });
+        });
+    }
+    
+    // Анимация карточек при наведении
+    function initCardHoverEffects() {
+        $('.feature-card, .step, .quick-link').on('mouseenter', function() {
+            $(this).addClass('hovered');
+        }).on('mouseleave', function() {
+            $(this).removeClass('hovered');
+        });
+    }
+    
+    // Плавная прокрутка к разделам
+    function initSmoothScrolling() {
+        $('a[href^="#"]').on('click', function(e) {
+            const target = $(this.getAttribute('href'));
+            if (target.length) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 80
+                }, 800);
+            }
+        });
+    }
+    
+    // Анимация появления элементов
+    function initOnboardingAnimations() {
+        // Анимация шагов onboarding
+        gsap.from('.step', {
+            duration: 0.6,
+            y: 30,
+            opacity: 0,
+            ease: 'power2.out',
+            stagger: 0.2,
+            scrollTrigger: {
+                trigger: '.onboarding-steps',
+                start: 'top 80%'
+            }
+        });
+        
+        // Анимация карточек функций
+        gsap.from('.feature-card', {
+            duration: 0.5,
+            x: -50,
+            opacity: 0,
+            ease: 'power2.out',
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: '.atk-features-grid',
+                start: 'top 85%'
+            }
+        });
+        
+        // Анимация quick links
+        gsap.from('.quick-link', {
+            duration: 0.4,
+            scale: 0.9,
+            opacity: 0,
+            ease: 'back.out(1.7)',
+            stagger: 0.05,
+            scrollTrigger: {
+                trigger: '.quick-links-grid',
+                start: 'top 90%'
+            }
+        });
+    }
+    
+    // Валидация формы импорта
+    function initImportFormValidation() {
+        $('.import-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            const $form = $(this);
+            const $submitBtn = $form.find('button[type="submit"]');
+            const originalText = $submitBtn.text();
+            
+            // Показываем прогресс
+            $submitBtn.prop('disabled', true).text('Импорт в процессе...');
+            
+            // Симуляция процесса импорта
+            setTimeout(() => {
+                // Показываем результаты
+                $('.import-results').addClass('show');
+                $submitBtn.text('Импорт завершен!').addClass('success');
+                
+                // Скрываем через 3 секунды
+                setTimeout(() => {
+                    $('.import-results').removeClass('show');
+                    $submitBtn.text(originalText).removeClass('success').prop('disabled', false);
+                }, 3000);
+            }, 2000);
+        });
+    }
+    
+    // Инициализация всех админских компонентов
+    $(document).ready(function() {
+        initImportProgress();
+        initCardHoverEffects();
+        initSmoothScrolling();
+        initImportFormValidation();
+        
+        // Инициализация анимаций для админки
+        if ($('.atk-welcome-page').length || $('.atk-demo-import-page').length) {
+            setTimeout(initOnboardingAnimations, 300);
+        }
+        
+        // Tooltips для админки
+        $('[data-tooltip]').each(function() {
+            const tooltipText = $(this).data('tooltip');
+            $(this).attr('title', tooltipText);
+        });
+    });
 
 });
