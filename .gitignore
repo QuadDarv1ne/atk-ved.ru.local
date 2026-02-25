@@ -1,0 +1,95 @@
+# WordPress Git Ignore
+
+## Локальные конфигурации
+wp-config.php
+wp-config-local.php
+wp-content/local.php
+
+## Логи и отладка
+*.log
+wp-content/debug.log
+wp-content/uploads/*.log
+
+## Временные файлы
+*.tmp
+*.temp
+*.cache
+*.swp
+*.swo
+*~
+
+## Системные файлы
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## IDE и редакторы
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+.phpintel/
+
+## Composer
+vendor/
+composer.lock
+
+## Node.js
+node_modules/
+package-lock.json
+yarn.lock
+
+## Сборка и дист
+dist/
+build/
+*.min.js
+*.min.css
+
+## Тесты
+phpunit.xml
+.phpunit.result.cache
+tests/
+phpcs.xml
+phpcs.xml.dist
+
+## Бекапы и дампы
+*.sql
+*.sql.gz
+*.bak
+*.backup
+dump/
+backups/
+
+## Загрузки и медиа (опционально)
+# wp-content/uploads/
+
+## Кэш WordPress
+wp-content/cache/
+wp-content/upgrade/
+
+## Плагины и темы разработки (раскомментировать при необходимости)
+# wp-content/plugins/my-custom-plugin/
+# wp-content/themes/my-custom-theme/
+
+## Серверные конфиги
+nginx.conf
+*.conf
+
+## SSL сертификаты (локальные)
+*.crt
+*.key
+*.pem
+
+## OpenServer
+.osp/
+ospanel/
+
+## Laragon
+laragon/
+
+##.env файлы
+.env
+.env.local
+.env.*.local
