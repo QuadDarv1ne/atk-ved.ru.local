@@ -1038,5 +1038,219 @@ jQuery(document).ready(function($) {
             $(this).attr('title', tooltipText);
         });
     });
+    
+    // ============================================================================
+    // JAVASCRIPT ДЛЯ DATABASE OPTIMIZATION & CACHING v2.9.1
+    // ============================================================================
+    
+    // Инициализация системы оптимизации базы данных
+    function initDatabaseOptimization() {
+        // Обработчики кнопок оптимизации
+        $('.btn-optimize').on('click', function() {
+            executeDatabaseAction('optimize', $(this));
+        });
+        
+        $('.btn-clean').on('click', function() {
+            executeDatabaseAction('clean', $(this));
+        });
+        
+        $('.btn-analyze').on('click', function() {
+            executeDatabaseAction('analyze', $(this));
+        });
+        
+        $('.btn-flush').on('click', function() {
+            executeCacheAction('flush', $(this));
+        });
+        
+        // Автоматическое обновление статистики
+        if ($('.atk-db-optimization-dashboard').length) {
+            setInterval(updateCacheStats, 30000); // Обновление каждые 30 секунд
+        }
+    }
+    
+    // Выполнение действий с базой данных
+    function executeDatabaseAction(action, $button) {
+        const originalText = $button.html();
+        const actionText = {
+            'optimize': 'Оптимизация...',
+            'clean': 'Очистка...',
+            'analyze': 'Анализ...'
+        };
+        
+        // Показываем прогресс
+        $button.addClass('btn-loading').html(actionText[action]);
+        
+        // Отправляем AJAX запрос
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_' + action + '_database',
+                nonce: atkVedData.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    showResults(response.data, 'success');
+                } else {
+                    showResults(response.data || {message: 'Ошибка выполнения'}, 'error');
+                }
+            },
+            error: function() {
+                showResults({message: 'Ошибка соединения'}, 'error');
+            },
+            complete: function() {
+                $button.removeClass('btn-loading').html(originalText);
+            }
+        });
+    }
+    
+    // Выполнение действий с кэшем
+    function executeCacheAction(action, $button) {
+        const originalText = $button.html();
+        const actionText = {
+            'flush': 'Очистка кэша...'
+        };
+        
+        $button.addClass('btn-loading').html(actionText[action]);
+        
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_' + action + '_cache',
+                nonce: atkVedData.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    showResults(response.data, 'success');
+                    updateCacheStats(); // Обновляем статистику после очистки
+                } else {
+                    showResults(response.data || {message: 'Ошибка выполнения'}, 'error');
+                }
+            },
+            error: function() {
+                showResults({message: 'Ошибка соединения'}, 'error');
+            },
+            complete: function() {
+                $button.removeClass('btn-loading').html(originalText);
+            }
+        });
+    }
+    
+    // Показ результатов
+    function showResults(data, type) {
+        const $results = $('.optimization-results');
+        const $resultsContent = $results.find('.results-content');
+        
+        let html = '';
+        
+        if (data.message) {
+            html += `<p><strong>${data.message}</strong></p>`;
+        }
+        
+        if (data.tables_optimized !== undefined) {
+            html += `<p>Оптимизировано таблиц: ${data.tables_optimized}</p>`;
+        }
+        
+        if (data.total_cleaned !== undefined) {
+            html += `<p>Очищено элементов: ${data.total_cleaned}</p>`;
+        }
+        
+        if (data.deleted_items !== undefined) {
+            html += `<p>Удалено из кэша: ${data.deleted_items} элементов</p>`;
+        }
+        
+        if (data.execution_time) {
+            html += `<p>Время выполнения: ${data.execution_time}</p>`;
+        }
+        
+        if (data.cleaned_items) {
+            html += '<h4>Подробности очистки:</h4><ul>';
+            for (const [item, count] of Object.entries(data.cleaned_items)) {
+                html += `<li>${item}: ${count}</li>`;
+            }
+            html += '</ul>';
+        }
+        
+        if (data.errors && data.errors.length > 0) {
+            html += '<h4>Ошибки:</h4><ul>';
+            data.errors.forEach(error => {
+                html += `<li class="error">${error}</li>`;
+            });
+            html += '</ul>';
+        }
+        
+        $resultsContent.html(html);
+        $results.removeClass('results-success results-error results-warning')
+                .addClass(`results-${type}`)
+                .show();
+        
+        // Автоматическое скрытие через 5 секунд
+        setTimeout(() => {
+            $results.fadeOut();
+        }, 5000);
+    }
+    
+    // Обновление статистики кэша
+    function updateCacheStats() {
+        if (!$('.atk-cache-management').length) return;
+        
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_cache_stats',
+                nonce: atkVedData.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    const stats = response.data;
+                    $('.cache-stat-transients .stat-number').text(stats.transients_count || 0);
+                    $('.cache-stat-theme .stat-number').text(stats.theme_cache_count || 0);
+                    $('.cache-stat-rest .stat-number').text(stats.rest_cache_count || 0);
+                    $('.cache-stat-pages .stat-number').text(stats.page_cache_count || 0);
+                    $('.cache-stat-size .stat-number').text(stats.cache_size_mb + ' MB');
+                }
+            }
+        });
+    }
+    
+    // Анимация прогресса оптимизации
+    function initOptimizationProgress() {
+        $('.optimization-progress').each(function() {
+            const $progress = $(this);
+            const $bar = $progress.find('.progress-bar');
+            const $text = $progress.find('.progress-text');
+            
+            // Симуляция прогресса
+            function simulateProgress() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        $text.text('Завершено!');
+                    } else {
+                        $text.text(`Выполняется... ${Math.round(progress)}%`);
+                    }
+                    $bar.css('width', progress + '%');
+                }, 200);
+            }
+            
+            // Запуск при начале оптимизации
+            $('.optimization-btn').on('click', function() {
+                $progress.show();
+                simulateProgress();
+            });
+        });
+    }
+    
+    // Инициализация всех компонентов оптимизации
+    $(document).ready(function() {
+        initDatabaseOptimization();
+        initOptimizationProgress();
+        updateCacheStats();
+    });
 
 });

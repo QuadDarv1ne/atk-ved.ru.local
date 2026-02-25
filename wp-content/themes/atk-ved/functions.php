@@ -78,12 +78,16 @@ require_once get_template_directory() . '/inc/demo-import.php';
 require_once get_template_directory() . '/inc/demo-content.php';
 require_once get_template_directory() . '/inc/welcome-page.php';
 require_once get_template_directory() . '/inc/performance-analytics.php';
+require_once get_template_directory() . '/inc/database-optimization.php';
+require_once get_template_directory() . '/inc/advanced-security.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
-    // Modern Design System v2.0
-    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '2.0');
-    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '2.0');
+    // Modern Design System v3.0
+    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-advanced-animations', get_template_directory_uri() . '/css/advanced-animations.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-modern-ui-components', get_template_directory_uri() . '/css/modern-ui-components.css', array('atk-ved-modern-design'), '3.0');
     
     // Критический CSS inline
     wp_add_inline_style('atk-ved-style', file_get_contents(get_template_directory() . '/css/critical.css'));
