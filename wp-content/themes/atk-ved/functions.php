@@ -1,53 +1,77 @@
 <?php
 /**
  * АТК ВЭД Theme Functions
- * 
+ *
  * @package ATK_VED
  * @since 1.0.0
- * @version 1.7.0
+ * @version 2.8.0
+ *
+ * @phpstan-ignore-file
  */
 
 declare(strict_types=1);
 
-// Подключение дополнительных файлов
+// ============================================================================
+// ПОДКЛЮЧЕНИЕ ФАЙЛОВ
+// ============================================================================
+
+// Ядро темы
 require_once get_template_directory() . '/inc/custom-post-types.php';
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/ajax-handlers.php';
-require_once get_template_directory() . '/inc/performance.php';
-require_once get_template_directory() . '/inc/seo.php';
-require_once get_template_directory() . '/inc/security.php';
-// require_once get_template_directory() . '/inc/optimization.php'; // Отключено - дублирует performance.php
 require_once get_template_directory() . '/inc/translations.php';
-require_once get_template_directory() . '/inc/analytics.php';
-require_once get_template_directory() . '/inc/cookie-banner.php';
-require_once get_template_directory() . '/inc/online-chat.php';
-require_once get_template_directory() . '/inc/webp-converter.php';
-require_once get_template_directory() . '/inc/testimonial-files.php';
-require_once get_template_directory() . '/inc/pwa.php';
-require_once get_template_directory() . '/inc/logger.php';
+
+// Безопасность
+require_once get_template_directory() . '/inc/security.php';
+require_once get_template_directory() . '/inc/security-advanced.php';
 require_once get_template_directory() . '/inc/recaptcha.php';
+require_once get_template_directory() . '/inc/cookie-banner.php';
+
+// Оптимизация
+require_once get_template_directory() . '/inc/logger.php';
+require_once get_template_directory() . '/inc/pwa.php';
+
+// SEO
+require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/sitemap.php';
 require_once get_template_directory() . '/inc/breadcrumbs.php';
+
+// Функциональность
 require_once get_template_directory() . '/inc/calculator.php';
-require_once get_template_directory() . '/inc/calculator-advanced.php';
-require_once get_template_directory() . '/inc/multilingual.php';
 require_once get_template_directory() . '/inc/shipment-tracking.php';
 require_once get_template_directory() . '/inc/ui-components.php';
+
+// ACF
 require_once get_template_directory() . '/inc/acf-field-groups.php';
 require_once get_template_directory() . '/inc/acf-options.php';
 require_once get_template_directory() . '/inc/acf-blocks.php';
+
+// REST API
 require_once get_template_directory() . '/inc/rest-api.php';
+require_once get_template_directory() . '/inc/rest-cache.php';
+
+// Виджеты
 require_once get_template_directory() . '/inc/callback-widget.php';
 require_once get_template_directory() . '/inc/chat-widget.php';
-require_once get_template_directory() . '/inc/enhanced-ui-components.php';
-require_once get_template_directory() . '/inc/accessibility-enhancements.php';
+
+// E-commerce
 require_once get_template_directory() . '/inc/woocommerce.php';
 require_once get_template_directory() . '/inc/amocrm.php';
-require_once get_template_directory() . '/inc/security-advanced.php';
+
+// Конверсия
 require_once get_template_directory() . '/inc/conversion.php';
+
+// Email
 require_once get_template_directory() . '/inc/email-templates.php';
+
+// Админка
 require_once get_template_directory() . '/inc/admin-dashboard.php';
 require_once get_template_directory() . '/inc/notifications.php';
+
+// UI улучшения
+require_once get_template_directory() . '/inc/enhanced-ui-components.php';
+require_once get_template_directory() . '/inc/accessibility-enhancements.php';
+require_once get_template_directory() . '/inc/health-check.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
