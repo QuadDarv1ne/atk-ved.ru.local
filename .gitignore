@@ -93,6 +93,7 @@ laragon/
 .env
 .env.local
 .env.*.local
+ACCOUNT's.md
 
 ## Большие файлы
 *.pdf

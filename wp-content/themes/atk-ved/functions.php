@@ -73,5 +73,154 @@ function atk_ved_customize_register($wp_customize) {
         'section' => 'atk_ved_contacts',
         'type' => 'email',
     ));
+    
+    // Адрес
+    $wp_customize->add_setting('atk_ved_address', array(
+        'default' => 'Москва, Россия',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    
+    $wp_customize->add_control('atk_ved_address', array(
+        'label' => __('Адрес', 'atk-ved'),
+        'section' => 'atk_ved_contacts',
+        'type' => 'text',
+    ));
+    
+    // Секция социальных сетей
+    $wp_customize->add_section('atk_ved_social', array(
+        'title' => __('Социальные сети', 'atk-ved'),
+        'priority' => 31,
+    ));
+    
+    // WhatsApp
+    $wp_customize->add_setting('atk_ved_whatsapp', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    
+    $wp_customize->add_control('atk_ved_whatsapp', array(
+        'label' => __('WhatsApp (ссылка)', 'atk-ved'),
+        'section' => 'atk_ved_social',
+        'type' => 'url',
+    ));
+    
+    // Telegram
+    $wp_customize->add_setting('atk_ved_telegram', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    
+    $wp_customize->add_control('atk_ved_telegram', array(
+        'label' => __('Telegram (ссылка)', 'atk-ved'),
+        'section' => 'atk_ved_social',
+        'type' => 'url',
+    ));
+    
+    // VK
+    $wp_customize->add_setting('atk_ved_vk', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    
+    $wp_customize->add_control('atk_ved_vk', array(
+        'label' => __('VK (ссылка)', 'atk-ved'),
+        'section' => 'atk_ved_social',
+        'type' => 'url',
+    ));
+    
+    // Секция Hero
+    $wp_customize->add_section('atk_ved_hero', array(
+        'title' => __('Главный экран', 'atk-ved'),
+        'priority' => 32,
+    ));
+    
+    // Заголовок Hero
+    $wp_customize->add_setting('atk_ved_hero_title', array(
+        'default' => 'ТОВАРЫ ДЛЯ МАРКЕТПЛЕЙСОВ ИЗ КИТАЯ ОПТОМ',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    
+    $wp_customize->add_control('atk_ved_hero_title', array(
+        'label' => __('Заголовок', 'atk-ved'),
+        'section' => 'atk_ved_hero',
+        'type' => 'text',
+    ));
+    
+    // Статистика 1
+    $wp_customize->add_setting('atk_ved_stat1_number', array(
+        'default' => '500+',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    
+    $wp_customize->add_control('atk_ved_stat1_number', array(
+        'label' => __('Статистика 1 - Число', 'atk-ved'),
+        'section' => 'atk_ved_hero',
+        'type' => 'text',
+    ));
+    
+    $wp_customize->add_setting('atk_ved_stat1_label', array(
+        'default' => 'КЛИЕНТОВ',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    
+    $wp_customize->add_control('atk_ved_stat1_label', array(
+        'label' => __('Статистика 1 - Подпись', 'atk-ved'),
+        'section' => 'atk_ved_hero',
+        'type' => 'text',
+    ));
 }
 add_action('customize_register', 'atk_ved_customize_register');
+
+// Добавление размеров изображений
+add_image_size('atk-ved-hero', 800, 600, true);
+add_image_size('atk-ved-service', 400, 300, true);
+
+// Отключение эмодзи
+function atk_ved_disable_emojis() {
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+}
+add_action('init', 'atk_ved_disable_emojis');
+
+// Оптимизация загрузки скриптов
+function atk_ved_optimize_scripts() {
+    // Удаление версий из URL
+    if (!is_admin()) {
+        wp_deregister_script('jquery');
+        wp_register_script('jquery', 'https://code.jquery.com/jquery-3.6.0.min.js', false, null, true);
+        wp_enqueue_script('jquery');
+    }
+}
+add_action('wp_enqueue_scripts', 'atk_ved_optimize_scripts', 1);
+
+// Добавление preload для критических ресурсов
+function atk_ved_add_preload() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
+    echo '<link rel="dns-prefetch" href="https://fonts.googleapis.com">';
+}
+add_action('wp_head', 'atk_ved_add_preload', 1);
+
+// Шорткод для кнопки
+function atk_ved_button_shortcode($atts, $content = null) {
+    $atts = shortcode_atts(array(
+        'url' => '#',
+        'style' => 'primary',
+        'target' => '_self'
+    ), $atts);
+    
+    return '<a href="' . esc_url($atts['url']) . '" class="cta-button ' . esc_attr($atts['style']) . '" target="' . esc_attr($atts['target']) . '">' . esc_html($content) . '</a>';
+}
+add_shortcode('button', 'atk_ved_button_shortcode');
+
+// Шорткод для иконки
+function atk_ved_icon_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'name' => 'check',
+        'size' => '24'
+    ), $atts);
+    
+    return '<span class="icon icon-' . esc_attr($atts['name']) . '" style="font-size: ' . esc_attr($atts['size']) . 'px;"></span>';
+}
+add_shortcode('icon', 'atk_ved_icon_shortcode');

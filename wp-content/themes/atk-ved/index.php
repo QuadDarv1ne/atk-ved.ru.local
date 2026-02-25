@@ -75,6 +75,24 @@
             </div>
             <div class="delivery-info">
                 <p>Мы предлагаем различные варианты доставки грузов из Китая в зависимости от ваших потребностей, сроков и бюджета.</p>
+                <div class="delivery-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Полное таможенное оформление</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Страхование грузов</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Отслеживание в реальном времени</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Доставка до двери</span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="delivery-methods">
@@ -82,16 +100,48 @@
                 <div class="method-icon">✈️</div>
                 <h3>Авиа</h3>
                 <p>5-10 дней</p>
+                <span class="method-desc">Быстрая доставка для срочных грузов</span>
             </div>
             <div class="method-card">
                 <div class="method-icon">🚢</div>
                 <h3>Море</h3>
                 <p>30-45 дней</p>
+                <span class="method-desc">Экономичный вариант для крупных партий</span>
             </div>
             <div class="method-card">
                 <div class="method-icon">🚂</div>
                 <h3>ЖД</h3>
                 <p>15-20 дней</p>
+                <span class="method-desc">Оптимальное соотношение цены и скорости</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Advantages Section -->
+<section class="advantages-section">
+    <div class="container">
+        <h2 class="section-title">ПОЧЕМУ ВЫБИРАЮТ НАС</h2>
+        <div class="advantages-grid">
+            <div class="advantage-card">
+                <div class="advantage-icon">🏆</div>
+                <h3>Опыт работы</h3>
+                <p>Более 5 лет успешной работы на рынке импорта из Китая</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">💰</div>
+                <h3>Выгодные цены</h3>
+                <p>Прямые контракты с производителями без посредников</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">🔒</div>
+                <h3>Гарантии</h3>
+                <p>Официальный договор и полное юридическое сопровождение</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">⚡</div>
+                <h3>Быстрая работа</h3>
+                <p>Оперативная обработка заказов и доставка в срок</p>
             </div>
         </div>
     </div>
@@ -167,22 +217,22 @@
         <h2 class="section-title">ОТЗЫВЫ О СОТРУДНИЧЕСТВЕ</h2>
         <div class="reviews-grid">
             <div class="review-card">
-                <div class="review-avatar"></div>
+                <div class="review-avatar">ИП</div>
                 <h4>Иван П.</h4>
-                <p>Отличная работа, все четко и в срок!</p>
+                <p>Отличная работа, все четко и в срок! Рекомендую.</p>
             </div>
             <div class="review-card">
-                <div class="review-avatar"></div>
+                <div class="review-avatar">МС</div>
                 <h4>Мария С.</h4>
                 <p>Помогли найти качественный товар по хорошей цене</p>
             </div>
             <div class="review-card">
-                <div class="review-avatar"></div>
+                <div class="review-avatar">АК</div>
                 <h4>Алексей К.</h4>
                 <p>Работаем уже 2 года, всем доволен</p>
             </div>
             <div class="review-card">
-                <div class="review-avatar"></div>
+                <div class="review-avatar">ОД</div>
                 <h4>Ольга Д.</h4>
                 <p>Профессиональный подход к делу</p>
             </div>
