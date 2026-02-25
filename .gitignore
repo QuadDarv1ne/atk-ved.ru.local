@@ -93,3 +93,7 @@ laragon/
 .env
 .env.local
 .env.*.local
+
+## Большие файлы
+*.pdf
+img-project/
