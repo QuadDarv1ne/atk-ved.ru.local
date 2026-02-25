@@ -83,72 +83,66 @@ require_once get_template_directory() . '/inc/advanced-security.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
-    // Modern Design System v3.0
-    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '3.0');
-    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '3.0');
-    wp_enqueue_style('atk-ved-advanced-animations', get_template_directory_uri() . '/css/advanced-animations.css', array(), '3.0');
-    wp_enqueue_style('atk-ved-modern-ui-components', get_template_directory_uri() . '/css/modern-ui-components.css', array('atk-ved-modern-design'), '3.0');
-    
+    // Современная система дизайна v3.1
+    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '3.1');
+    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '3.1');
+    wp_enqueue_style('atk-ved-advanced-animations', get_template_directory_uri() . '/css/advanced-animations.css', array(), '3.1');
+    wp_enqueue_style('atk-ved-modern-ui-components', get_template_directory_uri() . '/css/modern-ui-components.css', array('atk-ved-modern-design'), '3.1');
+    wp_enqueue_style('atk-ved-landing-sections', get_template_directory_uri() . '/css/landing-sections.css', array(), '3.1');
+
     // Критический CSS inline
     wp_add_inline_style('atk-ved-style', file_get_contents(get_template_directory() . '/css/critical.css'));
 
-    // Стили
-    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array('atk-ved-modern-design'), '2.0');
-    wp_enqueue_style('atk-ved-modal', get_template_directory_uri() . '/css/modal.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-calculator', get_template_directory_uri() . '/css/calculator.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-enhancements', get_template_directory_uri() . '/css/enhancements.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-statistics', get_template_directory_uri() . '/css/statistics.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-tracking', get_template_directory_uri() . '/css/tracking.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-gallery', get_template_directory_uri() . '/css/gallery.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-404', get_template_directory_uri() . '/css/404.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-thank-you', get_template_directory_uri() . '/css/thank-you.css', array(), '1.9');
+    // Основные стили
+    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array('atk-ved-modern-design'), '3.1');
 
-    // UX Enhancements v1.9
-    wp_enqueue_style('atk-ved-reviews-slider', get_template_directory_uri() . '/css/reviews-slider.css', array(), '2.0');
-    wp_enqueue_style('atk-ved-callback-modal', get_template_directory_uri() . '/css/callback-modal.css', array(), '2.0');
-    wp_enqueue_style('atk-ved-hero-counters', get_template_directory_uri() . '/css/hero-counters.css', array(), '2.0');
-    wp_enqueue_style('atk-ved-form-loader', get_template_directory_uri() . '/css/form-loader.css', array(), '2.0');
+    // Компоненты UI
+    wp_enqueue_style('atk-ved-ui-components', get_template_directory_uri() . '/css/ui-components.css', array('atk-ved-modern-design'), '3.1');
+    wp_enqueue_style('atk-ved-additional-components', get_template_directory_uri() . '/css/additional-components.css', array('atk-ved-ui-components'), '3.1');
     
-    // Advanced Features v2.0
-    wp_enqueue_style('atk-ved-calculator-advanced', get_template_directory_uri() . '/css/calculator-advanced.css', array(), '2.0');
-    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '2.0');
-    wp_enqueue_style('atk-ved-multilingual', get_template_directory_uri() . '/css/multilingual.css', array(), '2.0');
-
-    // Скрипты
-    wp_enqueue_script('atk-ved-loader', get_template_directory_uri() . '/js/loader.js', array(), '1.9', false);
-    wp_enqueue_script('atk-ved-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-modal', get_template_directory_uri() . '/js/modal.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-calculator', get_template_directory_uri() . '/js/calculator.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-enhancements', get_template_directory_uri() . '/js/enhancements.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-statistics', get_template_directory_uri() . '/js/statistics.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-tracking', get_template_directory_uri() . '/js/tracking.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-gallery', get_template_directory_uri() . '/js/gallery.js', array('jquery'), '1.9', true);
-
-    // Calculator v2.0
-    wp_enqueue_style('atk-ved-calculator', get_template_directory_uri() . '/css/calculator.css', array(), '2.0');
-    wp_enqueue_script('atk-ved-calculator-frontend', get_template_directory_uri() . '/js/calculator-frontend.js', array('jquery'), '2.0', true);
-
-    // Shipment Tracking v2.0
-    wp_enqueue_style('atk-ved-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', array(), '2.0');
-    wp_enqueue_script('atk-ved-tracking-frontend', get_template_directory_uri() . '/js/shipment-tracking.js', array('jquery'), '2.0', true);
-
-    // UI Components v2.1
-    wp_enqueue_style('atk-ved-ui-components', get_template_directory_uri() . '/css/ui-components.css', array('atk-ved-modern-design'), '2.1');
-    wp_enqueue_script('atk-ved-ui-components', get_template_directory_uri() . '/js/ui-components.js', array('jquery'), '2.1', true);
-
-    // Additional Components v2.2
-    wp_enqueue_style('atk-ved-additional-components', get_template_directory_uri() . '/css/additional-components.css', array('atk-ved-ui-components'), '2.2');
-    wp_enqueue_script('atk-ved-additional-components', get_template_directory_uri() . '/js/additional-components.js', array('jquery'), '2.2', true);
-
-    // UX Enhancements v1.9
-    wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '2.0', true);
-    wp_enqueue_script('atk-ved-callback-modal', get_template_directory_uri() . '/js/callback-modal.js', array('jquery'), '2.0', true);
-    wp_enqueue_script('atk-ved-hero-counters', get_template_directory_uri() . '/js/hero-counters.js', array('jquery'), '2.0', true);
-    wp_enqueue_script('atk-ved-form-loader', get_template_directory_uri() . '/js/form-loader.js', array('jquery'), '2.0', true);
+    // Функциональные компоненты
+    wp_enqueue_style('atk-ved-modal', get_template_directory_uri() . '/css/modal.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-calculator', get_template_directory_uri() . '/css/calculator.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-gallery', get_template_directory_uri() . '/css/gallery.css', array(), '3.0');
     
-    // Advanced Features v2.0
-    wp_enqueue_script('atk-ved-calculator-advanced', get_template_directory_uri() . '/js/calculator-advanced.js', array('jquery', 'atk-ved-calculator'), '2.0', true);
-    wp_enqueue_script('atk-ved-multilingual', get_template_directory_uri() . '/js/multilingual.js', array('jquery'), '2.0', true);
+    // UX улучшения
+    wp_enqueue_style('atk-ved-reviews-slider', get_template_directory_uri() . '/css/reviews-slider.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-callback-modal', get_template_directory_uri() . '/css/callback-modal.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-hero-counters', get_template_directory_uri() . '/css/hero-counters.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-form-loader', get_template_directory_uri() . '/css/form-loader.css', array(), '3.0');
+    
+    // Специализированные страницы
+    wp_enqueue_style('atk-ved-404', get_template_directory_uri() . '/css/404.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-thank-you', get_template_directory_uri() . '/css/thank-you.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-statistics', get_template_directory_uri() . '/css/statistics.css', array(), '3.0');
+    wp_enqueue_style('atk-ved-enhancements', get_template_directory_uri() . '/css/enhancements.css', array(), '3.0');
+
+    // Основные скрипты
+    wp_enqueue_script('atk-ved-loader', get_template_directory_uri() . '/js/loader.js', array(), '3.0', false);
+    wp_enqueue_script('atk-ved-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '3.0', true);
+    
+    // Компоненты UI
+    wp_enqueue_script('atk-ved-ui-components', get_template_directory_uri() . '/js/ui-components.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-additional-components', get_template_directory_uri() . '/js/additional-components.js', array('jquery'), '3.0', true);
+    
+    // Функциональные компоненты
+    wp_enqueue_script('atk-ved-modal', get_template_directory_uri() . '/js/modal.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-calculator', get_template_directory_uri() . '/js/calculator.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-calculator-frontend', get_template_directory_uri() . '/js/calculator-frontend.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-tracking-frontend', get_template_directory_uri() . '/js/shipment-tracking.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-gallery', get_template_directory_uri() . '/js/gallery.js', array('jquery'), '3.0', true);
+    
+    // UX улучшения
+    wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-callback-modal', get_template_directory_uri() . '/js/callback-modal.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-hero-counters', get_template_directory_uri() . '/js/hero-counters.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-form-loader', get_template_directory_uri() . '/js/form-loader.js', array('jquery'), '3.0', true);
+    
+    // Вспомогательные скрипты
+    wp_enqueue_script('atk-ved-enhancements', get_template_directory_uri() . '/js/enhancements.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-statistics', get_template_directory_uri() . '/js/statistics.js', array('jquery'), '3.0', true);
+    wp_enqueue_script('atk-ved-tracking', get_template_directory_uri() . '/js/tracking.js', array('jquery'), '3.0', true);
 
     // Локализация скриптов
     wp_localize_script('atk-ved-script', 'atkVedData', array(
@@ -182,8 +176,49 @@ function atk_ved_theme_support() {
     add_theme_support('post-thumbnails');
     add_theme_support('custom-logo');
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
+    add_theme_support('responsive-embeds');
+    add_theme_support('disable-custom-colors');
+    add_theme_support('disable-custom-font-sizes');
+    add_theme_support('editor-styles');
+    add_theme_support('wp-block-styles');
+    add_theme_support('align-wide');
 }
-add_action('after_setup_theme', 'atk_ved_theme_support');
+// Оптимизация изображений
+function atk_ved_optimize_images($image_data) {
+    // Добавляем ленивую загрузку
+    $image_data['attr']['loading'] = 'lazy';
+    
+    // Добавляем атрибуты для оптимизации
+    if (!isset($image_data['attr']['decoding'])) {
+        $image_data['attr']['decoding'] = 'async';
+    }
+    
+    return $image_data;
+}
+add_filter('wp_get_attachment_image_attributes', 'atk_ved_optimize_images');
+
+// Минификация HTML вывода
+function atk_ved_minify_html_output($buffer) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        return $buffer;
+    }
+    
+    // Удаляем комментарии
+    $buffer = preg_replace('/<!--(.|\s)*?-->/', '', $buffer);
+    
+    // Удаляем лишние пробелы
+    $buffer = preg_replace('/\s+/', ' ', $buffer);
+    
+    // Удаляем пробелы вокруг тегов
+    $buffer = preg_replace('/>\s+</', '><', $buffer);
+    
+    return $buffer;
+}
+
+// Добавим условие для минификации только на фронтенде
+if (!is_admin() && !defined('DOING_AJAX') && !defined('DOING_CRON')) {
+    ob_start('atk_ved_minify_html_output');
+}
 
 // Регистрация виджетов
 function atk_ved_widgets_init() {
@@ -198,6 +233,37 @@ function atk_ved_widgets_init() {
     ));
 }
 add_action('widgets_init', 'atk_ved_widgets_init');
+
+// Оптимизация заголовков
+function atk_ved_optimize_headers() {
+    // Добавляем предзагрузку критических ресурсов
+    if (is_front_page()) {
+        echo '<link rel="preload" href="' . get_template_directory_uri() . '/css/modern-design.css" as="style">' . "\n";
+        echo '<link rel="preload" href="' . get_template_directory_uri() . '/js/main.js" as="script">' . "\n";
+    }
+    
+    // Добавляем предконнект к внешним сервисам
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+}
+add_action('wp_head', 'atk_ved_optimize_headers', 1);
+
+// Оптимизация DNS prefetch
+function atk_ved_dns_prefetch() {
+    echo '<link rel="dns-prefetch" href="//www.google-analytics.com">' . "\n";
+    echo '<link rel="dns-prefetch" href="//mc.yandex.ru">' . "\n";
+}
+add_action('wp_head', 'atk_ved_dns_prefetch', 0);
+
+// Удаление ненужных мета-тегов
+function atk_ved_clean_head() {
+    remove_action('wp_head', 'wp_generator');
+    remove_action('wp_head', 'wlwmanifest_link');
+    remove_action('wp_head', 'rsd_link');
+    remove_action('wp_head', 'wp_shortlink_wp_head');
+    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
+}
+add_action('init', 'atk_ved_clean_head');
 function atk_ved_customize_register($wp_customize) {
     // Секция контактов
     $wp_customize->add_section('atk_ved_contacts', array(

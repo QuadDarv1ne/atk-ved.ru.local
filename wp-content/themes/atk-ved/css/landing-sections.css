@@ -1,0 +1,906 @@
+/**
+ * Landing Page Sections v3.1
+ * Современные секции для лендинга
+ * 
+ * @package ATK_VED
+ * @since 3.1.0
+ */
+
+/* ==========================================================================
+   MODERN HEADER (Современная шапка)
+   ========================================================================== */
+
+.header-modern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: var(--z-fixed);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.header-modern.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.header-modern-transparent {
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
+}
+
+.header-modern-transparent.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+}
+
+.header-content-modern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    transition: padding var(--duration-normal);
+}
+
+.header-modern.scrolled .header-content-modern {
+    padding: 10px 0;
+}
+
+/* Logo Modern */
+.logo-modern {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.logo-icon-modern {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    font-size: 24px;
+    font-weight: bold;
+    transition: transform var(--duration-fast);
+}
+
+.logo-modern:hover .logo-icon-modern {
+    transform: rotate(10deg) scale(1.05);
+}
+
+.logo-text-modern {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-name-modern {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.logo-tagline-modern {
+    font-size: 12px;
+    color: var(--color-gray-500);
+}
+
+/* Navigation Modern */
+.nav-modern {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-link-modern {
+    position: relative;
+    color: var(--color-gray-700);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 0;
+    transition: color var(--duration-fast);
+}
+
+.nav-link-modern::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--duration-normal) var(--ease-bounce);
+}
+
+.nav-link-modern:hover {
+    color: var(--color-primary);
+}
+
+.nav-link-modern:hover::after {
+    width: 100%;
+}
+
+.nav-link-modern.active::after {
+    width: 100%;
+}
+
+/* Header Actions */
+.header-actions-modern {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-btn-modern {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all var(--duration-normal);
+}
+
+.header-btn-ghost {
+    color: var(--color-gray-700);
+    background: transparent;
+}
+
+.header-btn-ghost:hover {
+    color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+.header-btn-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.header-btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.4);
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle-modern {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.menu-toggle-modern span {
+    width: 25px;
+    height: 3px;
+    background: var(--color-gray-900);
+    border-radius: 2px;
+    transition: all var(--duration-fast);
+}
+
+.menu-toggle-modern.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle-modern.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle-modern.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* ==========================================================================
+   MODERN FOOTER (Современный подвал)
+   ========================================================================== */
+
+.footer-modern {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    color: var(--color-white);
+    padding: 60px 0 30px;
+}
+
+.footer-content-modern {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-col-modern h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--color-white);
+}
+
+.footer-col-modern p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-links-modern {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links-modern li {
+    margin-bottom: 12px;
+}
+
+.footer-links-modern a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all var(--duration-fast);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-links-modern a:hover {
+    color: var(--color-primary);
+    transform: translateX(5px);
+}
+
+.footer-links-modern a::before {
+    content: '→';
+    opacity: 0;
+    transition: opacity var(--duration-fast);
+}
+
+.footer-links-modern a:hover::before {
+    opacity: 1;
+}
+
+/* Social Links Modern */
+.social-links-modern {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.social-link-modern {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 18px;
+    transition: all var(--duration-normal) var(--ease-bounce);
+}
+
+.social-link-modern:hover {
+    background: var(--color-primary);
+    transform: translateY(-5px) rotate(10deg);
+    box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.4);
+}
+
+/* Footer Bottom */
+.footer-bottom-modern {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-copyright {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-bottom-links a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color var(--duration-fast);
+}
+
+.footer-bottom-links a:hover {
+    color: var(--color-primary);
+}
+
+/* ==========================================================================
+   PRICING TABLES (Таблицы цен)
+   ========================================================================== */
+
+.pricing-section-modern {
+    padding: 100px 0;
+    background: var(--color-gray-50);
+}
+
+.pricing-header-modern {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.pricing-title-modern {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, var(--color-gray-900), var(--color-gray-700));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.pricing-subtitle-modern {
+    font-size: 18px;
+    color: var(--color-gray-600);
+}
+
+.pricing-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    align-items: stretch;
+}
+
+.pricing-card-modern {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: 40px 30px;
+    text-align: center;
+    transition: all var(--duration-slow) var(--ease-bounce);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-slow) var(--ease-bounce);
+}
+
+.pricing-card-modern:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border-color: rgba(var(--color-primary-rgb), 0.2);
+}
+
+.pricing-card-modern:hover::before {
+    transform: scaleX(1);
+}
+
+.pricing-card-modern.featured {
+    border-color: var(--color-primary);
+    transform: scale(1.05);
+}
+
+.pricing-card-modern.featured::before {
+    transform: scaleX(1);
+}
+
+.pricing-badge-modern {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pricing-icon-modern {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.1), rgba(var(--color-primary-rgb), 0.05));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+}
+
+.pricing-name-modern {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--color-gray-900);
+}
+
+.pricing-price-modern {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 30px;
+}
+
+.pricing-price-modern span {
+    font-size: 18px;
+    color: var(--color-gray-500);
+    font-weight: 400;
+}
+
+.pricing-features-modern {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px;
+    text-align: left;
+}
+
+.pricing-features-modern li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-gray-100);
+    font-size: 15px;
+    color: var(--color-gray-700);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pricing-features-modern li::before {
+    content: '✓';
+    color: var(--color-success);
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.pricing-features-modern li.disabled {
+    color: var(--color-gray-400);
+    text-decoration: line-through;
+}
+
+.pricing-features-modern li.disabled::before {
+    content: '✗';
+    color: var(--color-gray-300);
+}
+
+.pricing-btn-modern {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--duration-normal);
+}
+
+.pricing-btn-modern:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.pricing-card-modern.featured .pricing-btn-modern {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.pricing-card-modern.featured .pricing-btn-modern:hover {
+    background: var(--color-primary-dark);
+}
+
+/* ==========================================================================
+   FEATURES SECTION (Секция преимуществ)
+   ========================================================================== */
+
+.features-section-modern {
+    padding: 100px 0;
+    background: var(--color-white);
+}
+
+.features-header-modern {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.features-title-modern {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.features-subtitle-modern {
+    font-size: 18px;
+    color: var(--color-gray-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.features-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.feature-card-modern {
+    text-align: center;
+    padding: 40px 30px;
+    border-radius: var(--radius-xl);
+    transition: all var(--duration-slow) var(--ease-bounce);
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-100);
+}
+
+.feature-card-modern:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    border-color: transparent;
+}
+
+.feature-icon-modern {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: var(--color-white);
+    transition: transform var(--duration-normal) var(--ease-bounce);
+}
+
+.feature-card-modern:hover .feature-icon-modern {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.feature-title-modern {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--color-gray-900);
+}
+
+.feature-description-modern {
+    font-size: 15px;
+    color: var(--color-gray-600);
+    line-height: 1.8;
+}
+
+/* ==========================================================================
+   TEAM SECTION (Секция команды)
+   ========================================================================== */
+
+.team-section-modern {
+    padding: 100px 0;
+    background: var(--color-gray-50);
+}
+
+.team-header-modern {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.team-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.team-card-modern {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--duration-slow) var(--ease-bounce);
+}
+
+.team-card-modern:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.team-image-modern {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.team-image-modern img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slower);
+}
+
+.team-card-modern:hover .team-image-modern img {
+    transform: scale(1.1);
+}
+
+.team-social-modern {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    transform: translateY(100%);
+    transition: transform var(--duration-normal) var(--ease-bounce);
+}
+
+.team-card-modern:hover .team-social-modern {
+    transform: translateY(0);
+}
+
+.team-social-link-modern {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 16px;
+    transition: all var(--duration-fast);
+}
+
+.team-social-link-modern:hover {
+    background: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.team-info-modern {
+    padding: 25px;
+    text-align: center;
+}
+
+.team-name-modern {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: 5px;
+}
+
+.team-position-modern {
+    font-size: 14px;
+    color: var(--color-primary);
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.team-bio-modern {
+    font-size: 14px;
+    color: var(--color-gray-600);
+    line-height: 1.7;
+}
+
+/* ==========================================================================
+   TESTIMONIALS SECTION (Секция отзывов)
+   ========================================================================== */
+
+.testimonials-section-modern {
+    padding: 100px 0;
+    background: var(--color-white);
+}
+
+.testimonials-header-modern {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.testimonials-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.testimonial-card-modern {
+    background: var(--color-gray-50);
+    border-radius: var(--radius-xl);
+    padding: 30px;
+    transition: all var(--duration-slow) var(--ease-bounce);
+}
+
+.testimonial-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    background: var(--color-white);
+}
+
+.testimonial-rating-modern {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.testimonial-rating-modern .star {
+    color: #FFC107;
+}
+
+.testimonial-text-modern {
+    font-size: 15px;
+    color: var(--color-gray-700);
+    line-height: 1.8;
+    margin-bottom: 25px;
+    font-style: italic;
+}
+
+.testimonial-author-modern {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.testimonial-avatar-modern {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.testimonial-name-modern {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-gray-900);
+}
+
+.testimonial-position-modern {
+    font-size: 13px;
+    color: var(--color-gray-500);
+}
+
+/* ==========================================================================
+   SECTION DIVIDERS (Разделители секций)
+   ========================================================================== */
+
+.section-divider-modern {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.section-divider-modern svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 100px;
+}
+
+.section-divider-modern .divider-fill {
+    fill: var(--color-white);
+}
+
+.section-divider-modern.flipped {
+    top: 0;
+    bottom: auto;
+    transform: rotate(180deg);
+}
+
+/* Wave Divider */
+.divider-wave svg {
+    height: 80px;
+}
+
+/* Slope Divider */
+.divider-slope svg {
+    height: 100px;
+}
+
+/* Triangle Divider */
+.divider-triangle svg {
+    height: 100px;
+}
+
+/* Curve Divider */
+.divider-curve svg {
+    height: 150px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+    .pricing-grid-modern,
+    .features-grid-modern {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .team-grid-modern,
+    .testimonials-grid-modern {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content-modern {
+        padding: 10px 0;
+    }
+    
+    .nav-modern {
+        display: none;
+    }
+    
+    .menu-toggle-modern {
+        display: flex;
+    }
+    
+    .pricing-grid-modern,
+    .features-grid-modern,
+    .team-grid-modern,
+    .testimonials-grid-modern {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-card-modern.featured {
+        transform: none;
+    }
+    
+    .footer-content-modern {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .footer-bottom-modern {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ==========================================================================
+   DARK MODE SUPPORT
+   ========================================================================== */
+
+.dark-mode .header-modern {
+    background: rgba(26, 26, 26, 0.95);
+}
+
+.dark-mode .footer-modern {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.dark-mode .pricing-card-modern,
+.dark-mode .feature-card-modern,
+.dark-mode .team-card-modern,
+.dark-mode .testimonial-card-modern {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+}
+
+.dark-mode .pricing-features-modern li {
+    border-bottom-color: var(--color-gray-700);
+}

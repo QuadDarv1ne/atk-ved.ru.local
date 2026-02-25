@@ -1252,5 +1252,277 @@ jQuery(document).ready(function($) {
         initOptimizationProgress();
         updateCacheStats();
     });
+    
+    // ============================================================================
+    // JAVASCRIPT ДЛЯ ADVANCED SECURITY v2.9.1
+    // ============================================================================
+    
+    // Инициализация системы безопасности
+    function initAdvancedSecurity() {
+        // Обработчики кнопок безопасности
+        $('.btn-scan').on('click', function() {
+            executeSecurityAction('scan', $(this));
+        });
+        
+        $('.btn-report').on('click', function() {
+            executeSecurityAction('report', $(this));
+        });
+        
+        $('.btn-fix').on('click', function() {
+            const fixType = $(this).data('fix-type');
+            executeSecurityFix(fixType, $(this));
+        });
+        
+        // Автоматическое обновление статуса безопасности
+        if ($('.atk-security-dashboard').length) {
+            setInterval(updateSecurityStatus, 60000); // Обновление каждую минуту
+        }
+    }
+    
+    // Выполнение действий безопасности
+    function executeSecurityAction(action, $button) {
+        const originalText = $button.html();
+        const actionText = {
+            'scan': 'Сканирование...',
+            'report': 'Генерация отчета...'
+        };
+        
+        // Показываем прогресс
+        $button.addClass('btn-loading').html(actionText[action]);
+        $('.security-progress').show();
+        
+        // Отправляем AJAX запрос
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_security_' + action,
+                nonce: atkVedData.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    if (action === 'scan') {
+                        displaySecurityScanResults(response.data);
+                    } else if (action === 'report') {
+                        displaySecurityReport(response.data);
+                    }
+                } else {
+                    showSecurityMessage('Ошибка выполнения: ' + (response.data?.message || 'Неизвестная ошибка'), 'error');
+                }
+            },
+            error: function() {
+                showSecurityMessage('Ошибка соединения с сервером', 'error');
+            },
+            complete: function() {
+                $button.removeClass('btn-loading').html(originalText);
+                $('.security-progress').hide();
+            }
+        });
+    }
+    
+    // Выполнение исправлений безопасности
+    function executeSecurityFix(fixType, $button) {
+        const originalText = $button.html();
+        
+        $button.addClass('btn-loading').html('Применение...');
+        
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_security_fix',
+                fix_type: fixType,
+                nonce: atkVedData.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    const result = response.data;
+                    if (result.status === 'success') {
+                        showSecurityMessage(result.message, 'success');
+                        updateSecurityStatus(); // Обновляем статус после исправления
+                    } else if (result.status === 'manual') {
+                        showSecurityMessage(result.message, 'warning');
+                    } else {
+                        showSecurityMessage(result.message, 'error');
+                    }
+                } else {
+                    showSecurityMessage('Ошибка при применении исправления', 'error');
+                }
+            },
+            error: function() {
+                showSecurityMessage('Ошибка соединения', 'error');
+            },
+            complete: function() {
+                $button.removeClass('btn-loading').html(originalText);
+            }
+        });
+    }
+    
+    // Отображение результатов сканирования
+    function displaySecurityScanResults(data) {
+        // Обновляем оценку безопасности
+        const score = calculateSecurityScore(data);
+        $('.security-score').text(score).removeClass('score-excellent score-good score-fair score-poor')
+                           .addClass(getScoreClass(score));
+        
+        // Обновляем карточки статуса
+        if (data.checks) {
+            $.each(data.checks, function(checkKey, check) {
+                const $card = $('.security-card[data-check="' + checkKey + '"]');
+                if ($card.length) {
+                    $card.removeClass('card-secure card-warning card-error')
+                         .addClass(getCardClass(check.status));
+                    $card.find('.status-icon').removeClass('status-ok status-warning status-error')
+                         .addClass('status-' + check.status);
+                }
+            });
+        }
+        
+        // Отображаем проблемы
+        if (data.issues && data.issues.length > 0) {
+            let issuesHtml = '';
+            $.each(data.issues, function(index, issue) {
+                issuesHtml += `
+                    <li class="issue-item issue-${issue.type}">
+                        <h4>
+                            <span class="status-icon status-${issue.type}">${issue.type === 'error' ? '❌' : '⚠️'}</span>
+                            ${issue.title}
+                        </h4>
+                        <p class="issue-description">${issue.description}</p>
+                        <div class="issue-actions">
+                            <button class="security-btn btn-fix" data-fix-type="${issue.check_key}">
+                                Исправить
+                            </button>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            $('.issues-list').html(issuesHtml);
+            $('.security-issues').show();
+        } else {
+            $('.issues-list').html('<li class="issue-item issue-success"><p>Проблем безопасности не обнаружено! 🎉</p></li>');
+        }
+        
+        showSecurityMessage('Сканирование завершено успешно', 'success');
+    }
+    
+    // Отображение отчета по безопасности
+    function displaySecurityReport(data) {
+        // Обновляем оценку безопасности
+        $('.security-score').text(data.security_score).removeClass('score-excellent score-good score-fair score-poor')
+                           .addClass(getScoreClass(data.security_score));
+        
+        // Отображаем последние события
+        if (data.recent_events && data.recent_events.length > 0) {
+            let eventsHtml = '';
+            $.each(data.recent_events.slice(-10), function(index, event) {
+                const eventTypeClass = getEventTypeClass(event.message);
+                eventsHtml += `
+                    <tr class="event-${eventTypeClass}">
+                        <td>${event.timestamp}</td>
+                        <td>${event.message}</td>
+                        <td>${event.ip || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+            
+            $('.events-table tbody').html(eventsHtml);
+        }
+        
+        // Отображаем заблокированные IP
+        if (data.blocked_ips && Object.keys(data.blocked_ips).length > 0) {
+            let ipHtml = '';
+            $.each(data.blocked_ips, function(ip, expiry) {
+                const expiryDate = new Date(expiry * 1000).toLocaleString();
+                ipHtml += `
+                    <div class="ip-item">
+                        <span class="ip-address">${ip}</span>
+                        <span class="ip-expiry">Истекает: ${expiryDate}</span>
+                    </div>
+                `;
+            });
+            $('.ip-list').html(ipHtml);
+            $('.blocked-ips-section').show();
+        }
+        
+        showSecurityMessage('Отчет сгенерирован успешно', 'success');
+    }
+    
+    // Обновление статуса безопасности
+    function updateSecurityStatus() {
+        $.ajax({
+            url: atkVedData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'atk_ved_security_scan',
+                nonce: atkVedData.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    const score = calculateSecurityScore(response.data);
+                    $('.security-score').text(score).removeClass('score-excellent score-good score-fair score-poor')
+                                       .addClass(getScoreClass(score));
+                }
+            }
+        });
+    }
+    
+    // Показ сообщений безопасности
+    function showSecurityMessage(message, type) {
+        const messageTypeClass = {
+            'success': 'results-success',
+            'error': 'results-error',
+            'warning': 'results-warning'
+        };
+        
+        const $message = $('<div class="optimization-results ' + messageTypeClass[type] + '">' +
+                          '<div class="results-content"><p>' + message + '</p></div></div>');
+        
+        $('.atk-security-dashboard').prepend($message);
+        
+        // Автоматическое скрытие через 5 секунд
+        setTimeout(() => {
+            $message.fadeOut(() => {
+                $message.remove();
+            });
+        }, 5000);
+    }
+    
+    // Вспомогательные функции
+    function calculateSecurityScore(scanData) {
+        if (!scanData.checks) return 100;
+        
+        const totalChecks = Object.keys(scanData.checks).length;
+        const issuesCount = scanData.issues ? scanData.issues.length : 0;
+        
+        if (totalChecks === 0) return 100;
+        
+        const score = Math.max(0, 100 - Math.round((issuesCount / totalChecks) * 100));
+        return score;
+    }
+    
+    function getScoreClass(score) {
+        if (score >= 90) return 'score-excellent';
+        if (score >= 70) return 'score-good';
+        if (score >= 50) return 'score-fair';
+        return 'score-poor';
+    }
+    
+    function getCardClass(status) {
+        return status === 'ok' ? 'card-secure' : (status === 'warning' ? 'card-warning' : 'card-error');
+    }
+    
+    function getEventTypeClass(message) {
+        if (message.includes('blocked') || message.includes('attack')) return 'critical';
+        if (message.includes('warning') || message.includes('failed')) return 'warning';
+        return 'info';
+    }
+    
+    // Инициализация всех компонентов безопасности
+    $(document).ready(function() {
+        initAdvancedSecurity();
+        updateSecurityStatus();
+    });
 
 });
