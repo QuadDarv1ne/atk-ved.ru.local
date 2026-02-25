@@ -380,6 +380,72 @@
     </div>
 </section>
 
+<!-- Testimonial Files Section -->
+<section class="testimonial-files-section" id="testimonial-files">
+    <div class="container">
+        <h2 class="section-title">ДОКУМЕНТЫ И ОТЗЫВЫ</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 40px;">Официальные благодарственные письма и отзывы наших клиентов</p>
+        
+        <?php
+        $testimonial_files = atk_ved_get_testimonial_files();
+        
+        if (!empty($testimonial_files)): ?>
+            <div class="testimonial-files-grid">
+                <?php foreach ($testimonial_files as $file): ?>
+                    <div class="testimonial-file-card">
+                        <?php if ($file['thumbnail']): ?>
+                            <div class="file-preview">
+                                <img src="<?php echo esc_url($file['thumbnail']); ?>" alt="<?php echo esc_attr($file['title']); ?>" loading="lazy">
+                            </div>
+                        <?php else: ?>
+                            <div class="file-icon">
+                                <?php if ($file['file_type'] === 'pdf'): ?>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                <?php else: ?>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                        <polyline points="13 2 13 9 20 9"></polyline>
+                                    </svg>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="file-info">
+                            <h3><?php echo esc_html($file['title']); ?></h3>
+                            <?php if ($file['company']): ?>
+                                <div class="file-company"><?php echo esc_html($file['company']); ?></div>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="file-meta">
+                            <span class="file-date"><?php echo esc_html($file['date']); ?></span>
+                            <a href="<?php echo esc_url($file['file_url']); ?>" class="file-download" target="_blank" download>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Скачать
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="no-files">
+                <div class="no-files-icon">📄</div>
+                <p>Файлы отзывов скоро появятся</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+
 <!-- Reviews Section -->
 <section class="reviews-section" id="reviews">
     <div class="container">

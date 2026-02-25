@@ -1,0 +1,211 @@
+/**
+ * Расширенный калькулятор - дополнительные стили
+ */
+
+/* Кнопки экспорта */
+.calc-export-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.calc-export-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c2c2c;
+    transition: all 0.3s ease;
+}
+
+.calc-export-btn:hover {
+    border-color: #e31e24;
+    color: #e31e24;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.2);
+}
+
+.calc-export-btn:active {
+    transform: translateY(0);
+}
+
+.calc-export-btn svg {
+    flex-shrink: 0;
+}
+
+/* История расчетов - модальное окно */
+.calc-history-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.calc-history-content {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 30px;
+    animation: slideUp 0.3s ease;
+}
+
+.calc-history-content h3 {
+    margin: 0 0 25px;
+    font-size: 24px;
+    color: #2c2c2c;
+}
+
+.calc-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.calc-history-item {
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.calc-history-item:hover {
+    background: #fff;
+    border-color: #e31e24;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.calc-history-date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.calc-history-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.calc-history-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e31e24;
+}
+
+.calc-history-close {
+    width: 100%;
+    padding: 14px;
+    background: #e31e24;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.calc-history-close:hover {
+    background: #c01a1f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .calc-export-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .calc-export-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .calc-history-content {
+        padding: 20px;
+        max-height: 90vh;
+    }
+    
+    .calc-history-content h3 {
+        font-size: 20px;
+    }
+    
+    .calc-history-item {
+        padding: 15px;
+    }
+    
+    .calc-history-price {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calc-export-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .calc-export-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Отключение анимаций */
+@media (prefers-reduced-motion: reduce) {
+    .calc-history-modal,
+    .calc-history-content,
+    .calc-export-btn,
+    .calc-history-item {
+        animation: none;
+        transition: none;
+    }
+}

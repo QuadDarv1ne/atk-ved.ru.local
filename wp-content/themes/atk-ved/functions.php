@@ -20,8 +20,14 @@ require_once get_template_directory() . '/inc/security.php';
 require_once get_template_directory() . '/inc/translations.php';
 require_once get_template_directory() . '/inc/analytics.php';
 require_once get_template_directory() . '/inc/cookie-banner.php';
+require_once get_template_directory() . '/inc/online-chat.php';
+require_once get_template_directory() . '/inc/webp-converter.php';
+require_once get_template_directory() . '/inc/testimonial-files.php';
 require_once get_template_directory() . '/inc/pwa.php';
 require_once get_template_directory() . '/inc/logger.php';
+require_once get_template_directory() . '/inc/recaptcha.php';
+require_once get_template_directory() . '/inc/sitemap.php';
+require_once get_template_directory() . '/inc/breadcrumbs.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
@@ -29,7 +35,7 @@ function atk_ved_enqueue_scripts() {
     wp_add_inline_style('atk-ved-style', file_get_contents(get_template_directory() . '/css/critical.css'));
 
     // Стили
-    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array(), '1.9');
+    wp_enqueue_style('atk-ved-style', get_stylesheet_uri(), array(), '2.0');
     wp_enqueue_style('atk-ved-modal', get_template_directory_uri() . '/css/modal.css', array(), '1.9');
     wp_enqueue_style('atk-ved-calculator', get_template_directory_uri() . '/css/calculator.css', array(), '1.9');
     wp_enqueue_style('atk-ved-enhancements', get_template_directory_uri() . '/css/enhancements.css', array(), '1.9');
@@ -40,10 +46,14 @@ function atk_ved_enqueue_scripts() {
     wp_enqueue_style('atk-ved-thank-you', get_template_directory_uri() . '/css/thank-you.css', array(), '1.9');
 
     // UX Enhancements v1.9
-    wp_enqueue_style('atk-ved-reviews-slider', get_template_directory_uri() . '/css/reviews-slider.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-callback-modal', get_template_directory_uri() . '/css/callback-modal.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-hero-counters', get_template_directory_uri() . '/css/hero-counters.css', array(), '1.9');
-    wp_enqueue_style('atk-ved-form-loader', get_template_directory_uri() . '/css/form-loader.css', array(), '1.9');
+    wp_enqueue_style('atk-ved-reviews-slider', get_template_directory_uri() . '/css/reviews-slider.css', array(), '2.0');
+    wp_enqueue_style('atk-ved-callback-modal', get_template_directory_uri() . '/css/callback-modal.css', array(), '2.0');
+    wp_enqueue_style('atk-ved-hero-counters', get_template_directory_uri() . '/css/hero-counters.css', array(), '2.0');
+    wp_enqueue_style('atk-ved-form-loader', get_template_directory_uri() . '/css/form-loader.css', array(), '2.0');
+    
+    // Advanced Features v2.0
+    wp_enqueue_style('atk-ved-calculator-advanced', get_template_directory_uri() . '/css/calculator-advanced.css', array(), '2.0');
+    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '2.0');
 
     // Скрипты
     wp_enqueue_script('atk-ved-loader', get_template_directory_uri() . '/js/loader.js', array(), '1.9', false);
@@ -56,10 +66,13 @@ function atk_ved_enqueue_scripts() {
     wp_enqueue_script('atk-ved-gallery', get_template_directory_uri() . '/js/gallery.js', array('jquery'), '1.9', true);
     
     // UX Enhancements v1.9
-    wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-callback-modal', get_template_directory_uri() . '/js/callback-modal.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-hero-counters', get_template_directory_uri() . '/js/hero-counters.js', array('jquery'), '1.9', true);
-    wp_enqueue_script('atk-ved-form-loader', get_template_directory_uri() . '/js/form-loader.js', array('jquery'), '1.9', true);
+    wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '2.0', true);
+    wp_enqueue_script('atk-ved-callback-modal', get_template_directory_uri() . '/js/callback-modal.js', array('jquery'), '2.0', true);
+    wp_enqueue_script('atk-ved-hero-counters', get_template_directory_uri() . '/js/hero-counters.js', array('jquery'), '2.0', true);
+    wp_enqueue_script('atk-ved-form-loader', get_template_directory_uri() . '/js/form-loader.js', array('jquery'), '2.0', true);
+    
+    // Advanced Features v2.0
+    wp_enqueue_script('atk-ved-calculator-advanced', get_template_directory_uri() . '/js/calculator-advanced.js', array('jquery', 'atk-ved-calculator'), '2.0', true);
 
     // Локализация скриптов
     wp_localize_script('atk-ved-script', 'atkVedData', array(
@@ -67,6 +80,12 @@ function atk_ved_enqueue_scripts() {
         'nonce' => wp_create_nonce('atk_ved_nonce'),
         'siteUrl' => home_url('/'),
     ));
+    
+    // Передаем ID Метрики для аналитики
+    $metrika_id = get_theme_mod('atk_ved_metrika_id', '');
+    if (!empty($metrika_id)) {
+        wp_add_inline_script('atk-ved-script', 'window.atkVedMetrikaId = ' . intval($metrika_id) . ';', 'before');
+    }
 }
 add_action('wp_enqueue_scripts', 'atk_ved_enqueue_scripts');
 
@@ -255,3 +274,60 @@ function atk_ved_icon_shortcode($atts) {
     return '<span class="icon icon-' . esc_attr($atts['name']) . '" style="font-size: ' . esc_attr($atts['size']) . 'px;"></span>';
 }
 add_shortcode('icon', 'atk_ved_icon_shortcode');
+
+
+// Админские стили и скрипты
+function atk_ved_admin_enqueue_scripts($hook) {
+    global $post_type;
+    
+    if ($post_type === 'testimonial_file' || $hook === 'post-new.php' || $hook === 'post.php') {
+        wp_enqueue_media();
+        wp_enqueue_style('atk-ved-admin', get_template_directory_uri() . '/admin/admin-styles.css', array(), '2.0');
+        wp_enqueue_script('atk-ved-admin', get_template_directory_uri() . '/admin/admin-enhancements.js', array('jquery'), '2.0', true);
+        
+        wp_localize_script('atk-ved-admin', 'atkAdminData', array(
+            'nonce' => wp_create_nonce('atk_ved_admin_nonce'),
+            'ajaxUrl' => admin_url('admin-ajax.php')
+        ));
+    }
+}
+add_action('admin_enqueue_scripts', 'atk_ved_admin_enqueue_scripts');
+
+// Колонки в списке файлов отзывов
+function atk_ved_testimonial_files_columns($columns) {
+    $new_columns = array();
+    $new_columns['cb'] = $columns['cb'];
+    $new_columns['thumbnail'] = 'Превью';
+    $new_columns['title'] = 'Название';
+    $new_columns['company'] = 'Компания';
+    $new_columns['file_type'] = 'Тип';
+    $new_columns['date'] = 'Дата';
+    return $new_columns;
+}
+add_filter('manage_testimonial_file_posts_columns', 'atk_ved_testimonial_files_columns');
+
+function atk_ved_testimonial_files_column_content($column, $post_id) {
+    switch ($column) {
+        case 'thumbnail':
+            if (has_post_thumbnail($post_id)) {
+                echo get_the_post_thumbnail($post_id, array(60, 60));
+            } else {
+                echo '<span style="color: #ccc;">—</span>';
+            }
+            break;
+        case 'company':
+            $company = get_post_meta($post_id, '_company_name', true);
+            echo $company ? esc_html($company) : '<span style="color: #ccc;">—</span>';
+            break;
+        case 'file_type':
+            $type = get_post_meta($post_id, '_file_type', true);
+            $icons = array(
+                'pdf' => '📄',
+                'image' => '🖼️',
+                'doc' => '📝'
+            );
+            echo isset($icons[$type]) ? $icons[$type] . ' ' . strtoupper($type) : '—';
+            break;
+    }
+}
+add_action('manage_testimonial_file_posts_custom_column', 'atk_ved_testimonial_files_column_content', 10, 2);

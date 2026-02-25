@@ -1,0 +1,191 @@
+/**
+ * Стили админки для файлов отзывов
+ */
+
+/* Улучшенный интерфейс загрузки */
+.testimonial-file-upload-zone {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    background: #fafafa;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+}
+
+.testimonial-file-upload-zone.drag-over {
+    border-color: #e31e24;
+    background: #fff5f5;
+}
+
+.testimonial-file-upload-zone:hover {
+    border-color: #999;
+    background: #fff;
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.upload-text {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.upload-hint {
+    font-size: 13px;
+    color: #999;
+}
+
+/* Кнопка загрузки */
+.upload-file-button {
+    background: #e31e24 !important;
+    border-color: #e31e24 !important;
+    color: #fff !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.upload-file-button:hover {
+    background: #c01a1f !important;
+    border-color: #c01a1f !important;
+}
+
+/* Превью файла */
+.file-preview-admin {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.file-preview-admin img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Список файлов */
+.post-type-testimonial_file .wp-list-table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.post-type-testimonial_file .column-thumbnail {
+    width: 80px;
+}
+
+.post-type-testimonial_file .column-thumbnail img {
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Мета-бокс */
+#testimonial_file_details .inside {
+    padding: 20px;
+}
+
+#testimonial_file_details .form-table th {
+    width: 200px;
+    padding: 15px 10px;
+}
+
+#testimonial_file_details .form-table td {
+    padding: 15px 10px;
+}
+
+#testimonial_file_details input[type="text"],
+#testimonial_file_details select {
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Уведомления */
+.testimonial-file-notice {
+    background: #fff;
+    border-left: 4px solid #e31e24;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.testimonial-file-notice h3 {
+    margin-top: 0;
+    color: #e31e24;
+}
+
+/* Быстрое редактирование */
+.quick-edit-row .inline-edit-col input[type="text"] {
+    width: 100%;
+}
+
+/* Адаптивность */
+@media screen and (max-width: 782px) {
+    .testimonial-file-upload-zone {
+        padding: 30px 20px;
+    }
+    
+    #testimonial_file_details .form-table th,
+    #testimonial_file_details .form-table td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+}
+
+/* Иконки типов файлов */
+.file-type-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.file-type-pdf {
+    color: #e31e24;
+}
+
+.file-type-image {
+    color: #4CAF50;
+}
+
+.file-type-doc {
+    color: #2196F3;
+}
+
+/* Статистика */
+.testimonial-files-stats {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.stat-box {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #e31e24;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+}

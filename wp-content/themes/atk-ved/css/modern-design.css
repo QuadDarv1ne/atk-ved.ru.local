@@ -1,0 +1,332 @@
+/**
+ * Современный дизайн главной страницы
+ */
+
+/* Hero Section - Современный дизайн */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    padding: 80px 0 100px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-text h1 {
+    color: #fff;
+    font-size: 72px;
+    line-height: 1.1;
+    margin-bottom: 40px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.hero-text h1 .highlight {
+    background: linear-gradient(135deg, #e31e24 0%, #ff4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-features li {
+    color: rgba(255,255,255,0.9);
+}
+
+.hero-features li::before {
+    background: #e31e24;
+    box-shadow: 0 0 10px rgba(227,30,36,0.5);
+}
+
+.hero-image {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+
+.hero-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(227,30,36,0.1) 0%, transparent 100%);
+}
+
+/* Файлы отзывов - секция */
+.testimonial-files-section {
+    padding: 100px 0;
+    background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+    position: relative;
+}
+
+.testimonial-files-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #e0e0e0 50%, transparent 100%);
+}
+
+.testimonial-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.testimonial-file-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-file-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e31e24 0%, #ff4444 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.testimonial-file-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(227,30,36,0.15);
+    border-color: #e31e24;
+}
+
+.testimonial-file-card:hover::before {
+    transform: scaleX(1);
+}
+
+.file-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #e31e24 0%, #ff4444 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(227,30,36,0.3);
+}
+
+.file-icon svg {
+    width: 32px;
+    height: 32px;
+    color: #fff;
+}
+
+.file-preview {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: #f8f8f8;
+}
+
+.file-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.testimonial-file-card:hover .file-preview img {
+    transform: scale(1.05);
+}
+
+.file-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 8px;
+}
+
+.file-company {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.file-company::before {
+    content: '🏢';
+    font-size: 16px;
+}
+
+.file-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.file-date {
+    font-size: 12px;
+    color: #999;
+}
+
+.file-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #e31e24;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.file-download:hover {
+    background: #c01a1f;
+    transform: translateX(3px);
+    box-shadow: 0 4px 12px rgba(227,30,36,0.3);
+}
+
+.file-download svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Пустое состояние */
+.no-files {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+}
+
+.no-files-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .testimonial-files-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .testimonial-file-card {
+        padding: 20px;
+    }
+    
+    .file-preview {
+        height: 150px;
+    }
+}
+
+/* Анимация появления */
+.testimonial-file-card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.testimonial-file-card:nth-child(1) { animation-delay: 0.1s; }
+.testimonial-file-card:nth-child(2) { animation-delay: 0.2s; }
+.testimonial-file-card:nth-child(3) { animation-delay: 0.3s; }
+.testimonial-file-card:nth-child(4) { animation-delay: 0.4s; }
+.testimonial-file-card:nth-child(5) { animation-delay: 0.5s; }
+.testimonial-file-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Улучшенные карточки услуг */
+.service-card {
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #e31e24 0%, #ff4444 100%);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s ease;
+}
+
+.service-card:hover::after {
+    transform: scaleY(1);
+}
+
+/* Улучшенные изображения */
+.section-image-bg {
+    position: relative;
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.section-image-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(227,30,36,0.2) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+/* Parallax эффект */
+.parallax-section {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 768px) {
+    .parallax-section {
+        background-attachment: scroll;
+    }
+}
