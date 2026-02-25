@@ -39,6 +39,15 @@ require_once get_template_directory() . '/inc/acf-blocks.php';
 require_once get_template_directory() . '/inc/rest-api.php';
 require_once get_template_directory() . '/inc/callback-widget.php';
 require_once get_template_directory() . '/inc/chat-widget.php';
+require_once get_template_directory() . '/inc/enhanced-ui-components.php';
+require_once get_template_directory() . '/inc/accessibility-enhancements.php';
+require_once get_template_directory() . '/inc/woocommerce.php';
+require_once get_template_directory() . '/inc/amocrm.php';
+require_once get_template_directory() . '/inc/security-advanced.php';
+require_once get_template_directory() . '/inc/conversion.php';
+require_once get_template_directory() . '/inc/email-templates.php';
+require_once get_template_directory() . '/inc/admin-dashboard.php';
+require_once get_template_directory() . '/inc/notifications.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {

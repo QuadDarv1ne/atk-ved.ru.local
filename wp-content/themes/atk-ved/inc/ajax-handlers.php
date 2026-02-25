@@ -11,14 +11,50 @@ function atk_ved_contact_form_handler() {
     $email = sanitize_email($_POST['email']);
     $phone = sanitize_text_field($_POST['phone']);
     $message = sanitize_textarea_field($_POST['message']);
+    $consent = isset($_POST['consent']) ? sanitize_text_field($_POST['consent']) : '';
     
     // Валидация
     if (empty($name) || empty($email) || empty($message)) {
-        wp_send_json_error(array('message' => 'Пожалуйста, заполните все обязательные поля'));
+        wp_send_json_error(array(
+            'message' => 'Пожалуйста, заполните все обязательные поля',
+            'errors' => array(
+                'name' => empty($name) ? 'Имя обязательно' : '',
+                'email' => empty($email) ? 'Email обязателен' : '',
+                'message' => empty($message) ? 'Сообщение обязательно' : ''
+            )
+        ));
     }
     
     if (!is_email($email)) {
-        wp_send_json_error(array('message' => 'Некорректный email адрес'));
+        wp_send_json_error(array(
+            'message' => 'Некорректный email адрес',
+            'errors' => array(
+                'email' => 'Пожалуйста, введите корректный email адрес'
+            )
+        ));
+    }
+    
+    // Проверка согласия на обработку персональных данных
+    if (empty($consent)) {
+        wp_send_json_error(array(
+            'message' => 'Необходимо согласие на обработку персональных данных',
+            'errors' => array(
+                'consent' => 'Пожалуйста, подтвердите согласие на обработку персональных данных'
+            )
+        ));
+    }
+    
+    // Проверка honeypot
+    if (!empty($_POST['hp_website'])) {
+        wp_send_json_error(array('message' => 'Спам-проверка не пройдена'));
+    }
+    
+    // Проверка времени отправки формы (слишком быстро)
+    if (!empty($_POST['hp_timestamp'])) {
+        $time_diff = time() - intval($_POST['hp_timestamp']);
+        if ($time_diff < 3) {
+            wp_send_json_error(array('message' => 'Форма отправлена слишком быстро'));
+        }
     }
     
     // Отправка email
@@ -27,7 +63,9 @@ function atk_ved_contact_form_handler() {
     $body = "Имя: $name\n";
     $body .= "Email: $email\n";
     $body .= "Телефон: $phone\n\n";
-    $body .= "Сообщение:\n$message";
+    $body .= "Сообщение:\n$message\n\n";
+    $body .= "IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
+    $body .= "Дата: " . date('d.m.Y H:i:s') . "\n";
     
     $headers = array(
         'Content-Type: text/plain; charset=UTF-8',
@@ -47,6 +85,8 @@ function atk_ved_contact_form_handler() {
             'meta_input' => array(
                 '_contact_email' => $email,
                 '_contact_phone' => $phone,
+                '_contact_ip' => $_SERVER['REMOTE_ADDR'],
+                '_contact_consent' => $consent,
             ),
         ));
         
