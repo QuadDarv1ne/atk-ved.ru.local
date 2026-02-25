@@ -1847,7 +1847,7 @@ jQuery(document).ready(function($) {
         });
     }
     
-    // Инициализация всех UX/UI компонентов
+    // Инициализация всех компонентов
     $(document).ready(function() {
         initScrollAnimations();
         initImageGalleries();
@@ -1856,6 +1856,8 @@ jQuery(document).ready(function($) {
         initSmoothScrolling();
         initHoverEffects();
         initFAQAccordion();
+        initStatisticsCarousel();
+        initImageGallery();
     });
     
     // Аккордеон для FAQ
@@ -1872,6 +1874,106 @@ jQuery(document).ready(function($) {
                 $item.addClass('active');
             }
         });
+    }
+    
+    // Инициализация карусели статистики
+    function initStatisticsCarousel() {
+        const carousel = $('.carousel-container');
+        if (!carousel.length) return;
+        
+        let currentSlide = 0;
+        const slides = carousel.find('.carousel-slide');
+        const indicators = carousel.find('.indicator');
+        const totalSlides = Math.min(slides.length, indicators.length); // Use minimum to avoid index errors
+        
+        function goToSlide(slideIndex) {
+            if (slideIndex < 0 || slideIndex >= totalSlides) return;
+            
+            slides.removeClass('active');
+            indicators.removeClass('active');
+            
+            slides.eq(slideIndex).addClass('active');
+            indicators.eq(slideIndex).addClass('active');
+            
+            animateNumbers(slideIndex);
+            currentSlide = slideIndex;
+        }
+        
+        function animateNumbers(slideIndex) {
+            const slide = slides.eq(slideIndex);
+            const numberElement = slide.find('.stat-number');
+            const target = parseInt(numberElement.data('target'));
+            
+            if (target) {
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    numberElement.text(Math.floor(current));
+                }, 30);
+            }
+        }
+        
+        // Навигация кнопками
+        carousel.find('.carousel-btn.prev').on('click', function() {
+            goToSlide(currentSlide - 1);
+        });
+        
+        carousel.find('.carousel-btn.next').on('click', function() {
+            goToSlide(currentSlide + 1);
+        });
+        
+        // Навигация индикаторами
+        indicators.on('click', function() {
+            const slideIndex = parseInt($(this).data('slide'));
+            if (slideIndex < totalSlides) {
+                goToSlide(slideIndex);
+            }
+        });
+        
+        // Автопрокрутка
+        setInterval(() => {
+            goToSlide((currentSlide + 1) % totalSlides);
+        }, 5000);
+        
+        // Инициализация первой анимации
+        animateNumbers(0);
+    }
+    
+    // Инициализация галереи изображений
+    function initImageGallery() {
+        const gallery = $('.image-gallery');
+        if (!gallery.length) return;
+        
+        let currentImage = 0;
+        const images = gallery.find('.gallery-item');
+        const totalImages = images.length;
+        
+        function showImage(imageIndex) {
+            if (imageIndex < 0 || imageIndex >= totalImages) return;
+            
+            images.removeClass('active');
+            images.eq(imageIndex).addClass('active');
+            currentImage = imageIndex;
+        }
+        
+        // Навигация кнопками
+        $('.gallery-nav.prev').on('click', function() {
+            showImage((currentImage - 1 + totalImages) % totalImages);
+        });
+        
+        $('.gallery-nav.next').on('click', function() {
+            showImage((currentImage + 1) % totalImages);
+        });
+        
+        // Автопрокрутка изображений
+        setInterval(() => {
+            showImage((currentImage + 1) % totalImages);
+        }, 4000);
     }
 
 });

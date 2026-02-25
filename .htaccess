@@ -99,9 +99,14 @@ AddOutputFilterByType DEFLATE font/woff2
     Require all denied
 </FilesMatch>
 
-<FilesMatch "(^#|#$|\.htaccess$|\.htpasswd$|wp-config\.php|readme\.html|license\.txt|xmlrpc\.php)">
+<FilesMatch "(^#|#$|\.htaccess$|\.htpasswd$|wp-config\.php|readme\.html|license\.txt|xmlrpc\.php|install\.php|wp-admin/install\.php|wp-admin/setup-config\.php)">
     Require all denied
 </FilesMatch>
+
+# Explicit block for xmlrpc.php
+<Files xmlrpc.php>
+    Require all denied
+</Files>
 
 # Запрет доступа к директориям
 <IfModule mod_alias.c>
@@ -110,6 +115,7 @@ AddOutputFilterByType DEFLATE font/woff2
     RedirectMatch 403 /\.env
     RedirectMatch 403 /wp-content/upgrade
     RedirectMatch 403 /wp-content/cache
+    RedirectMatch 403 /wp-includes
 </IfModule>
 # END Security - Block Access to Sensitive Files
 

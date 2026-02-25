@@ -432,6 +432,101 @@ $company = atk_ved_get_company_info();
         </div>
     </section>
 
+    <!-- Statistics Carousel Section -->
+    <section class="statistics-carousel-section">
+        <div class="container">
+            <div class="statistics-content">
+                <div class="stats-carousel">
+                    <div class="carousel-container">
+                        <div class="carousel-track">
+                            <div class="carousel-slide active">
+                                <div class="stat-card">
+                                    <div class="stat-icon">👥</div>
+                                    <div class="stat-number" data-target="1500">0</div>
+                                    <div class="stat-suffix">+</div>
+                                    <div class="stat-label">Довольных клиентов</div>
+                                    <div class="stat-description">Работаем с 2018 года</div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="stat-card">
+                                    <div class="stat-icon">📅</div>
+                                    <div class="stat-number" data-target="5">0</div>
+                                    <div class="stat-suffix">+</div>
+                                    <div class="stat-label">Лет на рынке</div>
+                                    <div class="stat-description">Опыт и надежность</div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="stat-card">
+                                    <div class="stat-icon">📦</div>
+                                    <div class="stat-number" data-target="1000">0</div>
+                                    <div class="stat-suffix">+</div>
+                                    <div class="stat-label">Контейнеров доставлено</div>
+                                    <div class="stat-description">Объемные перевозки</div>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="stat-card">
+                                    <div class="stat-icon">🌍</div>
+                                    <div class="stat-number" data-target="15">0</div>
+                                    <div class="stat-label">Городов доставки</div>
+                                    <div class="stat-description">По всей России</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-controls">
+                            <button class="carousel-btn prev" aria-label="Предыдущий">
+                                <span>‹</span>
+                            </button>
+                            <button class="carousel-btn next" aria-label="Следующий">
+                                <span>›</span>
+                            </button>
+                        </div>
+                        <div class="carousel-indicators">
+                            <button class="indicator active" data-slide="0"></button>
+                            <button class="indicator" data-slide="1"></button>
+                            <button class="indicator" data-slide="2"></button>
+                            <button class="indicator" data-slide="3"></button>
+                            <button class="indicator" data-slide="4"></button>
+                            <button class="indicator" data-slide="5"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-images">
+                    <div class="image-gallery">
+                        <div class="gallery-item active">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/services/logistics-service.jpg" alt="Логистические услуги" loading="lazy">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/services/delivery-service.jpg" alt="Доставка грузов" loading="lazy">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/services/quality-service.jpg" alt="Контроль качества" loading="lazy">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/downloads/china/china-factory-1.jpg" alt="Китайские фабрики" loading="lazy">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/downloads/delivery/delivery-truck-1.jpg" alt="Автотранспорт" loading="lazy">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/downloads/logistics/logistics-center-1.jpg" alt="Логистический центр" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="gallery-controls">
+                        <button class="gallery-nav prev" aria-label="Предыдущее фото">
+                            <span>‹</span>
+                        </button>
+                        <button class="gallery-nav next" aria-label="Следующее фото">
+                            <span>›</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- ====================================================
          ЭТАПЫ РАБОТЫ
@@ -659,7 +754,7 @@ $company = atk_ved_get_company_info();
             src="<?php echo esc_url( $map_url ); ?>"
             title="<?php esc_attr_e( 'Расположение офиса АТК ВЭД на карте', 'atk-ved' ); ?>"
             width="100%"
-            height="400"
+            height="600"
             style="border:0"
             allowfullscreen
             loading="lazy"
