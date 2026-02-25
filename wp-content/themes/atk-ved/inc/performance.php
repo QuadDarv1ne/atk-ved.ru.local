@@ -140,13 +140,26 @@ function atk_ved_add_lazy_loading($content) {
     }
     
     $content = preg_replace_callback('/<img([^>]+?)src=/i', function($matches) {
-        return '<img' . $matches[1] . 'loading="lazy" src=';
+        // Проверяем, есть ли уже loading атрибут
+        if (strpos($matches[0], 'loading=') === false) {
+            return '<img' . $matches[1] . 'loading="lazy" src=';
+        }
+        return $matches[0];
     }, $content);
     
     return $content;
 }
 add_filter('the_content', 'atk_ved_add_lazy_loading', 99);
 add_filter('post_thumbnail_html', 'atk_ved_add_lazy_loading', 99);
+
+// Native lazy loading для всех изображений
+function atk_ved_native_lazy_load_images($image, $attachment_id, $size, $icon, $attr) {
+    if (!isset($attr['loading'])) {
+        $attr['loading'] = 'lazy';
+    }
+    return wp_get_attachment_image($attachment_id, $size, $icon, $attr);
+}
+add_filter('wp_get_attachment_image', 'atk_ved_native_lazy_load_images', 10, 5);
 
 // Отключение Heartbeat API
 function atk_ved_disable_heartbeat() {
@@ -181,6 +194,32 @@ function atk_ved_cache_query($query_key, $callback, $expiration = 3600) {
     return $cached;
 }
 
+// Улучшенное кэширование с поддержкой объектов
+function atk_ved_object_cache($cache_key, $callback, $expiration = 3600) {
+    // Сначала проверяем объектный кэш WordPress
+    $cached = wp_cache_get($cache_key, 'atk_ved');
+    
+    if (false === $cached) {
+        $cached = $callback();
+        wp_cache_set($cache_key, $cached, 'atk_ved', $expiration);
+    }
+    
+    return $cached;
+}
+
+// Кэширование HTML-блока
+function atk_ved_cache_html_block($block_name, $callback, $expiration = 1800) {
+    $cache_key = 'atk_ved_block_' . $block_name . '_' . md5(serialize(get_queried_object()));
+    $cached = get_transient($cache_key);
+    
+    if (false === $cached) {
+        $cached = $callback();
+        set_transient($cache_key, $cached, $expiration);
+    }
+    
+    return $cached;
+}
+
 // Очистка кэша при обновлении контента
 function atk_ved_clear_cache($post_id) {
     delete_transient('atk_ved_services');
@@ -197,6 +236,22 @@ function atk_ved_optimize_image_quality($quality, $mime_type) {
 add_filter('jpeg_quality', 'atk_ved_optimize_image_quality', 10, 2);
 add_filter('wp_editor_set_quality', 'atk_ved_optimize_image_quality', 10, 2);
 
+// Поддержка WebP
+function atk_ved_support_webp($filters) {
+    $filters[] = 'image/webp';
+    return $filters;
+}
+add_filter('wp_image_editors', 'atk_ved_support_webp');
+
+// Оптимизация размеров изображений
+function atk_ved_additional_image_sizes() {
+    add_image_size('atk-ved-large', 1200, 800, true);
+    add_image_size('atk-ved-medium', 800, 600, true);
+    add_image_size('atk-ved-small', 400, 300, true);
+    add_image_size('atk-ved-tiny', 200, 150, true);
+}
+add_action('after_setup_theme', 'atk_ved_additional_image_sizes');
+
 // Отключение srcset для экономии ресурсов (опционально)
 // add_filter('max_srcset_image_width', '__return_false');
 
@@ -204,8 +259,30 @@ add_filter('wp_editor_set_quality', 'atk_ved_optimize_image_quality', 10, 2);
 function atk_ved_dns_prefetch() {
     echo '<link rel="dns-prefetch" href="//fonts.googleapis.com">';
     echo '<link rel="dns-prefetch" href="//www.google-analytics.com">';
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
+    echo '<link rel="preload" as="font" type="font/woff2" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" crossorigin>';
 }
 add_action('wp_head', 'atk_ved_dns_prefetch', 0);
+
+// Оптимизация шрифтов
+function atk_ved_optimize_fonts() {
+    // Отложенная загрузка Google Fonts
+    $font_families = array(
+        'Inter:300,400,500,600,700'
+    );
+    
+    $query_args = array(
+        'family' => implode('|', $font_families),
+        'subset' => 'cyrillic,cyrillic-ext,latin',
+        'display' => 'swap'
+    );
+    
+    $fonts_url = add_query_arg($query_args, 'https://fonts.googleapis.com/css');
+    
+    echo '<link rel="preload" href="' . esc_url($fonts_url) . '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
+    echo '<noscript><link rel="stylesheet" href="' . esc_url($fonts_url) . '"></noscript>';
+}
+// add_action('wp_head', 'atk_ved_optimize_fonts', 1);
 
 // Отключение встроенных стилей Gutenberg
 function atk_ved_remove_gutenberg_styles() {

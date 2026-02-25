@@ -148,6 +148,8 @@ function atk_ved_security_headers() {
     header('X-XSS-Protection: 1; mode=block');
     header('Referrer-Policy: strict-origin-when-cross-origin');
     header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    header('Content-Security-Policy: default-src \'self\'; script-src \'self\' \'unsafe-inline\' https://www.google-analytics.com https://www.googletagmanager.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com; img-src \'self\' data: https:; frame-src https:');
 }
 add_action('send_headers', 'atk_ved_security_headers');
 
@@ -222,11 +224,38 @@ function atk_ved_block_suspicious_requests() {
     foreach ($suspicious_patterns as $pattern) {
         if (preg_match($pattern, $request_uri)) {
             header('HTTP/1.0 403 Forbidden');
+            atk_ved_log_security_event('Заблокирован подозрительный запрос', $request_uri);
             exit('Подозрительный запрос заблокирован');
+        }
+    }
+    
+    // Дополнительная проверка POST данных
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $post_data = file_get_contents('php://input');
+        foreach ($suspicious_patterns as $pattern) {
+            if (preg_match($pattern, $post_data)) {
+                header('HTTP/1.0 403 Forbidden');
+                atk_ved_log_security_event('Заблокирован подозрительный POST запрос', $post_data);
+                exit('Подозрительный запрос заблокирован');
+            }
         }
     }
 }
 add_action('init', 'atk_ved_block_suspicious_requests');
+
+// Проверка referer для форм
+function atk_ved_verify_referer() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        
+        if ($referer && !strpos($referer, $host)) {
+            // Не критично, но логируем
+            atk_ved_log_security_event('Потенциально небезопасный referer', $referer);
+        }
+    }
+}
+add_action('init', 'atk_ved_verify_referer');
 
 // Защита от CSRF
 function atk_ved_add_csrf_token() {
@@ -251,6 +280,25 @@ function atk_ved_verify_csrf_token() {
     
     return true;
 }
+
+// Генерация CSRF токена для форм
+function atk_ved_get_csrf_token() {
+    if (!session_id()) {
+        session_start();
+    }
+    
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    
+    return $_SESSION['csrf_token'];
+}
+
+// Шорткод для вставки CSRF токена в формы
+function atk_ved_csrf_token_shortcode() {
+    return '<input type="hidden" name="csrf_token" value="' . esc_attr(atk_ved_get_csrf_token()) . '">';
+}
+add_shortcode('csrf_token', 'atk_ved_csrf_token_shortcode');
 
 // Логирование подозрительной активности
 function atk_ved_log_security_event($event, $details = '') {

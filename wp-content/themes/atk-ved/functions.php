@@ -33,6 +33,12 @@ require_once get_template_directory() . '/inc/calculator-advanced.php';
 require_once get_template_directory() . '/inc/multilingual.php';
 require_once get_template_directory() . '/inc/shipment-tracking.php';
 require_once get_template_directory() . '/inc/ui-components.php';
+require_once get_template_directory() . '/inc/acf-field-groups.php';
+require_once get_template_directory() . '/inc/acf-options.php';
+require_once get_template_directory() . '/inc/acf-blocks.php';
+require_once get_template_directory() . '/inc/rest-api.php';
+require_once get_template_directory() . '/inc/callback-widget.php';
+require_once get_template_directory() . '/inc/chat-widget.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
@@ -86,6 +92,10 @@ function atk_ved_enqueue_scripts() {
     // UI Components v2.1
     wp_enqueue_style('atk-ved-ui-components', get_template_directory_uri() . '/css/ui-components.css', array('atk-ved-modern-design'), '2.1');
     wp_enqueue_script('atk-ved-ui-components', get_template_directory_uri() . '/js/ui-components.js', array('jquery'), '2.1', true);
+
+    // Additional Components v2.2
+    wp_enqueue_style('atk-ved-additional-components', get_template_directory_uri() . '/css/additional-components.css', array('atk-ved-ui-components'), '2.2');
+    wp_enqueue_script('atk-ved-additional-components', get_template_directory_uri() . '/js/additional-components.js', array('jquery'), '2.2', true);
 
     // UX Enhancements v1.9
     wp_enqueue_script('atk-ved-reviews-slider', get_template_directory_uri() . '/js/reviews-slider.js', array('jquery'), '2.0', true);

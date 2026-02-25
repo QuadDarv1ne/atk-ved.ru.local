@@ -66,6 +66,7 @@
             </div>
             <div class="hero-image">
                 <img src="<?php echo get_template_directory_uri(); ?>/images/hero/hero-boxes.jpg" alt="Товары из Китая" loading="eager">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/png/logistics.png" alt="Логистика" class="logistics-overlay" loading="lazy">
             </div>
         </div>
     </div>

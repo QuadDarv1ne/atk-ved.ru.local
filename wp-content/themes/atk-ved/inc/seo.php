@@ -17,18 +17,27 @@ function atk_ved_add_og_tags(): void {
         $description = get_the_excerpt() ?: wp_trim_words(strip_tags($post->post_content), 30);
         $url = get_permalink();
         $image = get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero/hero-boxes.jpg';
+        $author = get_the_author();
 
         echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
         echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
         echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
         echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
+        echo '<meta property="og:image:width" content="1200">' . "\n";
+        echo '<meta property="og:image:height" content="630">' . "\n";
         echo '<meta property="og:type" content="article">' . "\n";
         echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+        echo '<meta property="og:locale" content="ru_RU">' . "\n";
+        echo '<meta property="article:author" content="' . esc_attr($author) . '">' . "\n";
+        echo '<meta property="article:published_time" content="' . get_the_date('c') . '">' . "\n";
+        echo '<meta property="article:modified_time" content="' . get_the_modified_date('c') . '">' . "\n";
     } else {
         echo '<meta property="og:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
         echo '<meta property="og:description" content="' . esc_attr(get_bloginfo('description')) . '">' . "\n";
         echo '<meta property="og:url" content="' . esc_url(home_url('/')) . '">' . "\n";
         echo '<meta property="og:type" content="website">' . "\n";
+        echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+        echo '<meta property="og:locale" content="ru_RU">' . "\n";
     }
 }
 add_action('wp_head', 'atk_ved_add_og_tags');
@@ -41,20 +50,30 @@ function atk_ved_add_twitter_cards(): void {
         $title = get_the_title();
         $description = get_the_excerpt() ?: wp_trim_words(strip_tags($post->post_content), 30);
         $image = get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero/hero-boxes.jpg';
+        $site_username = get_theme_mod('atk_ved_twitter_username', '@atkved');
 
         echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+        echo '<meta name="twitter:site" content="' . esc_attr($site_username) . '">' . "\n";
         echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
         echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
         echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
+        echo '<meta name="twitter:image:alt" content="' . esc_attr($title) . '">' . "\n";
+    } else {
+        echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+        echo '<meta name="twitter:site" content="' . esc_attr(get_theme_mod('atk_ved_twitter_username', '@atkved')) . '">' . "\n";
+        echo '<meta name="twitter:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+        echo '<meta name="twitter:description" content="' . esc_attr(get_bloginfo('description')) . '">' . "\n";
     }
 }
 add_action('wp_head', 'atk_ved_add_twitter_cards');
 
 // Добавление расширенной Schema.org разметки
 function atk_ved_add_schema_markup(): void {
+    $schema = array();
+    
     // Organization schema для главной страницы
     if (is_front_page()) {
-        $schema = array(
+        $schema['organization'] = array(
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
             'name' => get_bloginfo('name'),
@@ -64,13 +83,15 @@ function atk_ved_add_schema_markup(): void {
             'address' => array(
                 '@type' => 'PostalAddress',
                 'addressCountry' => 'RU',
-                'addressLocality' => get_theme_mod('atk_ved_address', 'Москва')
+                'addressLocality' => get_theme_mod('atk_ved_address', 'Москва'),
+                'streetAddress' => get_theme_mod('atk_ved_street_address', '')
             ),
             'contactPoint' => array(
                 '@type' => 'ContactPoint',
                 'telephone' => get_theme_mod('atk_ved_phone', '+7 (XXX) XXX-XX-XX'),
                 'contactType' => 'customer service',
-                'email' => get_theme_mod('atk_ved_email', 'info@atk-ved.ru')
+                'areaServed' => 'RU',
+                'availableLanguage' => 'ru'
             ),
             'sameAs' => array_filter(array(
                 get_theme_mod('atk_ved_vk'),
@@ -78,13 +99,96 @@ function atk_ved_add_schema_markup(): void {
                 get_theme_mod('atk_ved_whatsapp')
             ))
         );
-
-        echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+    
+    // Article schema для записей
+    if (is_single()) {
+        global $post;
+        $schema['article'] = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'Article',
+            'mainEntityOfPage' => array(
+                '@type' => 'WebPage',
+                '@id' => get_permalink()
+            ),
+            'headline' => get_the_title(),
+            'description' => get_the_excerpt() ?: wp_trim_words(strip_tags($post->post_content), 20),
+            'image' => get_the_post_thumbnail_url($post->ID, 'large') ?: get_template_directory_uri() . '/images/hero/hero-boxes.jpg',
+            'author' => array(
+                '@type' => 'Person',
+                'name' => get_the_author()
+            ),
+            'publisher' => array(
+                '@type' => 'Organization',
+                'name' => get_bloginfo('name'),
+                'logo' => array(
+                    '@type' => 'ImageObject',
+                    'url' => get_template_directory_uri() . '/images/logo/logo.png'
+                )
+            ),
+            'datePublished' => get_the_date('c'),
+            'dateModified' => get_the_modified_date('c')
+        );
+    }
+    
+    // BreadcrumbList schema для навигации
+    if (is_single() || is_page() || is_category() || is_tag()) {
+        $breadcrumbs = array();
+        $breadcrumbs[] = array(
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Главная',
+            'item' => home_url('/')
+        );
+        
+        if (is_category()) {
+            $category = get_queried_object();
+            $breadcrumbs[] = array(
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => $category->name,
+                'item' => get_category_link($category->term_id)
+            );
+        } elseif (is_tag()) {
+            $tag = get_queried_object();
+            $breadcrumbs[] = array(
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => $tag->name,
+                'item' => get_tag_link($tag->term_id)
+            );
+        } elseif (is_single() || is_page()) {
+            $post_type = get_post_type();
+            if ($post_type !== 'post' && $post_type !== 'page') {
+                $post_type_obj = get_post_type_object($post_type);
+                if ($post_type_obj) {
+                    $breadcrumbs[] = array(
+                        '@type' => 'ListItem',
+                        'position' => 2,
+                        'name' => $post_type_obj->labels->singular_name,
+                        'item' => get_post_type_archive_link($post_type)
+                    );
+                }
+            }
+            
+            $breadcrumbs[] = array(
+                '@type' => 'ListItem',
+                'position' => count($breadcrumbs) + 1,
+                'name' => get_the_title(),
+                'item' => get_permalink()
+            );
+        }
+        
+        $schema['breadcrumb'] = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $breadcrumbs
+        );
     }
     
     // FAQ Schema для главной страницы
     if (is_front_page()) {
-        $faq_schema = array(
+        $schema['faq'] = array(
             '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
             'mainEntity' => array(
@@ -122,13 +226,11 @@ function atk_ved_add_schema_markup(): void {
                 )
             )
         );
-
-        echo '<script type="application/ld+json">' . json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     }
     
     // LocalBusiness schema
     if (is_front_page()) {
-        $local_schema = array(
+        $schema['localbusiness'] = array(
             '@context' => 'https://schema.org',
             '@type' => 'LocalBusiness',
             'name' => get_bloginfo('name'),
@@ -138,35 +240,77 @@ function atk_ved_add_schema_markup(): void {
             'address' => array(
                 '@type' => 'PostalAddress',
                 'addressCountry' => 'RU',
-                'addressLocality' => get_theme_mod('atk_ved_address', 'Москва')
+                'addressLocality' => get_theme_mod('atk_ved_address', 'Москва'),
+                'streetAddress' => get_theme_mod('atk_ved_street_address', '')
             ),
-            'openingHours' => 'Mo-Fr 09:00-18:00',
-            'priceRange' => '$$'
+            'openingHoursSpecification' => array(
+                '@type' => 'OpeningHoursSpecification',
+                'dayOfWeek' => array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
+                'opens' => '09:00',
+                'closes' => '18:00'
+            ),
+            'priceRange' => '$$',
+            'areaServed' => array(
+                '@type' => 'AdministrativeArea',
+                'name' => 'Россия'
+            ),
+            'availableLanguage' => 'ru'
         );
-
-        echo '<script type="application/ld+json">' . json_encode($local_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+    
+    // Выводим все схемы
+    foreach ($schema as $schema_item) {
+        echo '<script type="application/ld+json">' . json_encode($schema_item, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     }
 }
 add_action('wp_head', 'atk_ved_add_schema_markup');
 
 // Улучшение мета-описания
 function atk_ved_add_meta_description() {
-    if (is_singular()) {
+    if (is_home() || is_front_page()) {
+        $description = get_bloginfo('description');
+    } elseif (is_singular()) {
         global $post;
         $description = get_the_excerpt() ?: wp_trim_words(strip_tags($post->post_content), 30);
     } elseif (is_category()) {
         $description = category_description();
     } elseif (is_tag()) {
         $description = tag_description();
+    } elseif (is_author()) {
+        $description = get_the_author_meta('description');
     } else {
         $description = get_bloginfo('description');
     }
     
     if ($description) {
-        echo '<meta name="description" content="' . esc_attr(strip_tags($description)) . '">' . "\n";
+        // Ограничиваем длину описания до 160 символов
+        $description = wp_trim_words(strip_tags($description), 22, '...');
+        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     }
 }
 add_action('wp_head', 'atk_ved_add_meta_description');
+
+// Добавление мета-тегов keywords (для совместимости)
+function atk_ved_add_meta_keywords() {
+    if (is_singular()) {
+        global $post;
+        $tags = get_the_tags($post->ID);
+        if ($tags) {
+            $keywords = array();
+            foreach ($tags as $tag) {
+                $keywords[] = $tag->name;
+            }
+            echo '<meta name="keywords" content="' . esc_attr(implode(', ', $keywords)) . '">' . "\n";
+        }
+    } elseif (is_category()) {
+        $cat = get_category(get_query_var('cat'));
+        echo '<meta name="keywords" content="' . esc_attr($cat->name) . '">' . "\n";
+    } elseif (is_tag()) {
+        $tag = get_term_by('slug', get_query_var('tag'), 'post_tag');
+        echo '<meta name="keywords" content="' . esc_attr($tag->name) . '">' . "\n";
+    }
+}
+add_action('wp_head', 'atk_ved_add_meta_keywords');
 
 // Canonical URL
 function atk_ved_add_canonical() {
@@ -262,11 +406,42 @@ function atk_ved_custom_title($title) {
         return 'Поиск: ' . get_search_query() . ' - ' . get_bloginfo('name');
     } elseif (is_404()) {
         return 'Страница не найдена - ' . get_bloginfo('name');
+    } elseif (is_author()) {
+        return 'Автор: ' . get_the_author() . ' - ' . get_bloginfo('name');
+    } elseif (is_archive()) {
+        return $title . ' - Архив - ' . get_bloginfo('name');
     }
     
     return $title;
 }
 add_filter('pre_get_document_title', 'atk_ved_custom_title');
+
+// Добавление структурированной навигации
+function atk_ved_add_structured_navigation() {
+    if (is_front_page()) {
+        echo '<script type="application/ld+json">';
+        echo json_encode(array(
+            '@context' => 'https://schema.org',
+            '@type' => 'SiteNavigationElement',
+            'name' => array(
+                'Главная',
+                'Услуги',
+                'Доставка',
+                'Калькулятор',
+                'Контакты'
+            ),
+            'url' => array(
+                home_url('/'),
+                home_url('/#services'),
+                home_url('/#delivery'),
+                home_url('/#calculator'),
+                home_url('/#contacts')
+            )
+        ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        echo '</script>';
+    }
+}
+add_action('wp_head', 'atk_ved_add_structured_navigation');
 
 // Добавление hreflang для мультиязычности (если нужно)
 function atk_ved_add_hreflang() {
