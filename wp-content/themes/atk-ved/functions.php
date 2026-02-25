@@ -69,6 +69,7 @@ require_once get_template_directory() . '/inc/admin-dashboard.php';
 require_once get_template_directory() . '/inc/notifications.php';
 
 // UI улучшения
+require_once get_template_directory() . '/inc/image-manager.php';
 require_once get_template_directory() . '/inc/enhanced-ui-components.php';
 require_once get_template_directory() . '/inc/advanced-ui-components.php';
 require_once get_template_directory() . '/inc/accessibility-enhancements.php';
@@ -80,15 +81,21 @@ require_once get_template_directory() . '/inc/welcome-page.php';
 require_once get_template_directory() . '/inc/performance-analytics.php';
 require_once get_template_directory() . '/inc/database-optimization.php';
 require_once get_template_directory() . '/inc/advanced-security.php';
+require_once get_template_directory() . '/inc/ajax-search.php';
+require_once get_template_directory() . '/inc/wishlist-compare.php';
+require_once get_template_directory() . '/inc/stock-notifications.php';
+require_once get_template_directory() . '/inc/theme-customizer.php';
 
 // Подключение стилей и скриптов
 function atk_ved_enqueue_scripts() {
-    // Современная система дизайна v3.1
-    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array(), '3.1');
-    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '3.1');
-    wp_enqueue_style('atk-ved-advanced-animations', get_template_directory_uri() . '/css/advanced-animations.css', array(), '3.1');
-    wp_enqueue_style('atk-ved-modern-ui-components', get_template_directory_uri() . '/css/modern-ui-components.css', array('atk-ved-modern-design'), '3.1');
-    wp_enqueue_style('atk-ved-landing-sections', get_template_directory_uri() . '/css/landing-sections.css', array(), '3.1');
+    // Современная система дизайна v3.3
+    wp_enqueue_style('atk-ved-design-tokens', get_template_directory_uri() . '/css/design-tokens.css', array(), '3.3');
+    wp_enqueue_style('atk-ved-modern-design', get_template_directory_uri() . '/css/modern-design.css', array('atk-ved-design-tokens'), '3.3');
+    wp_enqueue_style('atk-ved-animations-enhanced', get_template_directory_uri() . '/css/animations-enhanced.css', array(), '3.3');
+    wp_enqueue_style('atk-ved-advanced-animations', get_template_directory_uri() . '/css/advanced-animations.css', array(), '3.3');
+    wp_enqueue_style('atk-ved-modern-ui-components', get_template_directory_uri() . '/css/modern-ui-components.css', array('atk-ved-modern-design'), '3.3');
+    wp_enqueue_style('atk-ved-landing-sections', get_template_directory_uri() . '/css/landing-sections.css', array(), '3.3');
+    wp_enqueue_style('atk-ved-dark-mode-toggle', get_template_directory_uri() . '/css/dark-mode-toggle.css', array(), '3.3');
 
     // Критический CSS inline
     wp_add_inline_style('atk-ved-style', file_get_contents(get_template_directory() . '/css/critical.css'));
@@ -264,6 +271,132 @@ function atk_ved_clean_head() {
     remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
 }
 add_action('init', 'atk_ved_clean_head');
+
+// ============================================================================
+// ФУНКЦИИ FOOTER v3.1
+// ============================================================================
+
+// Получение информации о компании для footer
+function atk_ved_get_company_info(): array {
+    return array(
+        'name' => 'АТК ВЭД',
+        'description' => 'Товары для маркетплейсов из Китая оптом. Полный цикл работы от поиска до доставки с гарантией качества.',
+        'founded' => 2018,
+        'deliveries' => 1000,
+        'rating' => 4.9
+    );
+}
+
+// Получение социальных сетей
+function atk_ved_get_social_links(): array {
+    return array(
+        'whatsapp' => get_theme_mod('atk_ved_whatsapp', ''),
+        'telegram' => get_theme_mod('atk_ved_telegram', ''),
+        'vk' => get_theme_mod('atk_ved_vk', ''),
+        'instagram' => get_theme_mod('atk_ved_instagram', ''),
+        'youtube' => get_theme_mod('atk_ved_youtube', '')
+    );
+}
+
+// Обработка подписки на рассылку
+function atk_ved_handle_newsletter_subscription(): void {
+    check_ajax_referer('atk_ved_nonce', 'nonce');
+    
+    $email = sanitize_email($_POST['email'] ?? '');
+    
+    if (!is_email($email)) {
+        wp_send_json_error(array('message' => 'Неверный формат email'));
+    }
+    
+    // Здесь можно добавить логику подписки (например, сохранение в базу данных)
+    // или интеграцию с сервисом email-рассылки
+    
+    // Пока просто возвращаем успех
+    wp_send_json_success(array(
+        'message' => 'Спасибо за подписку! Мы отправим вам первое письмо в ближайшее время.'
+    ));
+}
+add_action('wp_ajax_atk_ved_newsletter_subscribe', 'atk_ved_handle_newsletter_subscription');
+add_action('wp_ajax_nopriv_atk_ved_newsletter_subscribe', 'atk_ved_handle_newsletter_subscription');
+
+// Генерация trust badges
+function atk_ved_get_trust_badges(): array {
+    $company_info = atk_ved_get_company_info();
+    $current_year = date('Y');
+    $years_experience = $current_year - $company_info['founded'];
+    
+    return array(
+        array(
+            'icon' => '🏆',
+            'text' => $years_experience . ' ' . atk_ved_get_year_text($years_experience) . ' на рынке'
+        ),
+        array(
+            'icon' => '🚚',
+            'text' => $company_info['deliveries'] . '+ доставок'
+        ),
+        array(
+            'icon' => '⭐',
+            'text' => $company_info['rating'] . '/5 рейтинг'
+        ),
+        array(
+            'icon' => '✅',
+            'text' => 'Гарантия качества'
+        )
+    );
+}
+
+// Получение правильной формы слова "год" в зависимости от числа
+function atk_ved_get_year_text(int $years): string {
+    $last_digit = $years % 10;
+    $last_two_digits = $years % 100;
+    
+    if ($last_two_digits >= 11 && $last_two_digits <= 19) {
+        return 'лет';
+    }
+    
+    switch ($last_digit) {
+        case 1:
+            return 'год';
+        case 2:
+        case 3:
+        case 4:
+            return 'года';
+        default:
+            return 'лет';
+    }
+}
+
+// Добавление inline CSS для footer
+function atk_ved_footer_inline_styles(): void {
+    $custom_css = "
+        .modern-footer {
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+        }
+        
+        .footer-title::after {
+            background: #e31e24;
+        }
+        
+        .social-link:hover {
+            background: #e31e24;
+        }
+        
+        .footer-links a:hover {
+            color: #e31e24;
+        }
+        
+        .newsletter-form .cta-button {
+            background: #e31e24;
+        }
+        
+        .newsletter-form .cta-button:hover {
+            background: #c01a1f;
+        }
+    ";
+    
+    wp_add_inline_style('atk-ved-style', $custom_css);
+}
+add_action('wp_enqueue_scripts', 'atk_ved_footer_inline_styles');
 function atk_ved_customize_register($wp_customize) {
     // Секция контактов
     $wp_customize->add_section('atk_ved_contacts', array(

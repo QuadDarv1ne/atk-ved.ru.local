@@ -1524,5 +1524,337 @@ jQuery(document).ready(function($) {
         initAdvancedSecurity();
         updateSecurityStatus();
     });
+    
+    // ============================================================================
+    // JAVASCRIPT ДЛЯ СОВРЕМЕННОГО FOOTER v3.1
+    // ============================================================================
+    
+    // Инициализация компонентов footer
+    function initModernFooter() {
+        // Обработчик формы подписки
+        $('.newsletter-form').on('submit', function(e) {
+            e.preventDefault();
+            const $form = $(this);
+            const $email = $form.find('input[type="email"]');
+            const $button = $form.find('.cta-button');
+            const email = $email.val().trim();
+            
+            // Валидация email
+            if (!isValidEmail(email)) {
+                showFooterMessage('Пожалуйста, введите корректный email', 'error');
+                $email.focus();
+                return;
+            }
+            
+            // Анимация отправки
+            const originalText = $button.text();
+            $button.prop('disabled', true).text('Отправка...');
+            
+            // Симуляция отправки (в реальном проекте здесь будет AJAX)
+            setTimeout(() => {
+                showFooterMessage('Спасибо за подписку! Мы отправим вам первое письмо в ближайшее время.', 'success');
+                $form[0].reset();
+                $button.prop('disabled', false).text(originalText);
+            }, 1500);
+        });
+        
+        // Анимация прогресса прокрутки для кнопки "наверх"
+        let ticking = false;
+        function updateScrollProgress() {
+            const scrollTop = $(window).scrollTop();
+            const docHeight = $(document).height() - $(window).height();
+            const progress = (scrollTop / docHeight) * 100;
+            
+            $('.progress-ring path').css('stroke-dasharray', `${progress}, 100`);
+            ticking = false;
+        }
+        
+        $(window).on('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateScrollProgress);
+                ticking = true;
+            }
+        });
+        
+        // Анимация появления элементов footer при прокрутке
+        if ('IntersectionObserver' in window) {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('footer-animate-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            // Наблюдаем за элементами footer
+            $('.footer-col').each(function() {
+                observer.observe(this);
+            });
+        }
+    }
+    
+    // Валидация email
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    // Показ сообщений в footer
+    function showFooterMessage(message, type) {
+        // Удаляем предыдущие сообщения
+        $('.footer-message').remove();
+        
+        // Создаем новое сообщение
+        const messageClass = `footer-message message-${type}`;
+        const $message = $(`<div class="${messageClass}">${message}</div>`);
+        
+        // Добавляем в footer
+        $('.footer-newsletter').after($message);
+        
+        // Показываем
+        setTimeout(() => {
+            $message.addClass('show');
+        }, 100);
+        
+        // Автоматически скрываем
+        setTimeout(() => {
+            $message.removeClass('show');
+            setTimeout(() => {
+                $message.remove();
+            }, 300);
+        }, 5000);
+    }
+    
+    // Анимация появления footer
+    function animateFooterEntrance() {
+        const $footer = $('.modern-footer');
+        if ($footer.length) {
+            // Анимация по секциям
+            gsap.from('.footer-top', {
+                duration: 1,
+                y: 50,
+                opacity: 0,
+                ease: 'power3.out'
+            });
+            
+            gsap.from('.footer-col', {
+                duration: 0.8,
+                y: 30,
+                opacity: 0,
+                ease: 'power2.out',
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.footer-grid',
+                    start: 'top 85%'
+                }
+            });
+            
+            gsap.from('.footer-bottom', {
+                duration: 1,
+                y: 20,
+                opacity: 0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: '.footer-bottom',
+                    start: 'top 90%'
+                }
+            });
+        }
+    }
+    
+    // Инициализация всех компонентов footer
+    $(document).ready(function() {
+        initModernFooter();
+        setTimeout(animateFooterEntrance, 300);
+    });
+
+    // ============================================================================
+    // JAVASCRIPT ДЛЯ UX/UI УЛУЧШЕНИЙ v3.1
+    // ============================================================================
+    
+    // Анимация появления элементов при прокрутке
+    function initScrollAnimations() {
+        if ('IntersectionObserver' in window) {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        const animationClass = element.dataset.animation || 'fade-in-up';
+                        element.classList.add('animate');
+                        observer.unobserve(element);
+                    }
+                });
+            }, observerOptions);
+            
+            // Наблюдаем за элементами с анимациями
+            document.querySelectorAll('[data-animation]').forEach(function(element) {
+                observer.observe(element);
+            });
+        }
+    }
+    
+    // Улучшенные галереи изображений
+    function initImageGalleries() {
+        $('.gallery-item').on('click', function() {
+            const $this = $(this);
+            const imageUrl = $this.find('img').attr('src');
+            const title = $this.find('.gallery-title').text();
+            
+            // Создаем модальное окно для просмотра
+            const modal = `
+                <div class="modal-enhanced" id="galleryModal">
+                    <div class="modal-content-enhanced">
+                        <div style="text-align: right; margin-bottom: 20px;">
+                            <button class="btn-close" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                        </div>
+                        <img src="${imageUrl}" alt="${title}" style="width: 100%; border-radius: 8px;">
+                        <h3 style="margin: 20px 0 0; text-align: center;">${title}</h3>
+                    </div>
+                </div>
+            `;
+            
+            $('body').append(modal);
+            
+            // Показываем модальное окно
+            setTimeout(() => {
+                $('#galleryModal').addClass('active');
+            }, 10);
+            
+            // Закрытие модального окна
+            $('#galleryModal .btn-close, #galleryModal').on('click', function(e) {
+                if (e.target === this) {
+                    $('#galleryModal').removeClass('active');
+                    setTimeout(() => {
+                        $('#galleryModal').remove();
+                    }, 400);
+                }
+            });
+        });
+    }
+    
+    // Улучшенные формы
+    function initEnhancedForms() {
+        // Анимация фокуса для полей формы
+        $('.form-group-enhanced input, .form-group-enhanced textarea, .form-group-enhanced select').on('focus', function() {
+            $(this).parent().addClass('focused');
+        }).on('blur', function() {
+            if (!$(this).val()) {
+                $(this).parent().removeClass('focused');
+            }
+        });
+        
+        // Валидация форм в реальном времени
+        $('.form-enhanced').each(function() {
+            const $form = $(this);
+            
+            $form.find('input[required], textarea[required]').on('input', function() {
+                const $field = $(this);
+                const value = $field.val().trim();
+                const isValid = value.length > 0;
+                
+                $field.toggleClass('valid', isValid);
+                $field.toggleClass('invalid', !isValid && value.length > 0);
+            });
+        });
+    }
+    
+    // Улучшенные уведомления
+    function showEnhancedNotification(message, type = 'success', duration = 5000) {
+        // Удаляем предыдущие уведомления
+        $('.notification-enhanced').remove();
+        
+        const notificationClass = `notification-enhanced notification-${type}`;
+        const $notification = $(`<div class="${notificationClass}">${message}</div>`);
+        
+        $('body').append($notification);
+        
+        // Показываем уведомление
+        setTimeout(() => {
+            $notification.addClass('show');
+        }, 100);
+        
+        // Автоматически скрываем
+        if (duration > 0) {
+            setTimeout(() => {
+                $notification.removeClass('show');
+                setTimeout(() => {
+                    $notification.remove();
+                }, 400);
+            }, duration);
+        }
+    }
+    
+    // Улучшенные кнопки с эффектами загрузки
+    function initEnhancedButtons() {
+        $('.btn-enhanced').on('click', function(e) {
+            const $button = $(this);
+            const $originalContent = $button.find('span').text();
+            
+            if ($button.hasClass('loading')) {
+                return false;
+            }
+            
+            // Добавляем состояние загрузки
+            $button.addClass('loading');
+            $button.find('span').html('<div class="loading-spinner"></div>');
+            
+            // Симуляция загрузки (в реальном проекте здесь будет AJAX)
+            setTimeout(() => {
+                $button.removeClass('loading');
+                $button.find('span').text($originalContent);
+                showEnhancedNotification('Действие выполнено успешно!', 'success');
+            }, 2000);
+        });
+    }
+    
+    // Плавная прокрутка к якорям
+    function initSmoothScrolling() {
+        $('a[href^="#"]').on('click', function(e) {
+            const target = $(this.getAttribute('href'));
+            if (target.length) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 80
+                }, 800, 'easeInOutCubic');
+            }
+        });
+    }
+    
+    // Улучшенные hover-эффекты
+    function initHoverEffects() {
+        // Добавляем классы для hover-эффектов
+        $('.hover-lift').on('mouseenter', function() {
+            $(this).addClass('hovered');
+        }).on('mouseleave', function() {
+            $(this).removeClass('hovered');
+        });
+        
+        $('.hover-scale').on('mouseenter', function() {
+            $(this).addClass('hovered');
+        }).on('mouseleave', function() {
+            $(this).removeClass('hovered');
+        });
+    }
+    
+    // Инициализация всех UX/UI компонентов
+    $(document).ready(function() {
+        initScrollAnimations();
+        initImageGalleries();
+        initEnhancedForms();
+        initEnhancedButtons();
+        initSmoothScrolling();
+        initHoverEffects();
+    });
 
 });
