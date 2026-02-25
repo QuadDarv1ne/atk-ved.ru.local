@@ -183,6 +183,7 @@ function atk_ved_enqueue_scripts(): void {
         wp_enqueue_style( 'atk-landing',    ATK_VED_URI . '/css/landing-sections.css',   [], '3.3' );
         wp_enqueue_style( 'atk-hero',       ATK_VED_URI . '/css/hero-counters.css',       [], $v   );
         wp_enqueue_style( 'atk-stats',      ATK_VED_URI . '/css/statistics.css',          [], $v   );
+        wp_enqueue_style( 'atk-stats-carousel', ATK_VED_URI . '/css/statistics-carousel.css', [], '3.3' );
         wp_enqueue_style( 'atk-animations-adv', ATK_VED_URI . '/css/advanced-animations.css', [], '3.3' );
     }
 
