@@ -1855,6 +1855,23 @@ jQuery(document).ready(function($) {
         initEnhancedButtons();
         initSmoothScrolling();
         initHoverEffects();
+        initFAQAccordion();
     });
+    
+    // Аккордеон для FAQ
+    function initFAQAccordion() {
+        $('.faq-question').on('click', function() {
+            const $item = $(this).closest('.faq-item');
+            const isActive = $item.hasClass('active');
+            
+            // Закрываем все элементы
+            $('.faq-item').removeClass('active');
+            
+            // Открываем текущий, если был закрыт
+            if (!isActive) {
+                $item.addClass('active');
+            }
+        });
+    }
 
 });
