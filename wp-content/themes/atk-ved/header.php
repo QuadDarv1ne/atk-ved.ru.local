@@ -23,7 +23,7 @@
                 } else {
                     ?>
                     <a href="<?php echo esc_url(home_url('/')); ?>" class="logo-link">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/logo.svg" alt="АТК-ВЭД" width="200" height="50">
+                        <img src="<?php echo get_template_directory_uri(); ?>/images/logo/logo.png" alt="АТК-ВЭД" width="240" height="60">
                     </a>
                     <?php
                 }

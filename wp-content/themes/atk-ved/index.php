@@ -18,29 +18,54 @@
                 </h1>
                 <div class="marketplaces">
                     <div class="marketplace-item">
-                        <div class="marketplace-icon">М</div>
+                        <div class="marketplace-logo">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="6" fill="#FF6B00"/>
+                                <text x="16" y="22" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">М</text>
+                            </svg>
+                        </div>
                         <span>МЕГАМАРКЕТ</span>
                     </div>
                     <div class="marketplace-item">
-                        <div class="marketplace-icon">A</div>
+                        <div class="marketplace-logo">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="6" fill="#FF6A00"/>
+                                <text x="16" y="22" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">A</text>
+                            </svg>
+                        </div>
                         <span>Alibaba</span>
                     </div>
                     <div class="marketplace-item">
-                        <div class="marketplace-icon">W</div>
+                        <div class="marketplace-logo">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="6" fill="#CB11AB"/>
+                                <text x="16" y="22" font-family="Arial" font-size="16" font-weight="bold" fill="white" text-anchor="middle">WB</text>
+                            </svg>
+                        </div>
                         <span>WILDBERRIES</span>
                     </div>
                     <div class="marketplace-item">
-                        <div class="marketplace-icon">A</div>
+                        <div class="marketplace-logo">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="6" fill="#E62E04"/>
+                                <text x="16" y="22" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">A</text>
+                            </svg>
+                        </div>
                         <span>AliExpress</span>
                     </div>
                     <div class="marketplace-item">
-                        <div class="marketplace-icon">O</div>
+                        <div class="marketplace-logo">
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="6" fill="#005BFF"/>
+                                <text x="16" y="22" font-family="Arial" font-size="18" font-weight="bold" fill="white" text-anchor="middle">O</text>
+                            </svg>
+                        </div>
                         <span>OZON</span>
                     </div>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/hero-boxes.jpg" alt="Товары из Китая">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/hero/hero-boxes.svg" alt="Товары из Китая" loading="eager">
             </div>
         </div>
     </div>
@@ -99,7 +124,7 @@
                 </form>
             </div>
             <div class="search-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/container-search.jpg" alt="Поиск товаров в Китае">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/container-search.svg" alt="Поиск товаров в Китае">
             </div>
         </div>
     </div>
@@ -111,7 +136,7 @@
         <h2 class="section-title">СПОСОБЫ И СРОКИ ДОСТАВКИ ГРУЗОВ</h2>
         <div class="delivery-content">
             <div class="delivery-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/container.svg" alt="Контейнер">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/container.svg" alt="Контейнер">
             </div>
             <div class="delivery-info">
                 <p>Мы предлагаем различные варианты доставки грузов из Китая в зависимости от ваших потребностей, сроков и бюджета.</p>
@@ -309,27 +334,46 @@
 <!-- FAQ Section -->
 <section class="faq-section" id="faq">
     <div class="container">
-        <h2 class="section-title">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+        <h2 class="section-title reveal">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
         <div class="faq-content">
             <div class="faq-image">
                 <img src="<?php echo get_template_directory_uri(); ?>/images/china-map.jpg" alt="Карта Китая">
             </div>
             <div class="faq-list">
                 <div class="faq-item">
-                    <div class="faq-question">Какой минимальный заказ?</div>
-                    <div class="faq-answer">Минимальный заказ зависит от типа товара и способа доставки. Обычно от 1000$.</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">💰</span>
+                        <span class="faq-text">Какой минимальный заказ?</span>
+                    </div>
+                    <div class="faq-answer">Минимальный заказ зависит от типа товара и способа доставки. Обычно от 1000$. Мы работаем как с крупными, так и с небольшими партиями.</div>
                 </div>
                 <div class="faq-item">
-                    <div class="faq-question">Сколько стоят ваши услуги?</div>
-                    <div class="faq-answer">Стоимость услуг рассчитывается индивидуально в зависимости от объема и сложности заказа.</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">💵</span>
+                        <span class="faq-text">Сколько стоят ваши услуги?</span>
+                    </div>
+                    <div class="faq-answer">Стоимость услуг рассчитывается индивидуально в зависимости от объема и сложности заказа. Используйте наш калькулятор для предварительного расчета.</div>
                 </div>
                 <div class="faq-item">
-                    <div class="faq-question">Как происходит оплата?</div>
-                    <div class="faq-answer">Работаем по предоплате 50%, остаток после получения товара на складе в России.</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">💳</span>
+                        <span class="faq-text">Как происходит оплата?</span>
+                    </div>
+                    <div class="faq-answer">Работаем по предоплате 50%, остаток после получения товара на складе в России. Принимаем оплату по безналичному расчету.</div>
                 </div>
                 <div class="faq-item">
-                    <div class="faq-question">Какие гарантии вы даете?</div>
-                    <div class="faq-answer">Заключаем официальный договор, предоставляем все необходимые документы и отчеты.</div>
+                    <div class="faq-question">
+                        <span class="faq-icon">🛡️</span>
+                        <span class="faq-text">Какие гарантии вы даете?</span>
+                    </div>
+                    <div class="faq-answer">Заключаем официальный договор, предоставляем все необходимые документы и отчеты. Страхуем грузы и несем ответственность за сохранность.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-icon">⏱️</span>
+                        <span class="faq-text">Сколько времени занимает доставка?</span>
+                    </div>
+                    <div class="faq-answer">Авиа: 5-10 дней, ЖД: 15-20 дней, Море: 30-45 дней. Сроки зависят от выбранного способа доставки и таможенного оформления.</div>
                 </div>
             </div>
         </div>
@@ -386,7 +430,7 @@
                 </form>
             </div>
             <div class="contact-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/pagoda.svg" alt="Пагода">
+                <img src="<?php echo get_template_directory_uri(); ?>/images/sections/pagoda.svg" alt="Пагода">
             </div>
         </div>
     </div>
