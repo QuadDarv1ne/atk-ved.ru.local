@@ -84,7 +84,7 @@ class ATK_VED_Image_Manager {
     /**
      * Получение URL изображения с fallback на placeholder
      */
-    public static function get_image_url(string $section, string $image_name, string $type = 'webp'): string {
+    public static function get_image_url(string $section, string $image_name, string $type = 'jpg'): string {
         $theme_url = get_template_directory_uri();
         $base_path = self::$image_paths['base'];
         
@@ -97,21 +97,33 @@ class ATK_VED_Image_Manager {
             return $theme_url . '/' . $image_path . $image_file;
         }
         
-        // Проверяем JPG fallback
-        $jpg_file = $image_name . '.jpg';
-        $jpg_path = get_template_directory() . '/' . $image_path . $jpg_file;
-        
-        if (file_exists($jpg_path)) {
-            return $theme_url . '/' . $image_path . $jpg_file;
+        // Проверяем WebP fallback
+        if ($type !== 'webp') {
+            $webp_file = $image_name . '.webp';
+            $webp_path = get_template_directory() . '/' . $image_path . $webp_file;
+            
+            if (file_exists($webp_path)) {
+                return $theme_url . '/' . $image_path . $webp_file;
+            }
         }
         
         // Возвращаем placeholder
         $config = self::$image_config[$section][$image_name] ?? null;
         if ($config && isset($config['placeholder'])) {
-            return $theme_url . '/' . $config['placeholder'];
+            $placeholder_path = get_template_directory() . '/' . $config['placeholder'];
+            if (file_exists($placeholder_path)) {
+                return $theme_url . '/' . $config['placeholder'];
+            }
         }
         
-        return $theme_url . '/images/placeholders/default-placeholder.jpg';
+        // Возвращаем стандартный placeholder
+        $default_placeholder = get_template_directory() . '/images/placeholders/default-placeholder.jpg';
+        if (file_exists($default_placeholder)) {
+            return $theme_url . '/images/placeholders/default-placeholder.jpg';
+        }
+        
+        // Если ничего не найдено, возвращаем пустую строку
+        return '';
     }
     
     /**
@@ -277,6 +289,35 @@ function atk_ved_init_image_manager(): void {
     if (!function_exists('atk_ved_get_gallery')) {
         function atk_ved_get_gallery(string $gallery_name): array {
             return ATK_VED_Image_Manager::get_gallery_images($gallery_name);
+        }
+    }
+    
+    // Тестовая функция для проверки изображений
+    if (!function_exists('atk_ved_test_images')) {
+        function atk_ved_test_images(): void {
+            $test_images = array(
+                array('section' => 'services', 'name' => 'logistics-service'),
+                array('section' => 'services', 'name' => 'delivery-service'),
+                array('section' => 'services', 'name' => 'quality-service')
+            );
+            
+            echo '<div style="padding: 20px; background: #f5f5f5; margin: 20px 0;">';
+            echo '<h3>Тест изображений:</h3>';
+            
+            foreach ($test_images as $image) {
+                $url = ATK_VED_Image_Manager::get_image_url($image['section'], $image['name']);
+                echo '<div style="margin: 10px 0;">';
+                echo '<strong>' . $image['section'] . '/' . $image['name'] . ':</strong> ';
+                if ($url) {
+                    echo '<span style="color: green;">✓ Найдено</span> - ' . basename($url);
+                    echo '<br><img src="' . esc_url($url) . '" style="max-width: 200px; height: auto; margin: 5px 0;">';
+                } else {
+                    echo '<span style="color: red;">✗ Не найдено</span>';
+                }
+                echo '</div>';
+            }
+            
+            echo '</div>';
         }
     }
 }

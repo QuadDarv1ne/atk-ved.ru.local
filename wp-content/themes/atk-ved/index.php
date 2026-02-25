@@ -1,5 +1,9 @@
 <?php get_header(); ?>
 
+<?php if (function_exists('atk_ved_test_images')): ?>
+    <?php atk_ved_test_images(); ?>
+<?php endif; ?>
+
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
