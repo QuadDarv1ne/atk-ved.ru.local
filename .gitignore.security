@@ -1,0 +1,117 @@
+# =============================================================================
+# КРИТИЧНЫЕ ФАЙЛЫ БЕЗОПАСНОСТИ (НИКОГДА НЕ КОММИТИТЬ!)
+# =============================================================================
+
+# Конфигурационные файлы с паролями
+wp-config.php
+wp-config-*.php
+config.php
+config.local.php
+config.production.php
+config.staging.php
+database.php
+db-config.php
+
+# Environment файлы
+.env
+.env.*
+!.env.example
+!.env.sample
+.env.local
+.env.production
+.env.staging
+.env.development
+.env.test
+.env.backup
+
+# Ключи и сертификаты
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.p7b
+*.der
+*.csr
+id_rsa
+id_rsa.pub
+*.ppk
+*.ssh
+.ssh/
+
+# Секреты и токены
+secrets.json
+secrets.yml
+secrets.yaml
+auth.json
+auth.yml
+credentials.json
+credentials.yml
+token.txt
+api-keys.txt
+.secrets/
+/config/secrets/
+/config/credentials/
+
+# Пароли
+passwords.txt
+.htpasswd
+.htpasswd.*
+.password
+.passwords
+
+# Базы данных
+*.sql
+*.sql.gz
+*.sql.bz2
+*.sql.zip
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+database.dump
+db-backup/
+/database/
+/dumps/
+
+# Резервные копии с потенциально чувствительными данными
+*.backup
+*.bak
+*.old
+*.orig
+*-backup-*
+backup-*
+*.~*
+
+# Логи (могут содержать чувствительную информацию)
+*.log
+*.log.*
+/logs/
+/log/
+error_log
+php_error.log
+debug.log
+access.log
+security.log
+
+# Временные файлы
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# ПРОВЕРКА ИСТОРИИ GIT
+# =============================================================================
+# Если эти файлы уже были закоммичены:
+# 1. Смените все пароли НЕМЕДЛЕННО
+# 2. Удалите файлы из истории:
+#    git filter-branch --force --index-filter \
+#    "git rm --cached --ignore-unmatch wp-config.php" \
+#    --prune-empty --tag-name-filter cat -- --all
+# 3. Форсированно запушьте:
+#    git push origin --force --all
+# =============================================================================

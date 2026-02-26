@@ -1,38 +1,27 @@
 {
   "name": "atk-ved-theme",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "АТК ВЭД — современная тема WordPress для логистической компании",
   "private": true,
   "author": "ATK VED Team",
   "license": "GPL-2.0-or-later",
   "homepage": "https://atk-ved.ru",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atk-ved/theme.git"
-  },
-  "bugs": {
-    "url": "https://github.com/atk-ved/theme/issues"
-  },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "watch": "vite build --watch",
-    "clean": "rimraf dist",
-    "lint:js": "eslint src/js",
-    "lint:css": "stylelint src/css",
-    "lint": "npm run lint:js && npm run lint:css",
-    "format": "prettier --write \"src/**/*.{js,css,scss}\""
+    "minify:css": "for file in css/*.css; do [ -f \"$file\" ] && npx cssnano \"$file\" \"${file%.css}.min.css\"; done",
+    "minify:js": "for file in js/*.js; do [ -f \"$file\" ] && npx terser \"$file\" -o \"${file%.js}.min.js\" -c -m; done",
+    "minify": "npm run minify:css && npm run minify:js",
+    "watch:css": "npx chokidar 'css/**/*.css' -c 'npm run minify:css'",
+    "watch:js": "npx chokidar 'js/**/*.js' -c 'npm run minify:js'"
   },
   "devDependencies": {
-    "vite": "^5.4.0",
-    "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
-    "postcss": "^8.4.47",
-    "terser": "^5.34.1"
+    "cssnano-cli": "^1.0.5",
+    "terser": "^5.34.1",
+    "chokidar-cli": "^3.0.0"
   },
   "browserslist": [
     "last 2 versions",
@@ -45,6 +34,9 @@
     "atk-ved",
     "logistics",
     "china",
-    "marketplace"
+    "marketplace",
+    "no-jquery",
+    "pwa",
+    "optimized"
   ]
 }

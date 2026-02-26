@@ -21,25 +21,14 @@ $logo       = get_theme_mod( 'atk_ved_logo_white', get_template_directory_uri() 
         <div class="container">
             <div class="newsletter-inner">
                 <div class="newsletter-text">
-                    <h2 class="newsletter-title"><?php _e( 'Получайте лучшие предложения', 'atk-ved' ); ?></h2>
-                    <p><?php _e( 'Подпишитесь и получайте эксклюзивные скидки и новости', 'atk-ved' ); ?></p>
+                    <h2 class="newsletter-title"><?php _e('Получайте лучшие предложения', 'atk-ved'); ?></h2>
+                    <p><?php _e('Подпишитесь и получайте эксклюзивные скидки и новости', 'atk-ved'); ?></p>
                 </div>
                 <div class="newsletter-form-wrap">
-                    <label for="footer-email" class="screen-reader-text">
-                        <?php _e( 'Ваш email адрес', 'atk-ved' ); ?>
-                    </label>
-                    <div class="newsletter-form" role="form" aria-label="<?php esc_attr_e( 'Форма подписки', 'atk-ved' ); ?>">
-                        <input
-                            type="email"
-                            id="footer-email"
-                            name="email"
-                            placeholder="<?php esc_attr_e( 'Ваш email', 'atk-ved' ); ?>"
-                            required
-                            autocomplete="email"
-                        >
-                        <button type="button" class="btn btn-primary js-newsletter-submit">
-                            <?php _e( 'Подписаться', 'atk-ved' ); ?>
-                        </button>
+                    <label for="footer-email" class="screen-reader-text"><?php _e('Ваш email адрес', 'atk-ved'); ?></label>
+                    <div class="newsletter-form" role="form" aria-label="<?php esc_attr_e('Форма подписки', 'atk-ved'); ?>">
+                        <input type="email" id="footer-email" name="email" placeholder="<?php esc_attr_e('Ваш email', 'atk-ved'); ?>" required autocomplete="email">
+                        <button type="button" class="btn btn-primary js-newsletter-submit"><?php _e('Подписаться', 'atk-ved'); ?></button>
                     </div>
                     <div class="newsletter-response" aria-live="polite" hidden></div>
                 </div>
@@ -54,69 +43,39 @@ $logo       = get_theme_mod( 'atk_ved_logo_white', get_template_directory_uri() 
 
                 <!-- О компании -->
                 <div class="footer-col footer-col--about">
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-logo" aria-label="<?php esc_attr_e( 'АТК ВЭД — на главную', 'atk-ved' ); ?>">
-                        <img
-                            src="<?php echo esc_url( $logo ); ?>"
-                            alt="<?php esc_attr_e( 'АТК ВЭД', 'atk-ved' ); ?>"
-                            width="160"
-                            height="48"
-                            loading="lazy"
-                        >
+                    <a href="<?php echo esc_url(home_url('/')); ?>" class="footer-logo" aria-label="<?php esc_attr_e('АТК ВЭД — на главную', 'atk-ved'); ?>">
+                        <img src="<?php echo esc_url($logo); ?>" alt="<?php esc_attr_e('АТК ВЭД', 'atk-ved'); ?>" width="160" height="48" loading="lazy">
                     </a>
-                    <p class="footer-desc">
-                        <?php _e( 'Товары для маркетплейсов из Китая оптом. Полный цикл работы от поиска до доставки с гарантией качества.', 'atk-ved' ); ?>
-                    </p>
-                    <ul class="trust-badges" aria-label="<?php esc_attr_e( 'Наши достижения', 'atk-ved' ); ?>">
+                    <p class="footer-desc"><?php _e('Товары для маркетплейсов из Китая оптом. Полный цикл работы от поиска до доставки с гарантией качества.', 'atk-ved'); ?></p>
+                    <ul class="trust-badges" aria-label="<?php esc_attr_e('Наши достижения', 'atk-ved'); ?>">
                         <li class="badge">
-                            <span class="badge-icon" aria-hidden="true">
-                                <?php echo atk_ved_icon( 'trophy' ); ?>
-                            </span>
-                            <span><?php _e( '5 лет на рынке', 'atk-ved' ); ?></span>
+                            <span class="badge-icon" aria-hidden="true"><?php echo atk_ved_icon('trophy'); ?></span>
+                            <span><?php _e('5 лет на рынке', 'atk-ved'); ?></span>
                         </li>
                         <li class="badge">
-                            <span class="badge-icon" aria-hidden="true">
-                                <?php echo atk_ved_icon( 'truck' ); ?>
-                            </span>
-                            <span><?php _e( '1000+ доставок', 'atk-ved' ); ?></span>
+                            <span class="badge-icon" aria-hidden="true"><?php echo atk_ved_icon('truck'); ?></span>
+                            <span><?php _e('1000+ доставок', 'atk-ved'); ?></span>
                         </li>
                         <li class="badge">
-                            <span class="badge-icon" aria-hidden="true">
-                                <?php echo atk_ved_icon( 'star' ); ?>
-                            </span>
-                            <span><?php _e( '4.9/5 рейтинг', 'atk-ved' ); ?></span>
+                            <span class="badge-icon" aria-hidden="true"><?php echo atk_ved_icon('star'); ?></span>
+                            <span><?php _e('4.9/5 рейтинг', 'atk-ved'); ?></span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Услуги -->
                 <div class="footer-col footer-col--services">
-                    <h3 class="footer-col__title"><?php _e( 'Услуги', 'atk-ved' ); ?></h3>
-                    <nav aria-label="<?php esc_attr_e( 'Услуги', 'atk-ved' ); ?>">
-                        <?php
-                        wp_nav_menu( [
-                            'theme_location' => 'footer-services',
-                            'container'      => false,
-                            'menu_class'     => 'footer-links',
-                            'depth'          => 1,
-                            'fallback_cb'    => 'atk_ved_footer_services_fallback',
-                        ] );
-                        ?>
+                    <h3 class="footer-col__title"><?php _e('Услуги', 'atk-ved'); ?></h3>
+                    <nav aria-label="<?php esc_attr_e('Услуги', 'atk-ved'); ?>">
+                        <?php wp_nav_menu(['theme_location'=>'footer-services','container'=>false,'menu_class'=>'footer-links','depth'=>1,'fallback_cb'=>'atk_ved_footer_services_fallback']); ?>
                     </nav>
                 </div>
 
                 <!-- Компания -->
                 <div class="footer-col footer-col--company">
-                    <h3 class="footer-col__title"><?php _e( 'Компания', 'atk-ved' ); ?></h3>
-                    <nav aria-label="<?php esc_attr_e( 'Компания', 'atk-ved' ); ?>">
-                        <?php
-                        wp_nav_menu( [
-                            'theme_location' => 'footer-company',
-                            'container'      => false,
-                            'menu_class'     => 'footer-links',
-                            'depth'          => 1,
-                            'fallback_cb'    => 'atk_ved_footer_company_fallback',
-                        ] );
-                        ?>
+                    <h3 class="footer-col__title"><?php _e('Компания', 'atk-ved'); ?></h3>
+                    <nav aria-label="<?php esc_attr_e('Компания', 'atk-ved'); ?>">
+                        <?php wp_nav_menu(['theme_location'=>'footer-company','container'=>false,'menu_class'=>'footer-links','depth'=>1,'fallback_cb'=>'atk_ved_footer_company_fallback']); ?>
                     </nav>
                 </div>
 

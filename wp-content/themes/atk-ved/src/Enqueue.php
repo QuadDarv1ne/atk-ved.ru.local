@@ -32,9 +32,12 @@ class Enqueue {
 
         // === Стили ===
 
+        // Bootstrap
+        wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', [], '5.3.2' );
+
         // Базовые стили
         wp_enqueue_style( 'atk-variables', get_template_directory_uri() . '/css/variables.css', [], $v );
-        wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-variables' ], $v );
+        wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'bootstrap', 'atk-variables' ], $v );
         wp_enqueue_style( 'atk-base', get_template_directory_uri() . '/css/base.css', [], $v );
         
         // Критический CSS inline
@@ -90,6 +93,19 @@ class Enqueue {
 
         // Формы с background sync
         wp_enqueue_script( 'atk-forms', get_template_directory_uri() . '/js/forms.js', [], $v, true );
+
+        // Bootstrap JS
+        wp_enqueue_script( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', [], '5.3.2', true );
+
+        // Lazy loading изображений
+        if ( ! is_admin() ) {
+            wp_enqueue_script( 'atk-lazy-images', get_template_directory_uri() . '/js/lazy-images.js', [], $v, true );
+            
+            // Web Vitals мониторинг (только на продакшене)
+            if ( ! WP_DEBUG ) {
+                wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance-metrics.js', [], $v, true );
+            }
+        }
 
         // Локализация JS
         $this->localize_script();
@@ -160,6 +176,7 @@ class Enqueue {
         echo '<link rel="preload" href="' . esc_url( $theme_uri . '/js/core.js' ) . '" as="script">' . "\n";
 
         // Preconnect для внешних ресурсов
+        echo '<link rel="preconnect" href="https://cdn.jsdelivr.net">' . "\n";
         echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
         echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
         echo '<link rel="dns-prefetch" href="//mc.yandex.ru">' . "\n";

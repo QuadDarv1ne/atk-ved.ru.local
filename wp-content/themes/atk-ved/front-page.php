@@ -1,33 +1,23 @@
 <?php
 /**
- * Улучшенная главная страница (Front Page)
- * Интеграция всех новых функций и оптимизация
+ * Оптимизированная главная страница
  *
  * @package ATK_VED
- * @since 3.7.0
+ * @since 3.4.0
  */
 
 defined('ABSPATH') || exit;
 
 get_header();
-
-// Получаем данные компании
-$company = atk_ved_get_company_info();
 ?>
 
 <main id="main-content">
 
-    <!-- ====================================================
-         HERO СЕКЦИЯ С ФОТО КИТАЯ
-    ===================================================== -->
-    <?php
-    $hero_bg = atk_ved_get_stock_photo('china', 'full');
-    ?>
-    <section class="hero-section-enhanced" style="background-image: url('<?php echo esc_url($hero_bg); ?>');">
+    <!-- HERO -->
+    <section class="hero-section-enhanced">
         <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content-enhanced">
-                
                 <div class="hero-text-enhanced">
                     <div class="hero-badges">
                         <span class="badge">🏆 <?php _e('Опытные менеджеры', 'atk-ved'); ?></span>
@@ -53,23 +43,6 @@ $company = atk_ved_get_company_info();
                         </a>
                     </div>
 
-                    <!-- Статистика в Hero -->
-                    <div class="hero-stats">
-                        <div class="hero-stat">
-                            <span class="stat-number" data-target="1500">0</span><span class="stat-suffix">+</span>
-                            <span class="stat-label"><?php _e('Клиентов', 'atk-ved'); ?></span>
-                        </div>
-                        <div class="hero-stat">
-                            <span class="stat-number" data-target="5">0</span><span class="stat-suffix">+</span>
-                            <span class="stat-label"><?php _e('Лет опыта', 'atk-ved'); ?></span>
-                        </div>
-                        <div class="hero-stat">
-                            <span class="stat-number" data-target="1000">0</span><span class="stat-suffix">+</span>
-                            <span class="stat-label"><?php _e('Доставок', 'atk-ved'); ?></span>
-                        </div>
-                    </div>
-
-                    <!-- Маркетплейсы -->
                     <div class="marketplaces-hero">
                         <span class="mp-label"><?php _e('Работаем с:', 'atk-ved'); ?></span>
                         <div class="marketplace-logos">
@@ -77,24 +50,18 @@ $company = atk_ved_get_company_info();
                             <div class="mp-logo">Ozon</div>
                             <div class="mp-logo">Мегамаркет</div>
                             <div class="mp-logo">AliExpress</div>
-                            <div class="mp-logo">Alibaba</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
-        <!-- Scroll indicator -->
         <div class="scroll-indicator">
             <span class="scroll-text"><?php _e('Листайте вниз', 'atk-ved'); ?></span>
             <div class="scroll-arrow">↓</div>
         </div>
     </section>
 
-    <!-- ====================================================
-         УСЛУГИ (УЛУЧШЕННЫЕ КАРТОЧКИ)
-    ===================================================== -->
+    <!-- УСЛУГИ -->
     <section class="services-section-enhanced" id="services">
         <div class="container">
             <div class="section-header">
@@ -113,9 +80,8 @@ $company = atk_ved_get_company_info();
                     ['n' => '06', 'title' => __('Консультации', 'atk-ved'), 'desc' => __('Консультируем по всем вопросам работы с Китаем', 'atk-ved'), 'icon' => '💬'],
                 ];
                 foreach ($services as $i => $s):
-                    $delay = ($i + 1) * 100;
                 ?>
-                <article class="service-card-enhanced" style="--delay: <?php echo $delay; ?>ms">
+                <article class="service-card-enhanced" style="--delay: <?php echo ($i + 1) * 100; ?>ms">
                     <div class="service-icon"><?php echo esc_html($s['icon']); ?></div>
                     <span class="service-number"><?php echo esc_html($s['n']); ?></span>
                     <h3 class="service-title"><?php echo esc_html($s['title']); ?></h3>
@@ -132,38 +98,18 @@ $company = atk_ved_get_company_info();
         </div>
     </section>
 
-    <!-- ====================================================
-         ТАБЛИЦА СРАВНЕНИЯ ДОСТАВКИ
-    ===================================================== -->
-    <section class="delivery-comparison-section">
+    <!-- СРАВНЕНИЕ ДОСТАВКИ -->
+    <section class="delivery-comparison-section" id="calculator">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title"><?php _e('Сравнение способов доставки', 'atk-ved'); ?></h2>
                 <p class="section-subtitle"><?php _e('Выберите оптимальный вариант для вашего груза', 'atk-ved'); ?></p>
             </div>
-
             <?php echo do_shortcode('[delivery_comparison]'); ?>
         </div>
     </section>
 
-    <!-- ====================================================
-         ЛИД-КАЛЬКУЛЯТОР (2 ШАГА)
-    ===================================================== -->
-    <?php echo do_shortcode('[lead_calculator title="Рассчитайте стоимость доставки" subtitle="Получите расчёт и скидку 10% на первую доставку"]'); ?>
-
-    <!-- ====================================================
-         ГАЛЕРЕЯ ПРОИЗВОДСТВА
-    ===================================================== -->
-    <?php echo do_shortcode('[factory_gallery title="Производство и контроль качества" subtitle="Работаем только с проверенными фабриками" limit="8" columns="4"]'); ?>
-
-    <!-- ====================================================
-         ГАЛЕРЕЯ ДОСТАВКИ
-    ===================================================== -->
-    <?php echo do_shortcode('[shipping_gallery title="Логистика и доставка" subtitle="Надёжные маршруты по всему миру" limit="6"]'); ?>
-
-    <!-- ====================================================
-         ПРЕИМУЩЕСТВА
-    ===================================================== -->
+    <!-- ПРЕИМУЩЕСТВА -->
     <section class="advantages-section-enhanced">
         <div class="container">
             <div class="section-header">
@@ -193,42 +139,20 @@ $company = atk_ved_get_company_info();
         </div>
     </section>
 
-    <!-- ====================================================
-         ВИДЕО ПРЕЗЕНТАЦИЯ
-    ===================================================== -->
-    <?php
-    $video_id = get_theme_mod('atk_ved_video_id', '');
-    if ($video_id):
-    ?>
-    <?php echo do_shortcode('[video_presentation video_id="' . esc_attr($video_id) . '" title="Видео о компании" subtitle="Узнайте больше о нашей работе"]'); ?>
-    <?php endif; ?>
-
-    <!-- ====================================================
-         ПАРТНЁРЫ И СЕРТИФИКАТЫ
-    ===================================================== -->
-    <?php echo do_shortcode('[partners_certificates title="Наши партнёры и сертификаты" subtitle="Доверие клиентов и официальная сертификация"]'); ?>
-
-    <!-- ====================================================
-         КОМАНДА
-    ===================================================== -->
-    <?php echo do_shortcode('[team_section title="Наша команда" subtitle="Профессионалы с многолетним опытом"]'); ?>
-
-    <!-- ====================================================
-         ИНТЕРАКТИВНАЯ КАРТА
-    ===================================================== -->
-    <section class="map-section">
+    <!-- ОТЗЫВЫ -->
+    <?php if (function_exists('atk_ved_reviews_slider_shortcode')): ?>
+    <section class="reviews-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title"><?php _e('География доставки', 'atk-ved'); ?></h2>
-                <p class="section-subtitle"><?php _e('Работаем по всему миру', 'atk-ved'); ?></p>
+                <h2 class="section-title"><?php _e('Отзывы клиентов', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Что говорят о нас', 'atk-ved'); ?></p>
             </div>
-            <?php echo do_shortcode('[delivery_map height="500" zoom="4"]'); ?>
+            <?php echo do_shortcode('[reviews_slider]'); ?>
         </div>
     </section>
+    <?php endif; ?>
 
-    <!-- ====================================================
-         КОНТАКТЫ (CTA)
-    ===================================================== -->
+    <!-- КОНТАКТЫ -->
     <section class="contact-section-enhanced" id="contact">
         <div class="container">
             <div class="contact-inner">
@@ -245,7 +169,13 @@ $company = atk_ved_get_company_info();
                 </div>
 
                 <div class="contact-form-wrapper">
-                    <?php atk_ved_render_lead_form('contact', 'atk_ved_contact'); ?>
+                    <?php
+                    if (function_exists('atk_ved_render_lead_form')) {
+                        atk_ved_render_lead_form('contact', 'atk_ved_contact');
+                    } else {
+                        echo do_shortcode('[enhanced_contact_form]');
+                    }
+                    ?>
                 </div>
             </div>
         </div>

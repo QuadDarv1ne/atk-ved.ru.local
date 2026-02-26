@@ -1,36 +1,49 @@
 <?php
-/**
- * Главный класс темы - объединяет все модули.
- *
- * @package ATKVed
- */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ATKVed;
 
+use ATKVed\Core\Container;
+use ATKVed\Services\CompanyService;
+
 /**
- * Основной класс темы.
+ * Главный класс темы - объединяет все модули
+ *
+ * @package ATKVed
+ * @since   3.5.0
  */
-final class Theme {
-
+final class Theme
+{
     /**
-     * Экземпляр класса.
+     * Экземпляр класса (Singleton)
+     *
+     * @var self|null
      */
-    private static ?Theme $instance = null;
+    private static ?self $instance = null;
 
     /**
-     * Модули темы.
+     * DI контейнер
+     *
+     * @var Container
+     */
+    private Container $container;
+
+    /**
+     * Модули темы
+     *
+     * @var array<string, object>
      */
     private array $modules = [];
 
     /**
-     * Получение экземпляра (Singleton).
+     * Получение экземпляра (Singleton)
      *
-     * @return static
+     * @return self
      */
-    public static function get_instance(): self {
-        if ( null === self::$instance ) {
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
             self::$instance = new self();
         }
 
@@ -38,214 +51,215 @@ final class Theme {
     }
 
     /**
-     * Конструктор - инициализация модулей.
+     * Конструктор - инициализация темы
      */
-    private function __construct() {
-        $this->init_modules();
-        $this->register_hooks();
+    private function __construct()
+    {
+        $this->container = new Container();
+        $this->registerServices();
+        $this->initModules();
+        $this->registerHooks();
     }
 
     /**
-     * Инициализация модулей.
+     * Регистрация сервисов в контейнере
      *
      * @return void
      */
-    private function init_modules(): void {
-        $this->modules = [
-            'setup'      => new Setup(),
-            'enqueue'    => new Enqueue(),
-            'ajax'       => new Ajax(),
-            'shortcodes' => new Shortcodes(),
-            'customizer' => new Customizer(),
-        ];
+    private function registerServices(): void
+    {
+        // Регистрация сервиса компании
+        $this->container->register('company', function () {
+            return new CompanyService();
+        });
+
+        // Регистрация других сервисов
+        $this->container->register('enqueue', function () {
+            return new Enqueue();
+        });
+
+        $this->container->register('setup', function () {
+            return new Setup();
+        });
+
+        $this->container->register('ajax', function () {
+            return new Ajax();
+        });
+
+        $this->container->register('shortcodes', function () {
+            return new Shortcodes();
+        });
+
+        $this->container->register('customizer', function () {
+            return new Customizer();
+        });
     }
 
     /**
-     * Регистрация хуков WordPress.
+     * Инициализация модулей
      *
      * @return void
      */
-    private function register_hooks(): void {
+    private function initModules(): void
+    {
+        $moduleIds = ['setup', 'enqueue', 'ajax', 'shortcodes', 'customizer'];
+
+        foreach ($moduleIds as $id) {
+            $this->modules[$id] = $this->container->get($id);
+        }
+    }
+
+    /**
+     * Регистрация хуков WordPress
+     *
+     * @return void
+     */
+    private function registerHooks(): void
+    {
         // Инициализация всех модулей
-        foreach ( $this->modules as $module ) {
-            if ( method_exists( $module, 'init' ) ) {
+        foreach ($this->modules as $module) {
+            if (method_exists($module, 'init')) {
                 $module->init();
             }
         }
 
         // Дополнительные хуки
-        add_action( 'init', [ $this, 'cleanup_head' ] );
-        add_filter( 'wp_get_attachment_image_attributes', [ $this, 'optimize_images' ] );
-        add_action( 'template_redirect', [ $this, 'minify_html' ] );
+        add_action('init', [$this, 'cleanupHead']);
+        add_filter('wp_get_attachment_image_attributes', [$this, 'optimizeImages']);
+        
+        // Минификация HTML только на продакшене
+        if (!WP_DEBUG) {
+            add_action('template_redirect', [$this, 'minifyHtml']);
+        }
     }
 
     /**
-     * Очистка <head>.
+     * Очистка <head> от лишних тегов
      *
      * @return void
      */
-    public function cleanup_head(): void {
-        remove_action( 'wp_head', 'wp_generator' );
-        remove_action( 'wp_head', 'wlwmanifest_link' );
-        remove_action( 'wp_head', 'rsd_link' );
-        remove_action( 'wp_head', 'wp_shortlink_wp_head' );
-        remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head' );
+    public function cleanupHead(): void
+    {
+        remove_action('wp_head', 'wp_generator');
+        remove_action('wp_head', 'wlwmanifest_link');
+        remove_action('wp_head', 'rsd_link');
+        remove_action('wp_head', 'wp_shortlink_wp_head');
+        remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
+        remove_action('wp_head', 'feed_links_extra', 3);
     }
 
     /**
-     * Оптимизация атрибутов изображений.
+     * Оптимизация атрибутов изображений
      *
-     * @param array $attr Атрибуты.
-     *
-     * @return array
+     * @param array<string, mixed> $attr Атрибуты изображения
+     * @return array<string, mixed>
      */
-    public function optimize_images( array $attr ): array {
+    public function optimizeImages(array $attr): array
+    {
         $attr['loading']  ??= 'lazy';
         $attr['decoding'] ??= 'async';
+        
         return $attr;
     }
 
     /**
-     * Минификация HTML.
+     * Минификация HTML
      *
      * @return void
      */
-    public function minify_html(): void {
-        if (
-            is_admin()
-            || ( defined( 'DOING_AJAX' ) && DOING_AJAX )
-            || ( defined( 'DOING_CRON' ) && DOING_CRON )
-            || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
-            || ( defined( 'WP_DEBUG' ) && WP_DEBUG )
-        ) {
+    public function minifyHtml(): void
+    {
+        if ($this->shouldSkipMinification()) {
             return;
         }
 
-        ob_start( function( string $buffer ): string {
-            // Сохраняем содержимое <pre> и <script>/<style>
-            $preserved = [];
-            $buffer = preg_replace_callback(
-                '#(<(?:pre|script|style)[^>]*>)(.*?)(</(?:pre|script|style)>)#si',
-                function( $matches ) use ( &$preserved ): string {
-                    $key = '<!--PRESERVE_' . count( $preserved ) . '-->';
-                    $preserved[ $key ] = $matches[0];
-                    return $key;
-                },
-                $buffer
-            );
-
-            // Убираем HTML-комментарии (кроме IE-условных)
-            $buffer = preg_replace( '/<!--(?!\[if)(.|\s)*?-->/', '', $buffer );
-            // Сжимаем пробелы
-            $buffer = preg_replace( [ '/\s{2,}/', '/>\s+</' ], [ ' ', '><' ], $buffer );
-
-            // Восстанавливаем сохранённые блоки
-            return strtr( $buffer, $preserved );
-        } );
+        ob_start(function (string $buffer): string {
+            return $this->minifyBuffer($buffer);
+        });
     }
 
     /**
-     * Получение данных компании.
-     *
-     * @return array
-     */
-    public static function get_company_info(): array {
-        static $info = null;
-
-        if ( null === $info ) {
-            $founded = 2018;
-            $years   = (int) date( 'Y' ) - $founded;
-
-            $info = [
-                'name'        => 'АТК ВЭД',
-                'description' => __( 'Товары для маркетплейсов из Китая оптом. Полный цикл работы от поиска до доставки с гарантией качества.', 'atk-ved' ),
-                'founded'     => $founded,
-                'years'       => $years,
-                'deliveries'  => 1000,
-                'rating'      => 4.9,
-            ];
-        }
-
-        return $info;
-    }
-
-    /**
-     * Получение социальных ссылок.
-     *
-     * @return array
-     */
-    public static function get_social_links(): array {
-        static $links = null;
-
-        if ( null === $links ) {
-            $keys  = [ 'whatsapp', 'telegram', 'vk', 'instagram', 'youtube' ];
-            $links = [];
-
-            foreach ( $keys as $key ) {
-                $val = get_theme_mod( 'atk_ved_' . $key, '' );
-                if ( $val ) {
-                    $links[ $key ] = esc_url( $val );
-                }
-            }
-        }
-
-        return $links;
-    }
-
-    /**
-     * Получение trust-badges.
-     *
-     * @return array
-     */
-    public static function get_trust_badges(): array {
-        $info = self::get_company_info();
-
-        return [
-            [ 'icon' => 'trophy', 'text' => $info['years'] . ' ' . self::pluralize( $info['years'], 'год', 'года', 'лет' ) . ' ' . __( 'на рынке', 'atk-ved' ) ],
-            [ 'icon' => 'truck',  'text' => $info['deliveries'] . '+ ' . __( 'доставок', 'atk-ved' ) ],
-            [ 'icon' => 'star',   'text' => $info['rating'] . '/5 ' . __( 'рейтинг', 'atk-ved' ) ],
-            [ 'icon' => 'shield', 'text' => __( 'Гарантия качества', 'atk-ved' ) ],
-        ];
-    }
-
-    /**
-     * Склонение числительных.
-     *
-     * @param int    $n     Число.
-     * @param string $one   Форма 1.
-     * @param string $few   Форма 2-4.
-     * @param string $many  Форма 5+.
-     *
-     * @return string
-     */
-    public static function pluralize( int $n, string $one, string $few, string $many ): string {
-        $mod10  = $n % 10;
-        $mod100 = $n % 100;
-
-        if ( $mod100 >= 11 && $mod100 <= 19 ) {
-            return $many;
-        }
-
-        if ( $mod10 === 1 ) {
-            return $one;
-        }
-
-        if ( $mod10 >= 2 && $mod10 <= 4 ) {
-            return $few;
-        }
-
-        return $many;
-    }
-
-    /**
-     * Проверка URL на безопасность.
-     *
-     * @param string $url URL для проверки.
+     * Проверка, нужно ли пропустить минификацию
      *
      * @return bool
      */
-    public static function is_safe_url( string $url ): bool {
-        $scheme = parse_url( $url, PHP_URL_SCHEME );
-        return in_array( strtolower( (string) $scheme ), [ 'https', 'http', 'tg' ], true );
+    private function shouldSkipMinification(): bool
+    {
+        return is_admin()
+            || (defined('DOING_AJAX') && DOING_AJAX)
+            || (defined('DOING_CRON') && DOING_CRON)
+            || (defined('REST_REQUEST') && REST_REQUEST)
+            || (defined('WP_DEBUG') && WP_DEBUG);
+    }
+
+    /**
+     * Минификация буфера HTML
+     *
+     * @param string $buffer HTML буфер
+     * @return string
+     */
+    private function minifyBuffer(string $buffer): string
+    {
+        // Сохраняем содержимое <pre>, <script>, <style>
+        $preserved = [];
+        $buffer = preg_replace_callback(
+            '#(<(?:pre|script|style)[^>]*>)(.*?)(</(?:pre|script|style)>)#si',
+            function ($matches) use (&$preserved): string {
+                $key = '<!--PRESERVE_' . count($preserved) . '-->';
+                $preserved[$key] = $matches[0];
+                return $key;
+            },
+            $buffer
+        ) ?? $buffer;
+
+        // Убираем HTML-комментарии (кроме IE-условных)
+        $buffer = preg_replace('/<!--(?!\[if)(.|\s)*?-->/', '', $buffer) ?? $buffer;
+        
+        // Сжимаем пробелы
+        $buffer = preg_replace(['/\s{2,}/', '/>\s+</'], [' ', '><'], $buffer) ?? $buffer;
+
+        // Восстанавливаем сохранённые блоки
+        return strtr($buffer, $preserved);
+    }
+
+    /**
+     * Получение сервиса из контейнера
+     *
+     * @param string $id Идентификатор сервиса
+     * @return mixed
+     */
+    public function get(string $id): mixed
+    {
+        return $this->container->get($id);
+    }
+
+    /**
+     * Получение данных компании
+     *
+     * @return array<string, mixed>
+     */
+    public static function getCompanyInfo(): array
+    {
+        return self::getInstance()->get('company')->getInfo();
+    }
+
+    /**
+     * Получение социальных ссылок
+     *
+     * @return array<string, string>
+     */
+    public static function getSocialLinks(): array
+    {
+        return self::getInstance()->get('company')->getSocialLinks();
+    }
+
+    /**
+     * Получение trust badges
+     *
+     * @return array<int, array<string, string>>
+     */
+    public static function getTrustBadges(): array
+    {
+        return self::getInstance()->get('company')->getTrustBadges();
     }
 }

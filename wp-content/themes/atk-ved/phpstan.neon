@@ -1,0 +1,12 @@
+parameters:
+    level: 5
+    paths:
+        - src
+    excludePaths:
+        - vendor
+        - node_modules
+    ignoreErrors:
+        - '#Function (get_template_directory|get_template_directory_uri|get_theme_mod|esc_html|esc_attr|esc_url|__) not found#'
+        - '#Constant ABSPATH not found#'
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
