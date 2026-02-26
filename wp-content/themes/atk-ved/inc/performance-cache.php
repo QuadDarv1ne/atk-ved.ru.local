@@ -69,10 +69,10 @@ class ATK_VED_Cache {
     /**
      * Сохранение данных в кэш
      */
-    public function set(string $key, $value, int $time = null): bool {
+    public function set(string $key, $value, ?int $time = null): bool {
         $file = $this->get_cache_file($key);
         $data = maybe_serialize($value);
-        
+
         return file_put_contents($file, $data) !== false;
     }
     
@@ -421,28 +421,4 @@ function atk_ved_end_performance_timer(): void {
 }
 add_action('wp_footer', 'atk_ved_end_performance_timer', 1000);
 
-/**
- * Ленивая загрузка iframe
- */
-function atk_ved_lazy_iframes(string $content): string {
-    return preg_replace_callback(
-        '/<iframe(.*?)src="(.*?)"(.*?)><\/iframe>/is',
-        function($matches) {
-            $attrs = $matches[1] . $matches[3];
-            
-            // Добавляем loading="lazy" если нет
-            if (!preg_match('/loading=["\']lazy["\']/i', $attrs)) {
-                $attrs = ' loading="lazy"' . $attrs;
-            }
-            
-            // Добавляем decoding="async" если нет
-            if (!preg_match('/decoding=["\']async["\']/i', $attrs)) {
-                $attrs = ' decoding="async"' . $attrs;
-            }
-            
-            return '<iframe' . $attrs . 'src="' . $matches[2] . '"></iframe>';
-        },
-        $content
-    );
-}
-add_filter('the_content', 'atk_ved_lazy_iframes', 20);
+// Функция atk_ved_lazy_iframes() перенесена в performance-lazyload.php

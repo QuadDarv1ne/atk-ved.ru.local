@@ -233,6 +233,7 @@ add_filter('wp_calculate_image_srcset', 'atk_ved_webp_srcset', 10, 5);
 /**
  * Lazy Loading для iframe (YouTube, Vimeo)
  */
+if (!function_exists('atk_ved_lazy_iframes')):
 function atk_ved_lazy_iframes(string $content): string {
     if (empty($content)) {
         return $content;
@@ -273,6 +274,7 @@ function atk_ved_lazy_iframes(string $content): string {
     
     return $content;
 }
+endif;
 add_filter('the_content', 'atk_ved_lazy_iframes', 25);
 
 /**

@@ -10,14 +10,28 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Load Composer autoloader for theme (includes version.php and helpers.php)
+// Define constants first
+if ( ! defined( 'ATK_VED_DIR' ) ) {
+    define( 'ATK_VED_DIR', get_template_directory() );
+}
+if ( ! defined( 'ATK_VED_URI' ) ) {
+    define( 'ATK_VED_URI', get_template_directory_uri() );
+}
+
+// Load Composer autoloader for theme
 $composer_autoload = get_template_directory() . '/vendor/autoload.php';
 if ( file_exists( $composer_autoload ) ) {
     require_once $composer_autoload;
+} else {
+    // Fallback: manually include version.php if Composer autoloader doesn't exist
+    $version_file = get_template_directory() . '/version.php';
+    if ( file_exists( $version_file ) ) {
+        require_once $version_file;
+    }
 }
 
 // Check PHP version
-if ( version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
+if ( defined( 'ATK_VED_MIN_PHP_VERSION' ) && version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
     add_action( 'admin_notice', function() {
         echo '<div class="notice notice-error"><p>PHP ' . esc_html( ATK_VED_MIN_PHP_VERSION ) . '+ required. Current: ' . esc_html( PHP_VERSION ) . '</p></div>';
     } );
@@ -27,6 +41,25 @@ if ( version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
 // Initialize theme loader if class exists
 if ( class_exists( '\ATKVed\Loader' ) ) {
     \ATKVed\Loader::init();
+} else {
+    // Fallback: manually include necessary files if autoloader is not available
+    $fallback_includes = [
+        '/src/Base.php',
+        '/src/Theme.php',
+        '/src/Loader.php',
+    ];
+    
+    foreach ( $fallback_includes as $file ) {
+        $path = get_template_directory() . $file;
+        if ( file_exists( $path ) ) {
+            require_once $path;
+        }
+    }
+    
+    // Initialize theme if loader class exists after manual includes
+    if ( class_exists( '\ATKVed\Loader' ) ) {
+        \ATKVed\Loader::init();
+    }
 }
 
 $atk_includes = [
@@ -65,30 +98,25 @@ $atk_includes = [
     '/inc/accessibility-enhancements.php',
     '/inc/health-check.php',
     '/inc/demo-import.php',
-    '/inc/demo-content.php',
-    '/inc/welcome-page.php',
-    '/inc/performance-analytics.php',
-    '/inc/database-optimization.php',
-    '/inc/advanced-security.php',
-    '/inc/ajax-search.php',
-    '/inc/wishlist-compare.php',
-    '/inc/stock-notifications.php',
-    '/inc/theme-customizer.php',
-    '/inc/coupons-system.php',
-    '/inc/loyalty-system.php',
-    '/inc/dark-mode.php',
-    '/inc/performance-optimizer.php',
-    '/inc/delivery-map.php',
-    '/inc/performance-cache.php',
-    '/inc/performance-lazyload.php',
-    '/inc/performance-cdn.php',
+    // Восстановленные секции
     '/inc/new-sections.php',
-    '/inc/stock-photos.php',
-    '/inc/stock-photos-integration.php',
+    '/inc/cta-section.php',
     '/inc/faq-section.php',
     '/inc/reviews-section.php',
-    '/inc/cta-section.php',
     '/inc/process-section.php',
+    // Фотостоки
+    '/inc/stock-photos.php',
+    '/inc/stock-photos-integration.php',
+    // Доставка
+    '/inc/delivery-map.php',
+    // Производительность
+    '/inc/performance-cdn.php',
+    // Улучшенная производительность
+    '/inc/enhanced-performance.php',
+    // Улучшенная система PWA
+    '/inc/enhanced-pwa.php',
+    // Улучшенная оптимизация изображений
+    '/inc/enhanced-image-optimization.php',
 ];
 
 foreach ( $atk_includes as $file ) {

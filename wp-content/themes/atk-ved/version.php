@@ -45,10 +45,10 @@ define('ATK_VED_MIN_MYSQL_VERSION', '5.7');
  * Theme directories and URLs
  */
 if (!defined('ATK_VED_DIR')) {
-    define('ATK_VED_DIR', get_template_directory());
+    define('ATK_VED_DIR', function_exists('get_template_directory') ? get_template_directory() : __DIR__);
 }
 if (!defined('ATK_VED_URI')) {
-    define('ATK_VED_URI', get_template_directory_uri());
+    define('ATK_VED_URI', function_exists('get_template_directory_uri') ? get_template_directory_uri() : '');
 }
 
 /**
@@ -57,10 +57,12 @@ if (!defined('ATK_VED_URI')) {
  * @param string $version Version to check
  * @return bool True if version matches current version
  */
+if (!function_exists('atk_ved_is_version')):
 function atk_ved_is_version(string $version): bool
 {
     return ATK_VED_VERSION === $version;
 }
+endif;
 
 /**
  * Compare versions
@@ -69,16 +71,19 @@ function atk_ved_is_version(string $version): bool
  * @param string $operator Comparison operator (>, <, >=, <=, =, !=)
  * @return bool Result of comparison
  */
+if (!function_exists('atk_ved_version_compare')):
 function atk_ved_version_compare(string $version, string $operator = '>='): bool
 {
     return version_compare(ATK_VED_VERSION, $version, $operator);
 }
+endif;
 
 /**
  * Get version information
  *
  * @return array Version information
  */
+if (!function_exists('atk_ved_get_version_info')):
 function atk_ved_get_version_info(): array
 {
     return [
@@ -88,3 +93,4 @@ function atk_ved_get_version_info(): array
         'history' => ATK_VED_VERSION_HISTORY,
     ];
 }
+endif;
