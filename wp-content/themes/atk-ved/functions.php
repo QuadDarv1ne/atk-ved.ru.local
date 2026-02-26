@@ -74,6 +74,10 @@ $atk_includes = [
     '/inc/dark-mode.php',
     '/inc/performance-optimizer.php',
     '/inc/delivery-map.php',
+    '/inc/performance-cache.php',
+    '/inc/performance-lazyload.php',
+    '/inc/performance-cdn.php',
+    '/inc/new-sections.php',
 ];
 
 foreach ( $atk_includes as $file ) {
