@@ -1,0 +1,90 @@
+<?php
+/**
+ * Theme Version Configuration
+ *
+ * Single source of truth for ATK VED theme version
+ *
+ * @package ATK_VED
+ * @since 3.3.0
+ */
+
+declare(strict_types=1);
+
+// =============================================================================
+// THEME VERSION - SINGLE SOURCE OF TRUTH
+// =============================================================================
+
+/**
+ * Current theme version
+ *
+ * Format: MAJOR.MINOR.PATCH
+ * - MAJOR: Breaking changes
+ * - MINOR: New features (backward compatible)
+ * - PATCH: Bug fixes (backward compatible)
+ */
+define('ATK_VED_VERSION', '3.3.0');
+
+/**
+ * Version history
+ */
+define('ATK_VED_VERSION_HISTORY', [
+    '3.3.0' => '2026-02-26 — Полное улучшение проекта (тесты, Docker, CI/CD)',
+    '3.2.0' => '2026-02-26 — UI/UX Улучшения',
+    '3.1.0' => '2026-02-25 — Оптимизация производительности',
+    '3.0.0' => '2026-02-20 — Мажорное обновление',
+]);
+
+/**
+ * Minimum requirements
+ */
+define('ATK_VED_MIN_PHP_VERSION', '8.1');
+define('ATK_VED_MIN_WP_VERSION', '6.0');
+define('ATK_VED_MIN_MYSQL_VERSION', '5.7');
+
+/**
+ * Theme directories and URLs
+ */
+if (!defined('ATK_VED_DIR')) {
+    define('ATK_VED_DIR', get_template_directory());
+}
+if (!defined('ATK_VED_URI')) {
+    define('ATK_VED_URI', get_template_directory_uri());
+}
+
+/**
+ * Check if version matches
+ *
+ * @param string $version Version to check
+ * @return bool True if version matches current version
+ */
+function atk_ved_is_version(string $version): bool
+{
+    return ATK_VED_VERSION === $version;
+}
+
+/**
+ * Compare versions
+ *
+ * @param string $version Version to compare
+ * @param string $operator Comparison operator (>, <, >=, <=, =, !=)
+ * @return bool Result of comparison
+ */
+function atk_ved_version_compare(string $version, string $operator = '>='): bool
+{
+    return version_compare(ATK_VED_VERSION, $version, $operator);
+}
+
+/**
+ * Get version information
+ *
+ * @return array Version information
+ */
+function atk_ved_get_version_info(): array
+{
+    return [
+        'version' => ATK_VED_VERSION,
+        'min_php' => ATK_VED_MIN_PHP_VERSION,
+        'min_wp' => ATK_VED_MIN_WP_VERSION,
+        'history' => ATK_VED_VERSION_HISTORY,
+    ];
+}

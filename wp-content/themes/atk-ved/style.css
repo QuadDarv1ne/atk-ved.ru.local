@@ -2,12 +2,17 @@
 Theme Name: АТК ВЭД
 Theme URI: https://atk-ved.ru
 Author: Custom Theme
-Description: Современная тема для сайта АТК ВЭД - товары для маркетплейсов из Китая оптом. Полностью адаптивный дизайн с плавными анимациями, кастомными типами записей и AJAX функциями. v3.0: Расширенная функциональность, улучшенная безопасность, оптимизация производительности и SEO.
+Author URI: https://atk-ved.ru
+Description: Современная тема для сайта АТК ВЭД - товары для маркетплейсов из Китая оптом. Полностью адаптивный дизайн с плавными анимациями, кастомными типами записей и AJAX функциями. v3.3: Тестирование, Docker, CI/CD, улучшенная безопасность и производительность.
 Version: 3.3.0
+Requires at least: 6.0
+Requires PHP: 8.1
+Tested up to: 6.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: atk-ved
-Tags: one-page, landing-page, business, custom-menu, custom-logo, responsive-layout, accessibility-ready, custom-post-types, ajax-ready, modal, calculator, tracking, gallery, optimized, fast
+Domain Path: /languages
+Tags: one-page, landing-page, business, custom-menu, custom-logo, responsive-layout, accessibility-ready, custom-post-types, ajax-ready, modal, calculator, tracking, gallery, optimized, fast, e-commerce, blog
 */
 
 /* Reset & Base */

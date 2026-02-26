@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# =============================================================================
+# ATK VED Theme - Commit Message Hook
+# =============================================================================
+# Проверка формата сообщения коммита
+#
+# Формат:
+#   type(scope): description
+#
+# Типы:
+#   feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+# =============================================================================
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Skip merge commits
+if [[ "$COMMIT_MSG" =~ ^Merge ]]; then
+    exit 0
+fi
+
+# Skip revert commits
+if [[ "$COMMIT_MSG" =~ ^Revert ]]; then
+    exit 0
+fi
+
+# Valid types
+VALID_TYPES="feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|temp"
+
+# Check format
+if ! echo "$COMMIT_MSG" | grep -qE "^($VALID_TYPES)(\([a-z0-9_-]+\))?: .{1,100}"; then
+    echo ""
+    echo -e "${RED}╔═══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║         ОШИБКА: Неверный формат сообщения                 ║${NC}"
+    echo -e "${RED}╚═══════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${YELLOW}Ожидаемый формат:${NC}"
+    echo "  type(scope): description"
+    echo ""
+    echo -e "${YELLOW}Доступные типы:${NC}"
+    echo "  feat     - Новая функция"
+    echo "  fix      - Исправление ошибки"
+    echo "  docs     - Изменения в документации"
+    echo "  style    - Форматирование, отступы (без изменений кода)"
+    echo "  refactor - Рефакторинг (без новых функций)"
+    echo "  test     - Добавление тестов"
+    echo "  chore    - Изменение сборки, зависимостей"
+    echo "  perf     - Улучшение производительности"
+    echo "  ci       - Изменения в CI/CD"
+    echo "  build    - Изменения в сборке"
+    echo "  revert   - Откат изменений"
+    echo "  temp     - Временный коммит"
+    echo ""
+    echo -e "${YELLOW}Примеры:${NC}"
+    echo "  feat(auth): добавить регистрацию через Google"
+    echo "  fix(css): исправить отображение кнопки в Safari"
+    echo "  docs(readme): обновить инструкцию по установке"
+    echo "  refactor(core): упростить функцию калькулятора"
+    echo "  test(security): добавить тесты для XSS защиты"
+    echo ""
+    echo -e "${YELLOW}Ваше сообщение:${NC}"
+    echo "  $COMMIT_MSG"
+    echo ""
+    exit 1
+fi
+
+# Check for trailing punctuation
+if echo "$COMMIT_MSG" | grep -qE ".*[.\?]$"; then
+    echo ""
+    echo -e "${YELLOW}⚠ Предупреждение: Сообщение не должно заканчиваться точкой или вопросом${NC}"
+    echo ""
+fi
+
+# Check length
+MSG_LENGTH=${#COMMIT_MSG}
+if [ $MSG_LENGTH -gt 100 ]; then
+    echo ""
+    echo -e "${YELLOW}⚠ Предупреждение: Сообщение слишком длинное ($MSG_LENGTH символов, макс 100)${NC}"
+    echo ""
+fi
+
+exit 0

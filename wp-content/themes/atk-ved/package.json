@@ -1,11 +1,31 @@
 {
   "name": "atk-ved-theme",
   "version": "3.3.0",
+  "description": "АТК ВЭД — современная тема WordPress для логистической компании",
   "private": true,
+  "author": "ATK VED Team",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://atk-ved.ru",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atk-ved/theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/atk-ved/theme/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "watch": "vite build --watch"
+    "watch": "vite build --watch",
+    "clean": "rimraf dist",
+    "lint:js": "eslint src/js",
+    "lint:css": "stylelint src/css",
+    "lint": "npm run lint:js && npm run lint:css",
+    "format": "prettier --write \"src/**/*.{js,css,scss}\""
   },
   "devDependencies": {
     "vite": "^5.4.0",
@@ -13,5 +33,18 @@
     "cssnano": "^7.0.6",
     "postcss": "^8.4.47",
     "terser": "^5.34.1"
-  }
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ],
+  "keywords": [
+    "wordpress",
+    "theme",
+    "atk-ved",
+    "logistics",
+    "china",
+    "marketplace"
+  ]
 }

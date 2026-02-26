@@ -7,6 +7,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.1] - 2026-02-26 — Исправление проблем проекта
+
+### Added
+
+**Конфигурация:**
+- `wp-config.php` — полная конфигурация WordPress с поддержкой Docker, OpenServer, Production
+- `.env.example` — расширенный шаблон с комментариями (175 строк)
+- `version.php` — централизованное управление версией темы
+- `test-db.php` — скрипт проверки подключения к БД
+
+**Установка:**
+- `setup.php` — PHP скрипт автоматической настройки
+- `install.sh` — Bash скрипт для Linux/Mac
+- `install.bat` — Batch скрипт для Windows
+- `install-hooks.sh` — установка git хуков
+
+**Git хуки:**
+- `.githooks/pre-commit` — 7 проверок кода (PHP, JS, CSS, security)
+- `.githooks/commit-msg` — проверка формата сообщений коммитов
+
+**Инструменты:**
+- `Makefile` — 20 команд для разработки
+- `FIXES_REPORT.md` — отчёт об исправлениях
+
+### Changed
+
+**wp-config.php:**
+- Авто-определение окружения (Docker/OpenServer/Production)
+- Загрузка переменных из .env
+- Предупреждения об отсутствии .env
+- Генерация уникальных ключей для продакшена
+
+**functions.php:**
+- Интеграция version.php
+- Использование ATK_VED_MIN_PHP_VERSION
+
+**style.css:**
+- Обновлены метаданные темы
+- Добавлены Requires at least, Requires PHP, Tested up to
+- Расширенные теги
+
+**composer.json:**
+- Добавлена версия 3.3.0
+- Добавлен PHPUnit
+- autoload-dev для тестов
+- Скрипты test и test:coverage
+
+**package.json:**
+- Добавлена полная информация о проекте
+- engines (node, npm)
+- scripts (lint, format, clean)
+- browserslist
+- keywords
+
+### Fixed
+
+- ✅ Отсутствует wp-config.php
+- ✅ Нет проверки .env файла
+- ✅ Дублирование версий в 4 файлах
+- ✅ Отсутствуют скрипты установки
+- ✅ Нет pre-commit хуков
+- ✅ Отсутствует Makefile
+
+### Security
+
+- Проверка на секретные ключи в pre-commit
+- Авто-генерация ключей безопасности для продакшена
+- Предупреждения о небезопасных настройках
+
+### Developer Experience
+
+- Единая точка управления версией (version.php)
+- Автоматическая настройка проекта
+- 20 удобных команд через Makefile
+- 7 проверок кода перед коммитом
+- Поддержка Windows, Linux, Mac
+
 ## [3.3.0] - 2026-02-26 — Полное улучшение проекта
 
 ### Added — Инфраструктура

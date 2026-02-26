@@ -3,7 +3,19 @@
   "type": "wordpress-theme",
   "description": "АТК ВЭД — современная тема WordPress для логистической компании",
   "homepage": "https://atk-ved.ru",
+  "version": "3.3.0",
   "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "ATK VED Team",
+      "email": "info@atk-ved.ru",
+      "homepage": "https://atk-ved.ru"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/atk-ved/theme/issues",
+    "source": "https://github.com/atk-ved/theme"
+  },
   "require": {
     "php": ">=8.1"
   },
@@ -12,15 +24,22 @@
     "szepeviktor/phpstan-wordpress": "^1.3",
     "wp-coding-standards/wpcs": "^3.1",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpunit/phpunit": "^10.5"
   },
   "autoload": {
     "psr-4": {
       "ATKVed\\": "src/"
     },
     "files": [
+      "version.php",
       "inc/helpers.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ATKVed\\Tests\\": "tests/"
+    }
   },
   "scripts": {
     "post-install-cmd": "composer dump-autoload -o",
@@ -29,7 +48,9 @@
     "phpcs": "phpcs --standard=WordPress src/",
     "phpcbf": "phpcbf --standard=WordPress src/",
     "lint": "phpcs && phpstan",
-    "fix": "phpcbf"
+    "fix": "phpcbf",
+    "test": "phpunit",
+    "test:coverage": "phpunit --coverage-html=coverage"
   },
   "config": {
     "allow-plugins": {
@@ -37,6 +58,7 @@
     },
     "platform": {
       "php": "8.1"
-    }
+    },
+    "sort-packages": true
   }
 }

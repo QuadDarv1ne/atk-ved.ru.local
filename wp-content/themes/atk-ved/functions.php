@@ -3,20 +3,19 @@
  * ATK VED Theme Functions
  *
  * @package ATKVed
- * @version 3.0.0
+ * @version 3.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'ATK_VED_VERSION', '3.3.0' );
-define( 'ATK_VED_DIR', get_template_directory() );
-define( 'ATK_VED_URI', get_template_directory_uri() );
+// Load version configuration (single source of truth)
+require_once get_template_directory() . '/version.php';
 
-if ( version_compare( PHP_VERSION, '8.1', '<' ) ) {
+if ( version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
     add_action( 'admin_notice', function() {
-        echo '<div class="notice notice-error"><p>PHP 8.1+ required. Current: ' . esc_html( PHP_VERSION ) . '</p></div>';
+        echo '<div class="notice notice-error"><p>PHP ' . esc_html( ATK_VED_MIN_PHP_VERSION ) . '+ required. Current: ' . esc_html( PHP_VERSION ) . '</p></div>';
     } );
     return;
 }

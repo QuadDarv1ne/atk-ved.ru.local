@@ -1,0 +1,315 @@
+#!/usr/bin/env bash
+# =============================================================================
+# ATK VED Theme - Pre-commit Hook
+# =============================================================================
+# Автоматические проверки перед коммитом
+#
+# Проверки:
+# - PHP syntax check
+# - PHP_CodeSniffer (WordPress standards)
+# - PHPStan (static analysis)
+# - ESLint (JavaScript)
+# - Stylelint (CSS/SCSS)
+# - Secret keys detection
+# =============================================================================
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+# Directories
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+THEME_DIR="$ROOT_DIR/wp-content/themes/atk-ved"
+
+# Counters
+ERRORS=0
+WARNINGS=0
+
+# =============================================================================
+# Helper Functions
+# =============================================================================
+
+log_info() {
+    echo -e "${CYAN}ℹ $1${NC}"
+}
+
+log_success() {
+    echo -e "${GREEN}✓ $1${NC}"
+}
+
+log_error() {
+    echo -e "${RED}✗ $1${NC}"
+    ((ERRORS++))
+}
+
+log_warning() {
+    echo -e "${YELLOW}⚠ $1${NC}"
+    ((WARNINGS++))
+}
+
+log_step() {
+    echo -e "\n${BLUE}▶ $1${NC}"
+}
+
+# =============================================================================
+# Get staged PHP files
+# =============================================================================
+
+get_staged_php_files() {
+    git diff --cached --name-only --diff-filter=ACM | grep -E '\.(php)$' || true
+}
+
+get_staged_js_files() {
+    git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|jsx|mjs)$' || true
+}
+
+get_staged_css_files() {
+    git diff --cached --name-only --diff-filter=ACM | grep -E '\.(css|scss|sass|less)$' || true
+}
+
+# =============================================================================
+# Check for secret keys
+# =============================================================================
+
+check_secrets() {
+    log_step "Проверка на секретные ключи"
+    
+    local files=$(get_staged_php_files)
+    if [ -z "$files" ]; then
+        log_info "Нет PHP файлов для проверки"
+        return
+    fi
+    
+    # Check for common secret patterns
+    local patterns=(
+        "password.*=.*['\"][^'\"]{8,}['\"]"
+        "api_key.*=.*['\"][^'\"]{8,}['\"]"
+        "secret.*=.*['\"][^'\"]{8,}['\"]"
+        "PRIVATE_KEY"
+        "AWS_SECRET"
+    )
+    
+    for file in $files; do
+        if [ -f "$ROOT_DIR/$file" ]; then
+            for pattern in "${patterns[@]}"; do
+                if grep -qiE "$pattern" "$ROOT_DIR/$file" 2>/dev/null; then
+                    # Skip if it's in .env.example or sample file
+                    if [[ "$file" != *".env.example"* && "$file" != *"sample"* && "$file" != *"example"* ]]; then
+                        log_warning "Возможный секрет в файле: $file"
+                    fi
+                fi
+            done
+        fi
+    done
+    
+    log_success "Проверка секретов завершена"
+}
+
+# =============================================================================
+# PHP Syntax Check
+# =============================================================================
+
+check_php_syntax() {
+    log_step "Проверка синтаксиса PHP"
+    
+    local files=$(get_staged_php_files)
+    if [ -z "$files" ]; then
+        log_info "Нет PHP файлов для проверки"
+        return
+    fi
+    
+    local count=0
+    for file in $files; do
+        if [ -f "$ROOT_DIR/$file" ]; then
+            if php -l "$ROOT_DIR/$file" > /dev/null 2>&1; then
+                ((count++))
+            else
+                log_error "Синтаксическая ошибка в файле: $file"
+                php -l "$ROOT_DIR/$file"
+            fi
+        fi
+    done
+    
+    log_success "Проверено файлов: $count"
+}
+
+# =============================================================================
+# PHP_CodeSniffer Check
+# =============================================================================
+
+check_phpcs() {
+    log_step "Проверка PHPCS (WordPress Coding Standards)"
+    
+    local files=$(get_staged_php_files | grep -E '^wp-content/themes/atk-ved/' || true)
+    if [ -z "$files" ]; then
+        log_info "Нет PHP файлов темы для проверки"
+        return
+    fi
+    
+    if [ ! -f "$THEME_DIR/vendor/bin/phpcs" ]; then
+        log_warning "PHPCS не установлен. Пропускаем проверку"
+        return
+    fi
+    
+    for file in $files; do
+        if [ -f "$ROOT_DIR/$file" ]; then
+            if ! "$THEME_DIR/vendor/bin/phpcs" --standard=WordPress --warning-severity=0 -n "$ROOT_DIR/$file" > /dev/null 2>&1; then
+                log_error "PHPCS ошибки в файле: $file"
+                "$THEME_DIR/vendor/bin/phpcs" --standard=WordPress --warning-severity=0 -n "$ROOT_DIR/$file" || true
+            fi
+        fi
+    done
+    
+    log_success "PHPCS проверка завершена"
+}
+
+# =============================================================================
+# PHPStan Check
+# =============================================================================
+
+check_phpstan() {
+    log_step "Проверка PHPStan (статический анализ)"
+    
+    if [ ! -f "$THEME_DIR/vendor/bin/phpstan" ]; then
+        log_warning "PHPStan не установлен. Пропускаем проверку"
+        return
+    fi
+    
+    # Run PHPStan on changed theme files
+    local files=$(get_staged_php_files | grep -E '^wp-content/themes/atk-ved/src/' || true)
+    if [ -n "$files" ]; then
+        if ! "$THEME_DIR/vendor/bin/phpstan" analyse --configuration="$THEME_DIR/phpstan.neon" --no-progress --error-format=raw 2>&1 | grep -q "No errors"; then
+            log_error "PHPStan нашел ошибки"
+            "$THEME_DIR/vendor/bin/phpstan" analyse --configuration="$THEME_DIR/phpstan.neon" --no-progress || true
+        else
+            log_success "PHPStan ошибок не нашел"
+        fi
+    else
+        log_info "Нет файлов src/ для проверки"
+    fi
+}
+
+# =============================================================================
+# ESLint Check
+# =============================================================================
+
+check_eslint() {
+    log_step "Проверка ESLint (JavaScript)"
+    
+    local files=$(get_staged_js_files)
+    if [ -z "$files" ]; then
+        log_info "Нет JavaScript файлов для проверки"
+        return
+    fi
+    
+    if [ ! -f "$THEME_DIR/node_modules/.bin/eslint" ]; then
+        log_warning "ESLint не установлен. Пропускаем проверку"
+        return
+    fi
+    
+    for file in $files; do
+        if [ -f "$ROOT_DIR/$file" ]; then
+            if ! "$THEME_DIR/node_modules/.bin/eslint" "$ROOT_DIR/$file" > /dev/null 2>&1; then
+                log_error "ESLint ошибки в файле: $file"
+                "$THEME_DIR/node_modules/.bin/eslint" "$ROOT_DIR/$file" || true
+            fi
+        fi
+    done
+    
+    log_success "ESLint проверка завершена"
+}
+
+# =============================================================================
+# Stylelint Check
+# =============================================================================
+
+check_stylelint() {
+    log_step "Проверка Stylelint (CSS/SCSS)"
+    
+    local files=$(get_staged_css_files)
+    if [ -z "$files" ]; then
+        log_info "Нет CSS/SCSS файлов для проверки"
+        return
+    fi
+    
+    if [ ! -f "$THEME_DIR/node_modules/.bin/stylelint" ]; then
+        log_warning "Stylelint не установлен. Пропускаем проверку"
+        return
+    fi
+    
+    for file in $files; do
+        if [ -f "$ROOT_DIR/$file" ]; then
+            if ! "$THEME_DIR/node_modules/.bin/stylelint" "$ROOT_DIR/$file" > /dev/null 2>&1; then
+                log_error "Stylelint ошибки в файле: $file"
+                "$THEME_DIR/node_modules/.bin/stylelint" "$ROOT_DIR/$file" || true
+            fi
+        fi
+    done
+    
+    log_success "Stylelint проверка завершена"
+}
+
+# =============================================================================
+# File Size Check
+# =============================================================================
+
+check_file_size() {
+    log_step "Проверка размера файлов"
+    
+    local max_size=524288  # 512KB
+    local files=$(get_staged_php_files)
+    
+    for file in $files; do
+        if [ -f "$ROOT_DIR/$file" ]; then
+            local size=$(stat -f%z "$ROOT_DIR/$file" 2>/dev/null || stat -c%s "$ROOT_DIR/$file" 2>/dev/null || echo 0)
+            if [ "$size" -gt "$max_size" ]; then
+                log_warning "Большой размер файла: $file ($(numfmt --to=iec-i --suffix=B $size 2>/dev/null || echo "${size}B"))"
+            fi
+        fi
+    done
+    
+    log_success "Проверка размера завершена"
+}
+
+# =============================================================================
+# Main
+# =============================================================================
+
+echo ""
+echo "╔═══════════════════════════════════════════════════════════╗"
+echo "║         ATK VED - Pre-commit Checks                       ║"
+echo "╚═══════════════════════════════════════════════════════════╝"
+echo ""
+
+# Run all checks
+check_secrets
+check_php_syntax
+check_phpcs
+check_phpstan
+check_eslint
+check_stylelint
+check_file_size
+
+# Summary
+echo ""
+echo "═══════════════════════════════════════════════════════════"
+if [ $ERRORS -gt 0 ]; then
+    log_error "Найдено ошибок: $ERRORS"
+    echo ""
+    log_error "Коммит отклонён! Исправьте ошибки и попробуйте снова."
+    echo ""
+    exit 1
+else
+    log_success "Все проверки пройдены успешно!"
+    if [ $WARNINGS -gt 0 ]; then
+        log_warning "Предупреждений: $WARNINGS"
+    fi
+    echo ""
+    exit 0
+fi
