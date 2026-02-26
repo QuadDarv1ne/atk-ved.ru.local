@@ -78,6 +78,8 @@ $atk_includes = [
     '/inc/performance-lazyload.php',
     '/inc/performance-cdn.php',
     '/inc/new-sections.php',
+    '/inc/stock-photos.php',
+    '/inc/stock-photos-integration.php',
 ];
 
 foreach ( $atk_includes as $file ) {

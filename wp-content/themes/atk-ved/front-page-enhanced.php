@@ -1,0 +1,534 @@
+<?php
+/**
+ * Улучшенная главная страница (Front Page)
+ * Интеграция всех новых функций и оптимизация
+ *
+ * @package ATK_VED
+ * @since 3.7.0
+ */
+
+defined('ABSPATH') || exit;
+
+get_header();
+
+// Получаем данные компании
+$company = atk_ved_get_company_info();
+?>
+
+<main id="main-content">
+
+    <!-- ====================================================
+         HERO СЕКЦИЯ С ФОТО КИТАЯ
+    ===================================================== -->
+    <?php
+    $hero_bg = atk_ved_get_stock_photo('china', 'full');
+    ?>
+    <section class="hero-section-enhanced" style="background-image: url('<?php echo esc_url($hero_bg); ?>');">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content-enhanced">
+                
+                <div class="hero-text-enhanced">
+                    <div class="hero-badges">
+                        <span class="badge">🏆 <?php _e('Опытные менеджеры', 'atk-ved'); ?></span>
+                        <span class="badge">💰 <?php _e('Прозрачные цены', 'atk-ved'); ?></span>
+                        <span class="badge">📦 <?php _e('Без минимального заказа', 'atk-ved'); ?></span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        <?php _e('Товары для маркетплейсов', 'atk-ved'); ?><br>
+                        <span class="highlight"><?php _e('из Китая оптом', 'atk-ved'); ?></span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        <?php _e('Полный цикл работы: от поиска поставщика до доставки на ваш склад', 'atk-ved'); ?>
+                    </p>
+
+                    <div class="hero-cta">
+                        <a href="#contact" class="btn btn-primary btn-lg">
+                            <?php _e('Оставить заявку', 'atk-ved'); ?>
+                        </a>
+                        <a href="#calculator" class="btn btn-outline btn-lg">
+                            <?php _e('Рассчитать доставку', 'atk-ved'); ?>
+                        </a>
+                    </div>
+
+                    <!-- Статистика в Hero -->
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="stat-number" data-target="1500">0</span><span class="stat-suffix">+</span>
+                            <span class="stat-label"><?php _e('Клиентов', 'atk-ved'); ?></span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-number" data-target="5">0</span><span class="stat-suffix">+</span>
+                            <span class="stat-label"><?php _e('Лет опыта', 'atk-ved'); ?></span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-number" data-target="1000">0</span><span class="stat-suffix">+</span>
+                            <span class="stat-label"><?php _e('Доставок', 'atk-ved'); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Маркетплейсы -->
+                    <div class="marketplaces-hero">
+                        <span class="mp-label"><?php _e('Работаем с:', 'atk-ved'); ?></span>
+                        <div class="marketplace-logos">
+                            <div class="mp-logo">Wildberries</div>
+                            <div class="mp-logo">Ozon</div>
+                            <div class="mp-logo">Мегамаркет</div>
+                            <div class="mp-logo">AliExpress</div>
+                            <div class="mp-logo">Alibaba</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <span class="scroll-text"><?php _e('Листайте вниз', 'atk-ved'); ?></span>
+            <div class="scroll-arrow">↓</div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         УСЛУГИ (УЛУЧШЕННЫЕ КАРТОЧКИ)
+    ===================================================== -->
+    <section class="services-section-enhanced" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><?php _e('Наши услуги', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Полный спектр услуг для работы с Китаем', 'atk-ved'); ?></p>
+            </div>
+
+            <div class="services-grid-enhanced">
+                <?php
+                $services = [
+                    ['n' => '01', 'title' => __('Поиск товаров', 'atk-ved'), 'desc' => __('Находим нужные товары на китайских площадках по вашим требованиям', 'atk-ved'), 'icon' => '🔍'],
+                    ['n' => '02', 'title' => __('Проверка качества', 'atk-ved'), 'desc' => __('Контролируем качество до отправки, делаем фото и видеоотчёты', 'atk-ved'), 'icon' => '✓'],
+                    ['n' => '03', 'title' => __('Доставка грузов', 'atk-ved'), 'desc' => __('Организуем доставку авиа, морем, ЖД или авто', 'atk-ved'), 'icon' => '🚢'],
+                    ['n' => '04', 'title' => __('Таможенное оформление', 'atk-ved'), 'desc' => __('Берём на себя таможенное оформление и сертификацию', 'atk-ved'), 'icon' => '📋'],
+                    ['n' => '05', 'title' => __('Складская логистика', 'atk-ved'), 'desc' => __('Хранение и обработка грузов на наших складах в Китае', 'atk-ved'), 'icon' => '🏭'],
+                    ['n' => '06', 'title' => __('Консультации', 'atk-ved'), 'desc' => __('Консультируем по всем вопросам работы с Китаем', 'atk-ved'), 'icon' => '💬'],
+                ];
+                foreach ($services as $i => $s):
+                    $delay = ($i + 1) * 100;
+                ?>
+                <article class="service-card-enhanced" style="--delay: <?php echo $delay; ?>ms">
+                    <div class="service-icon"><?php echo esc_html($s['icon']); ?></div>
+                    <span class="service-number"><?php echo esc_html($s['n']); ?></span>
+                    <h3 class="service-title"><?php echo esc_html($s['title']); ?></h3>
+                    <p class="service-desc"><?php echo esc_html($s['desc']); ?></p>
+                    <a href="#contact" class="service-btn">
+                        <?php _e('Заказать', 'atk-ved'); ?>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         ТАБЛИЦА СРАВНЕНИЯ ДОСТАВКИ
+    ===================================================== -->
+    <section class="delivery-comparison-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><?php _e('Сравнение способов доставки', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Выберите оптимальный вариант для вашего груза', 'atk-ved'); ?></p>
+            </div>
+
+            <?php echo do_shortcode('[delivery_comparison]'); ?>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         ЛИД-КАЛЬКУЛЯТОР (2 ШАГА)
+    ===================================================== -->
+    <?php echo do_shortcode('[lead_calculator title="Рассчитайте стоимость доставки" subtitle="Получите расчёт и скидку 10% на первую доставку"]'); ?>
+
+    <!-- ====================================================
+         ГАЛЕРЕЯ ПРОИЗВОДСТВА
+    ===================================================== -->
+    <?php echo do_shortcode('[factory_gallery title="Производство и контроль качества" subtitle="Работаем только с проверенными фабриками" limit="8" columns="4"]'); ?>
+
+    <!-- ====================================================
+         ГАЛЕРЕЯ ДОСТАВКИ
+    ===================================================== -->
+    <?php echo do_shortcode('[shipping_gallery title="Логистика и доставка" subtitle="Надёжные маршруты по всему миру" limit="6"]'); ?>
+
+    <!-- ====================================================
+         ПРЕИМУЩЕСТВА
+    ===================================================== -->
+    <section class="advantages-section-enhanced">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><?php _e('Почему выбирают нас', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Наши ключевые преимущества', 'atk-ved'); ?></p>
+            </div>
+
+            <div class="advantages-grid-enhanced">
+                <?php
+                $advs = [
+                    ['icon' => '🏆', 'title' => __('Опыт работы', 'atk-ved'), 'desc' => __('Более 5 лет успешной работы', 'atk-ved')],
+                    ['icon' => '💰', 'title' => __('Выгодные цены', 'atk-ved'), 'desc' => __('Прямые контракты без посредников', 'atk-ved')],
+                    ['icon' => '🛡️', 'title' => __('Гарантии', 'atk-ved'), 'desc' => __('Официальный договор и сопровождение', 'atk-ved')],
+                    ['icon' => '⚡', 'title' => __('Быстрая работа', 'atk-ved'), 'desc' =>__('Оперативная обработка заказов', 'atk-ved')],
+                    ['icon' => '📍', 'title' => __('Отслеживание', 'atk-ved'), 'desc' => __('Контроль груза 24/7', 'atk-ved')],
+                    ['icon' => '🤝', 'title' => __('Поддержка', 'atk-ved'), 'desc' => __('Персональный менеджер', 'atk-ved')],
+                ];
+                foreach ($advs as $a):
+                ?>
+                <div class="advantage-card-enhanced">
+                    <span class="adv-icon"><?php echo esc_html($a['icon']); ?></span>
+                    <h3><?php echo esc_html($a['title']); ?></h3>
+                    <p><?php echo esc_html($a['desc']); ?></p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         ВИДЕО ПРЕЗЕНТАЦИЯ
+    ===================================================== -->
+    <?php
+    $video_id = get_theme_mod('atk_ved_video_id', '');
+    if ($video_id):
+    ?>
+    <?php echo do_shortcode('[video_presentation video_id="' . esc_attr($video_id) . '" title="Видео о компании" subtitle="Узнайте больше о нашей работе"]'); ?>
+    <?php endif; ?>
+
+    <!-- ====================================================
+         ПАРТНЁРЫ И СЕРТИФИКАТЫ
+    ===================================================== -->
+    <?php echo do_shortcode('[partners_certificates title="Наши партнёры и сертификаты" subtitle="Доверие клиентов и официальная сертификация"]'); ?>
+
+    <!-- ====================================================
+         КОМАНДА
+    ===================================================== -->
+    <?php echo do_shortcode('[team_section title="Наша команда" subtitle="Профессионалы с многолетним опытом"]'); ?>
+
+    <!-- ====================================================
+         ИНТЕРАКТИВНАЯ КАРТА
+    ===================================================== -->
+    <section class="map-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><?php _e('География доставки', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Работаем по всему миру', 'atk-ved'); ?></p>
+            </div>
+            <?php echo do_shortcode('[delivery_map height="500" zoom="4"]'); ?>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         КОНТАКТЫ (CTA)
+    ===================================================== -->
+    <section class="contact-section-enhanced" id="contact">
+        <div class="container">
+            <div class="contact-inner">
+                <div class="contact-text">
+                    <h2 class="contact-title"><?php _e('Готовы начать работу?', 'atk-ved'); ?></h2>
+                    <p class="contact-subtitle"><?php _e('Оставьте заявку и получите бесплатную консультацию', 'atk-ved'); ?></p>
+                    
+                    <ul class="contact-benefits">
+                        <li>✓ <?php _e('Расчёт стоимости за 15 минут', 'atk-ved'); ?></li>
+                        <li>✓ <?php _e('Скидка 10% на первую доставку', 'atk-ved'); ?></li>
+                        <li>✓ <?php _e('Персональный менеджер', 'atk-ved'); ?></li>
+                        <li>✓ <?php _e('Полная поддержка 24/7', 'atk-ved'); ?></li>
+                    </ul>
+                </div>
+
+                <div class="contact-form-wrapper">
+                    <?php atk_ved_render_lead_form('contact', 'atk_ved_contact'); ?>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<style>
+/* Hero секция с фото */
+.hero-section-enhanced {
+    position: relative;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    padding: 100px 0 60px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.75) 100%);
+}
+
+.hero-content-enhanced {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+}
+
+.hero-text-enhanced {
+    max-width: 800px;
+}
+
+.hero-badges {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.hero-badges .badge {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.hero-title {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 25px;
+}
+
+.hero-title .highlight {
+    color: #e31e24;
+    display: block;
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    margin-bottom: 35px;
+    opacity: 0.95;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding: 30px 0;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.hero-stat {
+    text-align: center;
+}
+
+.hero-stat .stat-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: #e31e24;
+}
+
+.hero-stat .stat-suffix {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.hero-stat .stat-label {
+    display: block;
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+.marketplaces-hero {
+    margin-top: 30px;
+}
+
+.mp-label {
+    display: block;
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 15px;
+}
+
+.marketplace-logos {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.mp-logo {
+    background: rgba(255,255,255,0.15);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    animation: bounce 2s infinite;
+}
+
+.scroll-text {
+    display: block;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.scroll-arrow {
+    font-size: 24px;
+    opacity: 0.8;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* Секции */
+.services-section-enhanced,
+.delivery-comparison-section,
+.advantages-section-enhanced,
+.map-section {
+    padding: 80px 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #2c2c2c;
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Контакты */
+.contact-section-enhanced {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #e31e24 0%, #c01a1f 100%);
+    color: #fff;
+}
+
+.contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    gap: 60px;
+    align-items: start;
+}
+
+.contact-title {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.contact-subtitle {
+    font-size: 18px;
+    opacity: 0.95;
+    margin-bottom: 30px;
+}
+
+.contact-benefits {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-benefits li {
+    padding: 10px 0;
+    font-size: 16px;
+}
+
+.contact-form-wrapper {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 42px;
+    }
+
+    .hero-stats {
+        gap: 20px;
+    }
+
+    .hero-stat .stat-number {
+        font-size: 36px;
+    }
+
+    .contact-inner {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section-enhanced {
+        padding: 60px 0;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+    }
+
+    .hero-stats {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .contact-section-enhanced {
+        padding: 60px 0;
+    }
+
+    .contact-form-wrapper {
+        padding: 25px;
+    }
+}
+</style>
+
+<?php
+get_footer();
