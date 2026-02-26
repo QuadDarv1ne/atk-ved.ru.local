@@ -1,9 +1,12 @@
 # EditorConfig is awesome: https://EditorConfig.org
+# Документация: https://editorconfig.org/
 
 # top-most EditorConfig file
 root = true
 
-# Default settings for all files
+# =============================================================================
+# DEFAULT SETTINGS FOR ALL FILES
+# =============================================================================
 [*]
 charset = utf-8
 end_of_line = lf
@@ -12,35 +15,109 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
-# WordPress PHP files
+# =============================================================================
+# PHP FILES (WordPress Coding Standards)
+# =============================================================================
 [*.php]
 indent_style = space
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
+max_line_length = 120
 
-# JavaScript files
+# WordPress specific files
+[wp-*.php]
+indent_style = space
+indent_size = 4
+
+# =============================================================================
+# JAVASCRIPT FILES
+# =============================================================================
 [*.js]
 indent_style = space
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
+max_line_length = 100
 
-# CSS files
+# ES modules
+[*.mjs]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# TypeScript
+[*.ts]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 100
+
+[*.tsx]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 100
+
+# =============================================================================
+# CSS FILES
+# =============================================================================
 [*.css]
 indent_style = space
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
+max_line_length = 120
 
-# JSON files
+# SCSS/SASS
+[*.scss]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.sass]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Less
+[*.less]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# PostCSS
+[*.pcss]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# =============================================================================
+# JSON FILES
+# =============================================================================
 [*.json]
 indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# YAML files
+# JSON with comments (VS Code settings)
+[.vscode/*.json]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# =============================================================================
+# YAML FILES
+# =============================================================================
 [*.yml]
 indent_style = space
 indent_size = 2
@@ -53,38 +130,82 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Markdown files
+# =============================================================================
+# MARKDOWN FILES
+# =============================================================================
 [*.md]
 indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = false
+max_line_length = 120
 
-# HTML files
+# GitHub README
+[README.md]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = false
+
+# =============================================================================
+# HTML FILES
+# =============================================================================
 [*.html]
 indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# XML files
+# Twig templates
+[*.twig]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# =============================================================================
+# XML FILES
+# =============================================================================
 [*.xml]
 indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Makefiles
+# =============================================================================
+# MAKEFILES
+# =============================================================================
 [Makefile]
 indent_style = tab
 indent_size = 4
 
-# Batch files
+# =============================================================================
+# SHELL SCRIPTS
+# =============================================================================
+[*.{sh,bash}]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# =============================================================================
+# BATCH FILES (Windows)
+# =============================================================================
 [*.bat]
 end_of_line = crlf
 charset = utf-8
+indent_style = space
+indent_size = 4
 
-# Git files
+[*.cmd]
+end_of_line = crlf
+charset = utf-8
+indent_style = space
+indent_size = 4
+
+# =============================================================================
+# GIT FILES
+# =============================================================================
 [.gitignore]
 indent_style = space
 indent_size = 2
@@ -92,3 +213,88 @@ indent_size = 2
 [.gitattributes]
 indent_style = space
 indent_size = 2
+
+[.gitkeep]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# DOCKER FILES
+# =============================================================================
+[Dockerfile]
+indent_style = space
+indent_size = 2
+
+[docker-compose.yml]
+indent_style = space
+indent_size = 2
+
+[docker-compose.*.yml]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# CONFIG FILES
+# =============================================================================
+[.env]
+indent_style = space
+indent_size = 1
+
+[.env.*]
+indent_style = space
+indent_size = 1
+
+[composer.json]
+indent_style = space
+indent_size = 2
+
+[package.json]
+indent_style = space
+indent_size = 2
+
+[phpunit.xml]
+indent_style = space
+indent_size = 2
+
+[phpstan.neon]
+indent_style = space
+indent_size = 4
+
+[.prettierrc]
+indent_style = space
+indent_size = 2
+
+[.stylelintrc.json]
+indent_style = space
+indent_size = 2
+
+[.eslintrc.json]
+indent_style = space
+indent_size = 2
+
+# =============================================================================
+# IMAGE FILES (no trimming)
+# =============================================================================
+[*.{png,jpg,jpeg,gif,webp,svg,ico}]
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# =============================================================================
+# FONT FILES (no trimming)
+# =============================================================================
+[*.{woff,woff2,ttf,otf,eot}]
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# =============================================================================
+# MINIFIED FILES (no modifications)
+# =============================================================================
+[*.min.js]
+trim_trailing_whitespace = false
+insert_final_newline = false
+indent_size = unset
+
+[*.min.css]
+trim_trailing_whitespace = false
+insert_final_newline = false
+indent_size = unset

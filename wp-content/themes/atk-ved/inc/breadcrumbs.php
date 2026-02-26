@@ -43,12 +43,13 @@ function atk_ved_breadcrumbs(array $args = []): void {
     echo '<' . esc_html($args['container']);
     echo ' class="' . esc_attr($args['container_class']) . '"';
     echo ' aria-label="' . esc_attr__('Хлебные крошки', 'atk-ved') . '"';
+    echo ' role="navigation"';
     if (!empty($args['container_id'])) {
         echo ' id="' . esc_attr($args['container_id']) . '"';
     }
     echo '>' . "\n";
     
-    echo '<ol class="' . esc_attr($args['class']) . '" itemscope itemtype="https://schema.org/BreadcrumbList">' . "\n";
+    echo '<ol class="' . esc_attr($args['class']) . '" itemscope itemtype="https://schema.org/BreadcrumbList" role="list">' . "\n";
     
     foreach ($breadcrumbs as $key => $crumb) {
         $is_last = ($key === count($breadcrumbs) - 1);

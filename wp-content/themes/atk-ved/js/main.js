@@ -546,39 +546,9 @@ jQuery(document).ready(function($) {
     });
     
     // ============================================================================
-    // НОВЫЕ ОПТИМИЗАЦИИ JAVASCRIPT v2.8
+    // ОПТИМИЗАЦИИ JAVASCRIPT v2.8
     // ============================================================================
-    
-    // Оптимизированная система уведомлений
-    window.atkShowToast = function(message, type = 'info', duration = 3000) {
-        // Удаляем предыдущие уведомления
-        $('.toast-notification').remove();
-        
-        // Создаем новое уведомление
-        let toastClass = 'toast-notification toast-' + type;
-        let $toast = $('<div class="' + toastClass + '">' + message + '</div>');
-        
-        // Добавляем в DOM
-        $('body').append($toast);
-        
-        // Показываем
-        setTimeout(() => {
-            $toast.addClass('show');
-        }, 100);
-        
-        // Автоматически скрываем
-        if (duration > 0) {
-            setTimeout(() => {
-                $toast.removeClass('show');
-                setTimeout(() => {
-                    $toast.remove();
-                }, 300);
-            }, duration);
-        }
-        
-        return $toast;
-    };
-    
+
     // Оптимизированная система lazy loading для изображений
     function initLazyLoading() {
         if ('IntersectionObserver' in window) {
@@ -628,21 +598,23 @@ jQuery(document).ready(function($) {
     };
     
     // Оптимизированная система обработки ошибок
-    window.atkHandleError = function(error, context = '') {
+    window.atkHandleError = function(error, context = '', showMessage = true) {
         console.error('ATK Error [' + context + ']:', error);
-        
+
         // Логируем в систему мониторинга
         if (typeof atkVedData !== 'undefined' && atkVedData.logError) {
             $.post(atkVedData.ajaxUrl, {
                 action: 'log_error',
                 error: error.toString(),
                 context: context,
-                nonce: atkVedData.nonce
+                nonce: atkVedData.nonce,
+                url: window.location.href,
+                userAgent: navigator.userAgent
             });
         }
-        
+
         // Показываем пользователю дружелюбное сообщение
-        if (typeof atkShowToast === 'function') {
+        if (showMessage && typeof atkShowToast === 'function') {
             atkShowToast('Произошла ошибка. Пожалуйста, попробуйте позже.', 'error');
         }
     };

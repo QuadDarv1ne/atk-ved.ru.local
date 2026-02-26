@@ -498,9 +498,120 @@ a:hover {
     color: #666; /* Контраст 5.7:1 */
 }
 
+/* Улучшенные цвета для соответствия WCAG 2.1 AA */
+h1, h2, h3, h4, h5, h6 {
+    color: #1a1a1a; /* Обеспечивает отличный контраст на светлом фоне */
+}
+
+p, div, span, li {
+    color: #2c2c2c; /* Обеспечивает хороший контраст 12.6:1 */
+}
+
+/* Кнопки с достаточным контрастом */
+.btn, .cta-button {
+    color: #ffffff; /* Белый текст на темном фоне */
+    background-color: #e31e24; /* Красный цвет с высоким контрастом */
+    border: 2px solid #e31e24;
+}
+
+.btn:hover, .cta-button:hover {
+    background-color: #b9151a; /* Темнее для создания контраста */
+    border-color: #b9151a;
+}
+
+/* Формы с контрастными элементами */
+input, textarea, select {
+    border: 2px solid #cccccc; /* Достаточный контраст */
+    color: #2c2c2c;
+    background-color: #ffffff;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #e31e24; /* Контрастный цвет при фокусе */
+    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.2);
+}
+
+/* Режим высокого контраста */
+.high-contrast-mode {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+.high-contrast-mode a {
+    color: #ffff00 !important; /* Желтый для лучшей видимости */
+    text-decoration: underline;
+}
+
+.high-contrast-mode .btn,
+.high-contrast-mode .cta-button {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+}
+
+.high-contrast-mode input,
+.high-contrast-mode textarea,
+.high-contrast-mode select {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+.high-contrast-mode .skip-link {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+.high-contrast-mode h1,
+.high-contrast-mode h2,
+.high-contrast-mode h3,
+.high-contrast-mode h4,
+.high-contrast-mode h5,
+.high-contrast-mode h6 {
+    color: #ffffff !important;
+}
+
+/* Переключатель режима высокого контраста */
+.toggle-high-contrast {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    padding: 8px 12px;
+    background: #e31e24;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+}
+
+/* Класс для отключения высокого контраста */
+.no-high-contrast {
+    display: none;
+}
+
 /* ==========================================================================
    Landmark Roles — ARIA Landmarks
    ========================================================================== */
+
+/* Основные области страницы */
+header[role="banner"] {
+    position: relative;
+}
+
+nav[role="navigation"] {
+    position: relative;
+}
+
+main[role="main"] {
+    position: relative;
+}
+
+footer[role="contentinfo"] {
+    position: relative;
+}
 
 /* Визуальная индикация для отладки */
 body.aria-debug header[role="banner"],
@@ -524,4 +635,65 @@ body.aria-debug footer[role="contentinfo"]::before {
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;
+}
+
+/* Дополнительные ориентиры для скринридеров */
+aside[role="complementary"] {
+    position: relative;
+}
+
+aside[role="complementary"] h2 {
+    margin-top: 0;
+}
+
+form[role="search"] {
+    position: relative;
+}
+
+section[role="region"] {
+    position: relative;
+}
+
+section[role="region"] h2 {
+    margin-top: 0;
+}
+
+/* Явные метки для важных элементов */
+[aria-label] {
+    position: relative;
+}
+
+[aria-labelledby] {
+    position: relative;
+}
+
+/* Улучшенная визуализация ARIA состояний */
+[aria-expanded="true"]::after {
+    content: " (развернуто)";
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+
+[aria-expanded="false"]::after {
+    content: " (свернуто)";
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+
+[aria-current="page"],
+[aria-current="true"] {
+    font-weight: bold;
+}
+
+/* Скрытие вспомогательных элементов от визуального отображения */
+.sr-only[aria-hidden="false"] {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: nowrap !important;
+    border: 0 !important;
 }

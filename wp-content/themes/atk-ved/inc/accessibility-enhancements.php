@@ -405,3 +405,49 @@ function atk_ved_init_accessibility_enhancements(): void {
     ATK_VED_Accessibility_Enhancements::get_instance();
 }
 add_action( 'after_setup_theme', 'atk_ved_init_accessibility_enhancements' );
+
+// Функция для улучшения доступности форм
+function atk_ved_enhance_form_accessibility($form) {
+    // Добавляем ARIA-описания к полям формы
+    $form = preg_replace_callback('/<input([^>]+)>|<textarea([^>]+)>|<select([^>]+)>/', function($matches) {
+        $tag = $matches[0];
+        $attributes = isset($matches[1]) ? $matches[1] : (isset($matches[2]) ? $matches[2] : $matches[3]);
+        
+        // Проверяем, содержит ли тег уже ARIA-атрибуты
+        if (strpos($attributes, 'aria-describedby') !== false || strpos($attributes, 'aria-label') !== false) {
+            return $tag; // Уже имеет ARIA-описание
+        }
+        
+        // Находим id поля
+        preg_match('/id=["\']([^"\']*)["\']/', $attributes, $id_matches);
+        if (!empty($id_matches[1])) {
+            $field_id = $id_matches[1];
+            
+            // Находим соответствующий label
+            preg_match('/<label[^>]+for=["\']' . preg_quote($field_id) . '["\'][^>]*>(.*?)<\/label>/', $tag . $tag, $label_matches);
+            if (empty($label_matches[1])) {
+                // Ищем label в предыдущем HTML
+                preg_match('/<label[^>]+for=["\']' . preg_quote($field_id) . '["\'][^>]*>(.*?)<\/label>/', $tag, $label_matches);
+            }
+            
+            if (!empty($label_matches[1])) {
+                $label_text = trim(strip_tags($label_matches[1]));
+                $error_id = $field_id . '-error';
+                
+                // Добавляем ARIA-описание
+                if (strpos($tag, 'aria-describedby') === false) {
+                    $updated_tag = str_replace('<' . substr($tag, 1, strpos($tag, ' ') - 1), '<' . substr($tag, 1, strpos($tag, ' ') - 1) . ' aria-describedby="' . $error_id . '"', $tag);
+                    return $updated_tag;
+                }
+            }
+        }
+        
+        return $tag;
+    }, $form);
+    
+    return $form;
+}
+
+// Хук для улучшения доступности форм
+add_filter('the_content', 'atk_ved_enhance_form_accessibility');
+add_filter('widget_text', 'atk_ved_enhance_form_accessibility');

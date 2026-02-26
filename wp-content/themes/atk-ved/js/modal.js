@@ -8,11 +8,11 @@
     // Создание модального окна
     function createModal(title, content, type = 'default') {
         const modalHTML = `
-            <div class="atk-modal-overlay">
-                <div class="atk-modal atk-modal-${type}">
+            <div class="atk-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <div class="atk-modal atk-modal-${type}" role="document">
                     <button class="atk-modal-close" aria-label="Закрыть">&times;</button>
                     <div class="atk-modal-header">
-                        <h3>${title}</h3>
+                        <h3 id="modal-title">${title}</h3>
                     </div>
                     <div class="atk-modal-body">
                         ${content}
@@ -25,6 +25,8 @@
         
         setTimeout(() => {
             $('.atk-modal-overlay').addClass('active');
+            // Устанавливаем фокус на модальное окно
+            setupModalFocusTrap($('.atk-modal-overlay').first());
         }, 10);
         
         // Закрытие по клику на overlay или кнопку
@@ -40,11 +42,54 @@
                 closeModal();
             }
         });
+        
+        // Улучшенное управление фокусом для модальных окон
+        function setupModalFocusTrap($modal) {
+            const $focusableElements = $modal.find('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+            
+            if ($focusableElements.length === 0) return;
+            
+            const $firstFocusable = $focusableElements.first();
+            const $lastFocusable = $focusableElements.last();
+            
+            // Сохраняем элемент, который имел фокус до открытия модального окна
+            const $previouslyFocused = $(document.activeElement);
+            
+            // Фокус на первый элемент при открытии модального окна
+            $firstFocusable.focus();
+            
+            // Обработка Tab и Shift+Tab внутри модального окна
+            $modal.on('keydown.trap', function(e) {
+                if (e.key !== 'Tab') return;
+                
+                if (e.shiftKey && document.activeElement === $firstFocusable[0]) {
+                    // Если нажат Shift+Tab на первом элементе, перемещаем фокус на последний
+                    e.preventDefault();
+                    $lastFocusable.focus();
+                } else if (!e.shiftKey && document.activeElement === $lastFocusable[0]) {
+                    // Если нажат Tab на последнем элементе, перемещаем фокус на первый
+                    e.preventDefault();
+                    $firstFocusable.focus();
+                }
+            });
+            
+            // Возвращаем фокус на элемент, который был сфокусирован до открытия модального окна при его закрытии
+            $modal.on('modalClosed', function() {
+                $previouslyFocused.focus();
+            });
+        }
+        
+        // Удаление обработчиков фокуса при закрытии модального окна
+        function removeModalFocusTrap($modal) {
+            $modal.off('keydown.trap');
+        }
     }
     
     function closeModal() {
         $('.atk-modal-overlay').removeClass('active');
         setTimeout(() => {
+            // Триггерим событие закрытия модального окна для восстановления фокуса
+            $('.atk-modal-overlay').trigger('modalClosed');
             $('.atk-modal-overlay').remove();
             $(document).off('keydown.modal');
         }, 300);

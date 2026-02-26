@@ -27,18 +27,27 @@ class ATK_VED_Accessibility {
     private function __construct() {
         // Skip links
         add_action( 'wp_body_open', [ $this, 'output_skip_links' ], 1 );
+        
+        // Улучшенное управление фокусом
+        add_action( 'wp_footer', [ $this, 'output_focus_management' ], 30 );
 
         // ARIA landmarks
         add_filter( 'body_class', [ $this, 'add_aria_landmarks' ] );
 
         // ARIA для форм
         add_filter( 'wpcf7_form_elements', [ $this, 'enhance_cf7_accessibility' ] );
+        
+        // Улучшенная доступность форм
+        add_filter( 'the_content', [ $this, 'enhance_form_accessibility' ] );
 
         // Подключение стилей доступности
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_accessibility_styles' ] );
 
         // Улучшение навигации
         add_action( 'wp_footer', [ $this, 'output_keyboard_navigation' ], 20 );
+        
+        // Улучшенная доступность
+        add_action( 'wp_head', [ $this, 'output_aria_labels' ], 20 );
     }
 
     /**
@@ -265,6 +274,203 @@ class ATK_VED_Accessibility {
         ];
 
         return $labels[ $field_name ] ?? $field_name;
+    }
+    
+    /**
+     * Улучшение доступности форм
+     */
+    public function enhance_form_accessibility( $content ) {
+        // Добавляем aria-invalid и aria-describedby к полям формы
+        $content = preg_replace_callback(
+            '/<(input|textarea|select)([^>]*?)>/i',
+            function( $matches ) {
+                $tag = $matches[1];
+                $attrs = $matches[2];
+                
+                // Проверяем, есть ли у поля id
+                if ( preg_match( '/id=["\']([^"\']*)["\']/', $attrs, $id_matches ) ) {
+                    $field_id = $id_matches[1];
+                    
+                    // Добавляем aria-invalid если его нет
+                    if ( strpos( $attrs, 'aria-invalid' ) === false ) {
+                        $attrs = rtrim( $attrs ) . ' aria-invalid="false"';
+                    }
+                    
+                    // Добавляем aria-describedby если его нет
+                    if ( strpos( $attrs, 'aria-describedby' ) === false ) {
+                        $error_id = $field_id . '-error';
+                        $attrs = rtrim( $attrs ) . ' aria-describedby="' . $error_id . '"';
+                    }
+                }
+                
+                return '<' . $tag . $attrs . '>';
+            },
+            $content
+        );
+        
+        return $content;
+    }
+    
+    /**
+     * Вывод ARIA меток для улучшения доступности
+     */
+    public function output_aria_labels(): void {
+        ?>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Добавляем ARIA метки к различным элементам
+            const buttons = document.querySelectorAll('button:not([aria-label]):not([aria-labelledby])');
+            buttons.forEach(function(button) {
+                if (button.textContent.trim()) {
+                    button.setAttribute('aria-label', button.textContent.trim());
+                } else if (button.querySelector('svg, img')) {
+                    button.setAttribute('aria-label', 'Кнопка');
+                }
+            });
+            
+            // Добавляем ARIA метки к изображениям без альтернативного текста
+            const images = document.querySelectorAll('img:not([alt]):not([aria-label]):not([aria-labelledby])');
+            images.forEach(function(img) {
+                img.setAttribute('aria-hidden', 'true');
+            });
+            
+            // Улучшаем доступность аккордеонов
+            const accordions = document.querySelectorAll('.faq-item, .accordion');
+            accordions.forEach(function(accordion, index) {
+                const trigger = accordion.querySelector('.faq-question, .accordion-trigger');
+                const content = accordion.querySelector('.faq-answer, .accordion-content');
+                
+                if (trigger && content) {
+                    const id = 'accordion-' + index;
+                    
+                    if (!content.id) {
+                        content.id = id;
+                    }
+                    
+                    trigger.setAttribute('aria-controls', content.id);
+                    trigger.setAttribute('aria-expanded', 'false');
+                    
+                    // Добавляем обработчик для обновления состояния
+                    trigger.addEventListener('click', function() {
+                        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+                        trigger.setAttribute('aria-expanded', !isExpanded);
+                    });
+                }
+            });
+            
+            // Добавляем переключатель режима высокого контраста
+            const highContrastToggle = document.createElement('button');
+            highContrastToggle.className = 'toggle-high-contrast';
+            highContrastToggle.type = 'button';
+            highContrastToggle.textContent = 'Включить высокий контраст';
+            highContrastToggle.setAttribute('aria-label', 'Переключить режим высокого контраста');
+            
+            highContrastToggle.addEventListener('click', function() {
+                document.body.classList.toggle('high-contrast-mode');
+                
+                if (document.body.classList.contains('high-contrast-mode')) {
+                    highContrastToggle.textContent = 'Выключить высокий контраст';
+                    localStorage.setItem('highContrastMode', 'enabled');
+                } else {
+                    highContrastToggle.textContent = 'Включить высокий контраст';
+                    localStorage.setItem('highContrastMode', 'disabled');
+                }
+            });
+            
+            // Проверяем сохраненное состояние режима высокого контраста
+            if (localStorage.getItem('highContrastMode') === 'enabled') {
+                document.body.classList.add('high-contrast-mode');
+                highContrastToggle.textContent = 'Выключить высокий контраст';
+            }
+            
+            document.body.appendChild(highContrastToggle);
+        });
+        </script>
+        <?php
+    }
+    
+    /**
+     * Вывод JavaScript для улучшенного управления фокусом
+     */
+    public function output_focus_management(): void {
+        ?>
+        <script>
+        (function() {
+            'use strict';
+            
+            // Управление фокусом для модальных окон
+            function setupModalFocusManagement() {
+                const modals = document.querySelectorAll('[role="dialog"], .modal[aria-modal="true"]');
+                
+                modals.forEach(function(modal) {
+                    // Находим все интерактивные элементы в модальном окне
+                    const focusableElements = modal.querySelectorAll(
+                        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                    );
+                    
+                    if (focusableElements.length === 0) return;
+                    
+                    const firstFocusable = focusableElements[0];
+                    const lastFocusable = focusableElements[focusableElements.length - 1];
+                    
+                    // Обработка Tab и Shift+Tab внутри модального окна
+                    modal.addEventListener('keydown', function(e) {
+                        if (e.key !== 'Tab') return;
+                        
+                        if (e.shiftKey && document.activeElement === firstFocusable) {
+                            // Если нажат Shift+Tab на первом элементе, перемещаем фокус на последний
+                            e.preventDefault();
+                            lastFocusable.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                            // Если нажат Tab на последнем элементе, перемещаем фокус на первый
+                            e.preventDefault();
+                            firstFocusable.focus();
+                        }
+                    });
+                });
+            }
+            
+            // Управление фокусом для навигации с клавиатуры
+            function setupKeyboardNavigation() {
+                let isUsingKeyboard = false;
+                
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab' || e.keyCode === 9) {
+                        isUsingKeyboard = true;
+                        document.body.classList.add('keyboard-navigation');
+                    }
+                });
+                
+                document.addEventListener('mousedown', function() {
+                    isUsingKeyboard = false;
+                    document.body.classList.remove('keyboard-navigation');
+                });
+                
+                // Добавляем класс для элементов при фокусе с клавиатуры
+                document.addEventListener('focusin', function(e) {
+                    if (isUsingKeyboard) {
+                        e.target.classList.add('focused-by-keyboard');
+                    }
+                });
+                
+                document.addEventListener('focusout', function(e) {
+                    e.target.classList.remove('focused-by-keyboard');
+                });
+            }
+            
+            // Инициализация при загрузке DOM
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setupModalFocusManagement();
+                    setupKeyboardNavigation();
+                });
+            } else {
+                setupModalFocusManagement();
+                setupKeyboardNavigation();
+            }
+        })();
+        </script>
+        <?php
     }
 }
 

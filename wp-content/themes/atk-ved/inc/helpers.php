@@ -1,178 +1,382 @@
 <?php
 /**
- * Вспомогательные функции темы
+ * Helper Functions
+ *
+ * @package ATK_VED
+ * @since 3.3.0
  */
 
-// Получение услуг
-function atk_ved_get_services($limit = -1) {
-    $args = array(
-        'post_type'      => 'service',
-        'posts_per_page' => $limit,
-        'orderby'        => 'menu_order',
-        'order'          => 'ASC',
-    );
-    
-    return new WP_Query($args);
+declare(strict_types=1);
+
+/**
+ * Санитизация номера телефона
+ *
+ * @param string $phone Номер телефона
+ * @return string Очищенный номер
+ */
+function atk_ved_sanitize_phone(string $phone): string {
+    return preg_replace('/[^\d+]/', '', $phone);
 }
 
-// Получение отзывов
-function atk_ved_get_reviews($limit = 4) {
-    $args = array(
-        'post_type'      => 'review',
-        'posts_per_page' => $limit,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-    );
-    
-    return new WP_Query($args);
+/**
+ * Валидация email
+ *
+ * @param string $email Email для проверки
+ * @return bool true если email валиден
+ */
+function atk_ved_validate_email(string $email): bool {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-// Получение FAQ
-function atk_ved_get_faq($limit = -1) {
-    $args = array(
-        'post_type'      => 'faq',
-        'posts_per_page' => $limit,
-        'orderby'        => 'menu_order',
-        'order'          => 'ASC',
-    );
-    
-    return new WP_Query($args);
-}
+/**
+ * Получение инициалов из имени
+ *
+ * @param string $name Полное имя
+ * @return string Инициалы
+ */
+function atk_ved_get_initials(string $name): string {
+    if (empty($name)) {
+        return 'А';
+    }
 
-// Получение инициалов из имени
-function atk_ved_get_initials($name) {
-    $words = explode(' ', $name);
+    $parts = explode(' ', trim($name));
     $initials = '';
-    
-    foreach ($words as $word) {
-        if (!empty($word)) {
-            $initials .= mb_substr($word, 0, 1);
+
+    foreach ($parts as $part) {
+        if (!empty($part)) {
+            $initials .= mb_strtoupper(mb_substr($part, 0, 1));
         }
     }
-    
-    return mb_strtoupper($initials);
+
+    return substr($initials, 0, 2) ?: 'А';
 }
 
-// Вывод звезд рейтинга
-function atk_ved_get_rating_stars($rating) {
-    $output = '<div class="rating-stars">';
-    
-    for ($i = 1; $i <= 5; $i++) {
-        if ($i <= $rating) {
-            $output .= '<span class="star filled">★</span>';
+/**
+ * Форматирование цены
+ *
+ * @param float|int $price Цена
+ * @param string $currency Символ валюты
+ * @return string Отформатированная цена
+ */
+function atk_ved_format_price($price, string $currency = '₽'): string {
+    return number_format((float) $price, 0, '.', ' ') . ' ' . $currency;
+}
+
+/**
+ * Проверка URL на безопасность
+ *
+ * @param string $url URL для проверки
+ * @return bool true если URL безопасен
+ */
+function atk_ved_is_safe_url(string $url): bool {
+    if (empty($url)) {
+        return false;
+    }
+
+    $parsed = wp_parse_url($url);
+
+    if (!isset($parsed['host'])) {
+        return false;
+    }
+
+    $allowed_schemes = ['http', 'https'];
+    if (!isset($parsed['scheme']) || !in_array($parsed['scheme'], $allowed_schemes, true)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Логирование событий безопасности
+ *
+ * @param string $event   Событие
+ * @param string $details Детали
+ * @return void
+ */
+function atk_ved_log_security_event( string $event, string $details = '' ): void {
+	$log_file     = WP_CONTENT_DIR . '/security.log';
+	$timestamp    = date( 'Y-m-d H:i:s' );
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$ip           = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$user_agent   = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+
+	$log_entry = sprintf(
+		"[%s] IP: %s | Event: %s | Details: %s | User Agent: %s\n",
+		$timestamp,
+		$ip,
+		$event,
+		$details,
+		$user_agent
+	);
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+	file_put_contents( $log_file, $log_entry, FILE_APPEND | LOCK_EX );
+}
+
+/**
+ * Получение данных компании
+ *
+ * @return array Данные компании
+ */
+function atk_ved_get_company_info(): array {
+    return [
+        'name'    => get_theme_mod('atk_ved_company_name', 'АТК ВЭД'),
+        'phone'   => get_theme_mod('atk_ved_phone', ''),
+        'email'   => get_theme_mod('atk_ved_email', ''),
+        'address' => get_theme_mod('atk_ved_address', ''),
+        'years'   => get_theme_mod('atk_ved_years', 5),
+    ];
+}
+
+/**
+ * Проверка, является ли запрос AJAX
+ *
+ * @return bool
+ */
+function atk_ved_is_ajax(): bool {
+    return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+}
+
+/**
+ * Проверка, является ли запрос мобильным
+ *
+ * @return bool
+ */
+function atk_ved_is_mobile(): bool {
+    return wp_is_mobile();
+}
+
+/**
+ * Получение MIME типа файла
+ *
+ * @param string $filename Имя файла
+ * @return string MIME тип
+ */
+function atk_ved_get_mime_type(string $filename): string {
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+    $mime_types = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'svg' => 'image/svg+xml',
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ];
+
+    return $mime_types[$extension] ?? 'application/octet-stream';
+}
+
+/**
+ * Генерация уникального токена
+ *
+ * @param int $length Длина токена
+ * @return string Токен
+ */
+function atk_ved_generate_token(int $length = 32): string {
+    return bin2hex(random_bytes($length / 2));
+}
+
+/**
+ * Проверка токена
+ *
+ * @param string $token Токен для проверки
+ * @param string $expected Ожидаемый токен
+ * @return bool true если токены совпадают
+ */
+function atk_ved_verify_token(string $token, string $expected): bool {
+    return hash_equals($expected, $token);
+}
+
+/**
+ * Ограничение длины строки
+ *
+ * @param string $string Строка
+ * @param int $length Максимальная длина
+ * @param string $suffix Суффикс для обрезанной строки
+ * @return string Обрезанная строка
+ */
+function atk_ved_trim_string(string $string, int $length, string $suffix = '...'): string {
+    if (mb_strlen($string) <= $length) {
+        return $string;
+    }
+
+    return mb_substr($string, 0, $length - mb_strlen($suffix)) . $suffix;
+}
+
+/**
+ * Конвертация размера файла в человекочитаемый формат
+ *
+ * @param int $bytes Размер в байтах
+ * @return string Человекочитаемый размер
+ */
+function atk_ved_human_file_size(int $bytes): string {
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+    $bytes = max($bytes, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+
+    $bytes /= (1 << (10 * $pow));
+
+    return round($bytes, 2) . ' ' . $units[$pow];
+}
+
+/**
+ * Получение относительного времени
+ *
+ * @param string|int $datetime Дата и время
+ * @return string Относительное время
+ */
+function atk_ved_relative_time($datetime): string {
+    $timestamp = is_numeric($datetime) ? (int) $datetime : strtotime($datetime);
+    $diff = time() - $timestamp;
+
+    if ($diff < 0) {
+        return 'в будущем';
+    }
+
+    if ($diff < 60) {
+        return 'только что';
+    }
+
+    if ($diff < 3600) {
+        $mins = floor($diff / 60);
+        return $mins . ' мин. назад';
+    }
+
+    if ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        return $hours . ' ч. назад';
+    }
+
+    if ($diff < 604800) {
+        $days = floor($diff / 86400);
+        return $days . ' дн. назад';
+    }
+
+    return date('d.m.Y', $timestamp);
+}
+
+/**
+ * Проверка, является ли строка JSON
+ *
+ * @param string $string Строка для проверки
+ * @return bool true если строка JSON
+ */
+function atk_ved_is_json(string $string): bool {
+    json_decode($string);
+    return json_last_error() === JSON_ERROR_NONE;
+}
+
+/**
+ * Рекурсивная санитизация массива
+ *
+ * @param array $data Массив для санитизации
+ * @param callable $callback Функция санитизации
+ * @return array Очищенный массив
+ */
+function atk_ved_sanitize_array(array $data, callable $callback): array {
+    $result = [];
+
+    foreach ($data as $key => $value) {
+        if (is_array($value)) {
+            $result[$key] = atk_ved_sanitize_array($value, $callback);
         } else {
-            $output .= '<span class="star">☆</span>';
+            $result[$key] = $callback($value);
         }
     }
-    
-    $output .= '</div>';
-    
-    return $output;
+
+    return $result;
 }
 
-// Обрезка текста
-function atk_ved_trim_text($text, $length = 100, $more = '...') {
-    if (mb_strlen($text) <= $length) {
-        return $text;
+/**
+ * Получение домена из URL
+ *
+ * @param string $url URL
+ * @return string Домен
+ */
+function atk_ved_get_domain(string $url): string {
+    $parsed = wp_parse_url($url);
+    return $parsed['host'] ?? '';
+}
+
+/**
+ * Проверка, является ли URL внутренним
+ *
+ * @param string $url URL для проверки
+ * @return bool true если URL внутренний
+ */
+function atk_ved_is_internal_url(string $url): bool {
+    $site_url = home_url();
+    return strpos($url, $site_url) === 0;
+}
+
+/**
+ * Генерация случайной строки
+ *
+ * @param int $length Длина строки
+ * @return string Случайная строка
+ */
+function atk_ved_random_string(int $length = 10): string {
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $result = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $result .= $chars[random_int(0, strlen($chars) - 1)];
     }
-    
-    $text = mb_substr($text, 0, $length);
-    $text = mb_substr($text, 0, mb_strrpos($text, ' '));
-    
-    return $text . $more;
+
+    return $result;
 }
 
-// Получение времени чтения
-function atk_ved_get_reading_time($content) {
-    $word_count = str_word_count(strip_tags($content));
-    $reading_time = ceil($word_count / 200); // 200 слов в минуту
-    
-    return $reading_time;
+/**
+ * Конвертация кириллицы в латиницу (транслитерация)
+ *
+ * @param string $string Строка для транслитерации
+ * @return string Транслитерированная строка
+ */
+function atk_ved_transliterate(string $string): string {
+    $converter = [
+        'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',
+        'д' => 'd',    'е' => 'e',    'ё' => 'e',    'ж' => 'zh',
+        'з' => 'z',    'и' => 'i',    'й' => 'y',    'к' => 'k',
+        'л' => 'l',    'м' => 'm',    'н' => 'n',    'о' => 'o',
+        'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
+        'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',
+        'ч' => 'ch',   'ш' => 'sh',   'щ' => 'sch',  'ь' => '',
+        'ы' => 'y',    'ъ' => '',     'э' => 'e',    'ю' => 'yu',
+        'я' => 'ya',
+        'А' => 'A',    'Б' => 'B',    'В' => 'V',    'Г' => 'G',
+        'Д' => 'D',    'Е' => 'E',    'Ё' => 'E',    'Ж' => 'Zh',
+        'З' => 'Z',    'И' => 'I',    'Й' => 'Y',    'К' => 'K',
+        'Л' => 'L',    'М' => 'M',    'Н' => 'N',    'О' => 'O',
+        'П' => 'P',    'Р' => 'R',    'С' => 'S',    'Т' => 'T',
+        'У' => 'U',    'Ф' => 'F',    'Х' => 'H',    'Ц' => 'C',
+        'Ч' => 'Ch',   'Ш' => 'Sh',   'Щ' => 'Sch',  'Ь' => '',
+        'Ы' => 'Y',    'Ъ' => '',     'Э' => 'E',    'Ю' => 'Yu',
+        'Я' => 'Ya',
+    ];
+
+    return strtr($string, $converter);
 }
 
-// Проверка, является ли страница лендингом
-function atk_ved_is_landing_page() {
-    return is_front_page() || is_page_template('template-landing.php');
-}
-
-// Получение цвета для аватара
-function atk_ved_get_avatar_color($name) {
-    $colors = array(
-        '#e31e24', // красный
-        '#2196F3', // синий
-        '#4CAF50', // зеленый
-        '#FF9800', // оранжевый
-        '#9C27B0', // фиолетовый
-        '#00BCD4', // голубой
-    );
-    
-    $index = ord(mb_substr($name, 0, 1)) % count($colors);
-    
-    return $colors[$index];
-}
-
-// Форматирование номера телефона
-function atk_ved_format_phone($phone) {
-    $phone = preg_replace('/[^0-9]/', '', $phone);
-    
-    if (strlen($phone) == 11 && $phone[0] == '7') {
-        return '+7 (' . substr($phone, 1, 3) . ') ' . substr($phone, 4, 3) . '-' . substr($phone, 7, 2) . '-' . substr($phone, 9, 2);
-    }
-    
-    return $phone;
-}
-
-// Получение ссылки для телефона
-function atk_ved_get_phone_link($phone) {
-    return 'tel:' . preg_replace('/[^0-9+]/', '', $phone);
-}
-
-// Проверка, есть ли социальные сети
-function atk_ved_has_social_links() {
-    return get_theme_mod('atk_ved_whatsapp') || 
-           get_theme_mod('atk_ved_telegram') || 
-           get_theme_mod('atk_ved_vk');
-}
-
-// Получение SVG иконки
-function atk_ved_get_svg_icon($name) {
-    $icons = array(
-        'phone' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>',
-        'email' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>',
-        'location' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>',
-        'check' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
-    );
-    
-    return isset($icons[$name]) ? $icons[$name] : '';
-}
-
-// Безопасный вывод HTML
-function atk_ved_kses_post($content) {
-    $allowed_tags = wp_kses_allowed_html('post');
-    $allowed_tags['svg'] = array(
-        'xmlns' => true,
-        'width' => true,
-        'height' => true,
-        'viewbox' => true,
-        'fill' => true,
-        'stroke' => true,
-        'stroke-width' => true,
-        'stroke-linecap' => true,
-        'stroke-linejoin' => true,
-    );
-    $allowed_tags['path'] = array(
-        'd' => true,
-        'fill' => true,
-        'stroke' => true,
-    );
-    $allowed_tags['circle'] = array(
-        'cx' => true,
-        'cy' => true,
-        'r' => true,
-    );
-    $allowed_tags['polyline'] = array(
-        'points' => true,
-    );
-    
-    return wp_kses($content, $allowed_tags);
+/**
+ * Создание slug (URL-friendly строки)
+ *
+ * @param string $string Строка
+ * @return string Slug
+ */
+function atk_ved_create_slug(string $string): string {
+    $string = atk_ved_transliterate($string);
+    $string = preg_replace('/[^a-zA-Z0-9\s-]/', '', $string);
+    $string = trim(preg_replace('/[\s-]+/', '-', $string));
+    return strtolower($string);
 }
