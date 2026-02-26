@@ -80,6 +80,10 @@ $atk_includes = [
     '/inc/new-sections.php',
     '/inc/stock-photos.php',
     '/inc/stock-photos-integration.php',
+    '/inc/faq-section.php',
+    '/inc/reviews-section.php',
+    '/inc/cta-section.php',
+    '/inc/process-section.php',
 ];
 
 foreach ( $atk_includes as $file ) {
