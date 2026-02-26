@@ -13,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Load version configuration (single source of truth)
 require_once get_template_directory() . '/version.php';
 
+// Load Composer autoloader for theme
+$composer_autoload = get_template_directory() . '/vendor/autoload.php';
+if ( file_exists( $composer_autoload ) ) {
+    require_once $composer_autoload;
+}
+
+// Check PHP version
 if ( version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
     add_action( 'admin_notice', function() {
         echo '<div class="notice notice-error"><p>PHP ' . esc_html( ATK_VED_MIN_PHP_VERSION ) . '+ required. Current: ' . esc_html( PHP_VERSION ) . '</p></div>';
@@ -20,8 +27,10 @@ if ( version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
     return;
 }
 
-require_once get_template_directory() . '/src/Loader.php';
-\ATKVed\Loader::init();
+// Initialize theme loader if class exists
+if ( class_exists( '\ATKVed\Loader' ) ) {
+    \ATKVed\Loader::init();
+}
 
 $atk_includes = [
     '/inc/custom-post-types.php',
