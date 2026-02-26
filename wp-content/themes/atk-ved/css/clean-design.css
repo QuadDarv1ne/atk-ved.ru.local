@@ -1,0 +1,616 @@
+/**
+ * Чистый минималистичный дизайн
+ * Соответствует макету с изображения
+ * 
+ * @package ATK_VED
+ * @version 1.0.0
+ */
+
+/* ============================================
+   БАЗОВЫЕ СТИЛИ
+============================================ */
+
+:root {
+    /* Цвета */
+    --color-primary: #e31e24;
+    --color-primary-dark: #c01a1f;
+    --color-text: #2c2c2c;
+    --color-text-light: #666666;
+    --color-bg: #ffffff;
+    --color-bg-light: #f8f9fa;
+    --color-border: #e8e8e8;
+    
+    /* Отступы */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 40px;
+    --spacing-xl: 60px;
+    --spacing-2xl: 80px;
+    
+    /* Тени */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    
+    /* Радиусы */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+/* ============================================
+   ТИПОГРАФИКА
+============================================ */
+
+.section-title-clean {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.section-subtitle-clean {
+    font-size: 18px;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-2xl);
+    line-height: 1.6;
+}
+
+.text-highlight {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* ============================================
+   HERO СЕКЦИЯ (КАК НА МАКЕТЕ)
+============================================ */
+
+.hero-clean {
+    position: relative;
+    min-height: 600px;
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%),
+                url('../images/hero/hero-boxes.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-2xl) 0;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.hero-clean .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title-clean {
+    font-size: 56px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.hero-title-clean .highlight {
+    color: var(--color-primary);
+    display: block;
+}
+
+.hero-subtitle-clean {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--spacing-lg);
+    max-width: 600px;
+}
+
+/* ============================================
+   СЕКЦИЯ "НАШИ УСЛУГИ"
+============================================ */
+
+.services-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg);
+}
+
+.services-header-clean {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.services-grid-clean {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.service-card-clean {
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-border);
+}
+
+.service-card-clean:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+}
+
+.service-icon-clean {
+    width: 60px;
+    height: 60px;
+    background: rgba(227, 30, 36, 0.1);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+    font-size: 28px;
+}
+
+.service-card-clean:hover .service-icon-clean {
+    background: var(--color-primary);
+}
+
+.service-card-clean:hover .service-icon-clean svg,
+.service-card-clean:hover .service-icon-clean i {
+    color: #ffffff;
+}
+
+.service-title-clean {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.3;
+}
+
+.service-desc-clean {
+    font-size: 15px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.service-link-clean {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.service-link-clean:hover {
+    gap: 12px;
+}
+
+.service-link-clean svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ============================================
+   СЕКЦИЯ "СПОСОБЫ ДОСТАВКИ"
+============================================ */
+
+.delivery-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg-light);
+}
+
+.delivery-grid-clean {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.delivery-card-clean {
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.delivery-card-clean:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.delivery-icon-clean {
+    font-size: 48px;
+    margin-bottom: var(--spacing-md);
+}
+
+.delivery-title-clean {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+}
+
+.delivery-time-clean {
+    font-size: 14px;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-xs);
+}
+
+.delivery-price-clean {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* ============================================
+   СЕКЦИЯ "ЭТАПЫ СОТРУДНИЧЕСТВА"
+============================================ */
+
+.steps-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg);
+}
+
+.steps-grid-clean {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.step-card-clean {
+    position: relative;
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--color-primary);
+}
+
+.step-number-clean {
+    position: absolute;
+    top: -15px;
+    left: var(--spacing-md);
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: var(--shadow-md);
+}
+
+.step-title-clean {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.step-desc-clean {
+    font-size: 14px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+}
+
+/* ============================================
+   FAQ СЕКЦИЯ
+============================================ */
+
+.faq-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg-light);
+}
+
+.faq-list-clean {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item-clean {
+    background: var(--color-bg);
+    margin-bottom: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.faq-question-clean {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.faq-question-clean:hover {
+    color: var(--color-primary);
+}
+
+.faq-icon-clean {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.faq-item-clean.active .faq-icon-clean {
+    transform: rotate(180deg);
+}
+
+.faq-answer-clean {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item-clean.active .faq-answer-clean {
+    max-height: 500px;
+}
+
+.faq-answer-content-clean {
+    padding: 0 var(--spacing-md) var(--spacing-md);
+    font-size: 14px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+}
+
+/* ============================================
+   СЕКЦИЯ ОТЗЫВОВ
+============================================ */
+
+.reviews-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg);
+}
+
+.reviews-grid-clean {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.review-card-clean {
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+}
+
+.review-header-clean {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.review-avatar-clean {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.review-author-clean {
+    flex: 1;
+}
+
+.review-name-clean {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 4px;
+}
+
+.review-date-clean {
+    font-size: 12px;
+    color: var(--color-text-light);
+}
+
+.review-rating-clean {
+    display: flex;
+    gap: 4px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.review-star-clean {
+    color: #ffc107;
+    font-size: 16px;
+}
+
+.review-text-clean {
+    font-size: 14px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+}
+
+/* ============================================
+   КОНТАКТНАЯ ФОРМА
+============================================ */
+
+.contact-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg-light);
+}
+
+.contact-grid-clean {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    align-items: start;
+}
+
+.contact-info-clean {
+    padding-right: var(--spacing-lg);
+}
+
+.contact-form-clean {
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.form-group-clean {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label-clean {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-xs);
+}
+
+.form-input-clean,
+.form-textarea-clean {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+}
+
+.form-input-clean:focus,
+.form-textarea-clean:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+}
+
+.form-textarea-clean {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.btn-primary-clean {
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-clean:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   КАРТА
+============================================ */
+
+.map-clean {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-bg);
+}
+
+.map-container-clean {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    height: 400px;
+}
+
+.map-container-clean iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* ============================================
+   АДАПТИВНОСТЬ
+============================================ */
+
+@media (max-width: 1024px) {
+    .services-grid-clean,
+    .delivery-grid-clean,
+    .steps-grid-clean {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .contact-grid-clean {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title-clean {
+        font-size: 36px;
+    }
+    
+    .section-title-clean {
+        font-size: 32px;
+    }
+    
+    .services-grid-clean,
+    .delivery-grid-clean,
+    .steps-grid-clean,
+    .reviews-grid-clean {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-card-clean,
+    .delivery-card-clean,
+    .step-card-clean {
+        padding: var(--spacing-md);
+    }
+}
+
+/* ============================================
+   УТИЛИТЫ
+============================================ */
+
+.text-center {
+    text-align: center;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+.mb-5 { margin-bottom: var(--spacing-xl); }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: var(--spacing-xs); }
+.mt-2 { margin-top: var(--spacing-sm); }
+.mt-3 { margin-top: var(--spacing-md); }
+.mt-4 { margin-top: var(--spacing-lg); }
+.mt-5 { margin-top: var(--spacing-xl); }
