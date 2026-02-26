@@ -1,7 +1,6 @@
 <?php
 /**
  * Footer Template
- * Требует регистрации настроек в functions.php (см. комментарий внизу)
  */
 
 $phone      = get_theme_mod( 'atk_ved_phone', '' );
@@ -12,6 +11,8 @@ $telegram   = get_theme_mod( 'atk_ved_telegram', '' );
 $vk         = get_theme_mod( 'atk_ved_vk', '' );
 $logo       = get_theme_mod( 'atk_ved_logo_white', get_template_directory_uri() . '/images/logo-white.png' );
 ?>
+
+</main><!-- #main-content -->
 
 <footer class="site-footer" role="contentinfo">
 

@@ -20,6 +20,8 @@ class Enqueue {
     public function init(): void {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'wp_head', [ $this, 'preload_resources' ], 1 );
+        add_action( 'wp_footer', [ $this, 'add_web_share_api' ] );
+        add_action( 'wp_footer', [ $this, 'add_background_sync_js' ] );
     }
 
     /**
@@ -170,6 +172,11 @@ class Enqueue {
         echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
         echo '<link rel="dns-prefetch" href="//www.google-analytics.com">' . "\n";
         echo '<link rel="dns-prefetch" href="//mc.yandex.ru">' . "\n";
+        
+        // Additional resource hints for performance
+        echo '<link rel="preconnect" href="https://www.googletagmanager.com">' . "\n";
+        echo '<link rel="preconnect" href="https://connect.facebook.net">' . "\n";
+        echo '<link rel="dns-prefetch" href="//yastatic.net">' . "\n";
     }
 
     /**
@@ -188,5 +195,125 @@ class Enqueue {
                     || has_shortcode( $post->post_content, 'atk_tracking' )
                 )
             );
+    }
+    
+    /**
+     * Add Web Share API functionality.
+     * 
+     * @return void
+     */
+    public function add_web_share_api(): void {
+        if (is_front_page()) {
+            $site_description = get_bloginfo('description');
+            echo '<script>
+                function sharePage() {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: document.title,
+                            text: "' . esc_js($site_description) . '",
+                            url: window.location.href
+                        }).catch(console.error);
+                    } else {
+                        // Fallback to clipboard API
+                        navigator.clipboard.writeText(window.location.href);
+                        alert("Ссылка скопирована в буфер обмена!");
+                    }
+                }
+            </script>';
+        }
+    }
+    
+    /**
+     * Add background sync functionality for forms.
+     * 
+     * @return void
+     */
+    public function add_background_sync_js(): void {
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Handle form submissions for background sync
+                const forms = document.querySelectorAll("form");
+                
+                forms.forEach(function(form) {
+                    form.addEventListener("submit", function(e) {
+                        // Check if form is an AJAX form
+                        if (form.classList.contains("ajax-form") || form.classList.contains("contact-form") || form.classList.contains("newsletter-form")) {
+                            // Allow AJAX forms to handle themselves
+                            return;
+                        }
+                        
+                        // For regular forms, we can still register background sync capability
+                        if ("serviceWorker" in navigator && "SyncManager" in window) {
+                            navigator.serviceWorker.ready.then(function(reg) {
+                                // Register background sync for form submission
+                                reg.sync.register("contact-form-sync").catch(function(error) {
+                                    console.log("Background sync registration failed:", error);
+                                });
+                            });
+                        }
+                    });
+                });
+                
+                // Specifically handle contact forms with AJAX
+                const contactForms = document.querySelectorAll(".contact-form, .quick-search-form, #calculator-form");
+                
+                contactForms.forEach(function(form) {
+                    form.addEventListener("submit", function(e) {
+                        e.preventDefault();
+                        
+                        // Collect form data
+                        const formData = new FormData(form);
+                        const serializedData = new URLSearchParams(formData).toString();
+                        
+                        // Try to submit via fetch
+                        fetch(form.action || "./", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                            body: serializedData
+                        })
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error("Network response was not ok");
+                        })
+                        .then(function(data) {
+                            // Handle success
+                            if (data.queued) {
+                                alert("Форма добавлена в очередь для отправки");
+                            } else {
+                                alert("Форма успешно отправлена");
+                            }
+                            form.reset();
+                        })
+                        .catch(function(error) {
+                            console.error("Form submission error:", error);
+                            
+                            // If offline, queue for background sync
+                            if ("serviceWorker" in navigator && "SyncManager" in window) {
+                                navigator.serviceWorker.ready.then(function(reg) {
+                                    // Store form data for sync
+                                    if (typeof localStorage !== "undefined") {
+                                        const queuedForms = JSON.parse(localStorage.getItem("queued_forms") || "[]");
+                                        queuedForms.push({
+                                            id: Date.now(),
+                                            url: form.action || "./",
+                                            payload: serializedData,
+                                            timestamp: Date.now()
+                                        });
+                                        localStorage.setItem("queued_forms", JSON.stringify(queuedForms));
+                                    }
+                                    
+                                    reg.sync.register("contact-form-sync");
+                                    alert("Форма будет отправлена при восстановлении соединения");
+                                });
+                            }
+                        });
+                    });
+                });
+            });
+        </script>';
     }
 }

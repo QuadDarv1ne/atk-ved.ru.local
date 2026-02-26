@@ -1,10 +1,21 @@
-node_modules
-dist
-.cache
-*.log
+# Composer
+/vendor/
+composer.phar
+
+# Node
+node_modules/
+
+# Build
+dist/
+.cache/
+*.map
+
+# OS
 .DS_Store
 Thumbs.db
-*.map
+*.log
+
+# Images
 *.webp
 optimized-images/
 critical-css/
