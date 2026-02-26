@@ -23,7 +23,7 @@ declare(strict_types=1);
  * - PATCH: Bug fixes (backward compatible)
  */
 if ( ! defined( 'ATK_VED_VERSION' ) ) {
-	define( 'ATK_VED_VERSION', '3.3.0' );
+	define( 'ATK_VED_VERSION', '3.4.0' );
 }
 
 /**
@@ -31,6 +31,7 @@ if ( ! defined( 'ATK_VED_VERSION' ) ) {
  */
 if ( ! defined( 'ATK_VED_VERSION_HISTORY' ) ) {
 	define( 'ATK_VED_VERSION_HISTORY', [
+		'3.4.0' => '2026-02-26 — Удаление jQuery, оптимизация JS/CSS, улучшение производительности',
 		'3.3.0' => '2026-02-26 — Полное улучшение проекта (тесты, Docker, CI/CD)',
 		'3.2.0' => '2026-02-26 — UI/UX Улучшения',
 		'3.1.0' => '2026-02-25 — Оптимизация производительности',

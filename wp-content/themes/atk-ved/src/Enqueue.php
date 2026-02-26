@@ -57,6 +57,9 @@ class Enqueue {
         if ( $this->is_calc_page() ) {
             wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [], $v );
             wp_enqueue_style( 'atk-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', [], $v );
+            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-calc-fe', get_template_directory_uri() . '/js/calculator-frontend.js', [ 'jquery', 'atk-calc' ], $v, true );
+            wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking.js', [ 'jquery' ], $v, true );
         }
 
         // 404
@@ -69,26 +72,24 @@ class Enqueue {
         // Лоадер в head
         wp_enqueue_script( 'atk-loader', get_template_directory_uri() . '/js/loader.js', [], $v, false );
 
-        // Основные скрипты (оптимизированные)
-        wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [ 'jquery' ], $v, true );
+        // Service Worker для PWA
+        if ( ! is_admin() ) {
+            wp_enqueue_script( 'atk-sw', get_template_directory_uri() . '/js/sw-register.js', [], $v, true );
+        }
+
+        // Основные скрипты (без jQuery)
+        wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [], $v, true );
+        wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui.js', [], $v, true );
+        wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {
-            wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/counters.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/counters.js', [], $v, true );
             wp_enqueue_script( 'atk-share', get_template_directory_uri() . '/js/share.js', [], $v, true );
         }
 
         // Формы с background sync
         wp_enqueue_script( 'atk-forms', get_template_directory_uri() . '/js/forms.js', [], $v, true );
-
-        // Калькулятор и трекинг
-        if ( $this->is_calc_page() ) {
-            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator.js', [ 'jquery' ], $v, true );
-            wp_enqueue_script( 'atk-calc-fe', get_template_directory_uri() . '/js/calculator-frontend.js', [ 'jquery', 'atk-calc' ], $v, true );
-            wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking.js', [ 'jquery' ], $v, true );
-        }
 
         // Локализация JS
         $this->localize_script();
@@ -100,17 +101,16 @@ class Enqueue {
      * @return void
      */
     private function enqueue_critical_css(): void {
-        $transient_key = 'atk_ved_critical_css_v2';
-        $critical_css  = get_transient( $transient_key );
+        $transient_key = 'atk_ved_critical_css_v3';
+        $critical_css  = wp_cache_get( $transient_key, 'atk_ved' );
 
         if ( false === $critical_css ) {
             $critical_file = get_template_directory() . '/css/critical-inline.css';
             if ( file_exists( $critical_file ) ) {
                 $critical_css = file_get_contents( $critical_file );
-                // Минифицируем еще больше
                 $critical_css = preg_replace( '/\s+/', ' ', $critical_css );
                 $critical_css = str_replace( [ ' {', '{ ', ' }', '} ', ': ', ' :', '; ', ' ;' ], [ '{', '{', '}', '}', ':', ':', ';', ';' ], $critical_css );
-                set_transient( $transient_key, $critical_css, WEEK_IN_SECONDS );
+                wp_cache_set( $transient_key, $critical_css, 'atk_ved', WEEK_IN_SECONDS );
             } else {
                 $critical_css = '';
             }
@@ -152,20 +152,22 @@ class Enqueue {
      * @return void
      */
     public function preload_resources(): void {
-        if ( is_front_page() ) {
-            printf(
-                '<link rel="preload" href="%s" as="style">' . "\n",
-                esc_url( get_template_directory_uri() . '/css/front-page.css' )
-            );
-            printf(
-                '<link rel="preload" href="%s" as="script">' . "\n",
-                esc_url( get_template_directory_uri() . '/js/core.js' )
-            );
-        }
+        $theme_uri = get_template_directory_uri();
+        
+        // Preload критических ресурсов
+        echo '<link rel="preload" href="' . esc_url( $theme_uri . '/css/variables.css' ) . '" as="style">' . "\n";
+        echo '<link rel="preload" href="' . esc_url( get_stylesheet_uri() ) . '" as="style">' . "\n";
+        echo '<link rel="preload" href="' . esc_url( $theme_uri . '/js/core.js' ) . '" as="script">' . "\n";
 
+        // Preconnect для внешних ресурсов
         echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
         echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
         echo '<link rel="dns-prefetch" href="//mc.yandex.ru">' . "\n";
+        
+        // Prefetch для главной страницы
+        if ( is_front_page() ) {
+            echo '<link rel="prefetch" href="' . esc_url( $theme_uri . '/css/landing.css' ) . '">' . "\n";
+        }
     }
 
     /**

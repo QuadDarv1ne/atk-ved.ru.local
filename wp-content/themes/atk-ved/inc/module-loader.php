@@ -124,6 +124,7 @@ class ATK_VED_Module_Loader {
                 '/inc/image-manager.php',
                 '/inc/stock-photos.php',
                 '/inc/stock-photos-integration.php',
+                '/inc/webp-converter.php',
             ],
         ],
         
