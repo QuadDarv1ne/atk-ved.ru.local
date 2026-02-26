@@ -364,3 +364,152 @@ function atk_ved_calculator_customizer($wp_customize): void {
     ));
 }
 add_action('customize_register', 'atk_ved_calculator_customizer');
+
+/**
+ * Шорткод таблицы сравнения способов доставки
+ */
+function atk_ved_delivery_comparison_shortcode(array $atts): string {
+    $atts = shortcode_atts([
+        'title' => __('Сравнение способов доставки', 'atk-ved'),
+        'subtitle' => __('Выберите оптимальный вариант для вашего груза', 'atk-ved'),
+    ], $atts);
+
+    ob_start();
+    ?>
+    <div class="delivery-comparison-section">
+        <?php if ($atts['title']): ?>
+        <h3 class="comparison-title"><?php echo esc_html($atts['title']); ?></h3>
+        <?php endif; ?>
+        
+        <?php if ($atts['subtitle']): ?>
+        <p class="comparison-subtitle"><?php echo esc_html($atts['subtitle']); ?></p>
+        <?php endif; ?>
+
+        <div class="delivery-comparison">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Способ</th>
+                        <th>Срок</th>
+                        <th>Цена</th>
+                        <th>Надёжность</th>
+                        <th>Для кого</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="delivery-icon">🛫</span>
+                            Авиа
+                            <span class="comparison-badge badge-fast">Быстро</span>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="5 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                            </div>
+                        </td>
+                        <td>$$$$</td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="4 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                            </div>
+                        </td>
+                        <td>Срочные грузы</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td>
+                            <span class="delivery-icon">🚂</span>
+                            Ж/Д
+                            <span class="comparison-badge badge-optimal">Оптимально</span>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="4 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                            </div>
+                        </td>
+                        <td>$$</td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="5 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                            </div>
+                        </td>
+                        <td>Большинство грузов</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="delivery-icon">🚢</span>
+                            Море
+                            <span class="comparison-badge badge-cheap">Дёшево</span>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="2 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                            </div>
+                        </td>
+                        <td>$</td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="5 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                            </div>
+                        </td>
+                        <td>Крупные партии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="delivery-icon">🚛</span>
+                            Авто
+                            <span class="comparison-badge badge-reliable">Гибко</span>
+                        </td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="3 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                            </div>
+                        </td>
+                        <td>$$$</td>
+                        <td>
+                            <div class="rating">
+                                <span class="rating-star" aria-label="4 из 5">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star" aria-hidden="true">★</span>
+                                <span class="rating-star empty" aria-hidden="true">☆</span>
+                            </div>
+                        </td>
+                        <td>Сборные грузы</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('delivery_comparison', 'atk_ved_delivery_comparison_shortcode');

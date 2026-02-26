@@ -712,3 +712,213 @@ label {
         content: " (" attr(href) ")";
     }
 }
+
+/* ==========================================================================
+   УЛУЧШЕННЫЕ КАРТОЧКИ УСЛУГ v2.0
+   ========================================================================== */
+
+/* Улучшенная карточка услуги */
+.service-card-enhanced {
+    position: relative;
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e31e24, #ff6b6b);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.service-card-enhanced:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(227, 30, 36, 0.15);
+}
+
+.service-card-enhanced:hover::before {
+    transform: scaleX(1);
+}
+
+/* Иконка услуги */
+.service-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(227, 30, 36, 0.1), rgba(255, 107, 107, 0.1));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.service-card-enhanced:hover .service-icon {
+    background: linear-gradient(135deg, #e31e24, #ff6b6b);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.service-icon svg,
+.service-icon i {
+    width: 35px;
+    height: 35px;
+    color: #e31e24;
+    transition: all 0.3s ease;
+}
+
+.service-card-enhanced:hover .service-icon svg,
+.service-card-enhanced:hover .service-icon i {
+    color: #fff;
+}
+
+/* Заголовок */
+.service-card-enhanced h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Описание */
+.service-card-enhanced .service-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    flex: 1;
+}
+
+/* Список преимуществ */
+.service-features {
+    list-style: none;
+    margin-bottom: 25px;
+    padding: 0;
+}
+
+.service-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.service-features li::before {
+    content: '✓';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* Кнопка */
+.service-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    color: #e31e24;
+    border: 2px solid #e31e24;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    justify-content: center;
+    align-self: flex-start;
+}
+
+.service-btn:hover {
+    background: #e31e24;
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.service-btn svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.service-btn:hover svg {
+    transform: translateX(5px);
+}
+
+/* Бейдж на карточке */
+.service-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.service-badge.popular {
+    background: linear-gradient(135deg, #ff6b6b, #e31e24);
+    color: #fff;
+}
+
+.service-badge.new {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: #fff;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .service-card-enhanced {
+        padding: 30px 20px;
+    }
+
+    .service-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .service-icon svg,
+    .service-icon i {
+        width: 30px;
+        height: 30px;
+    }
+
+    .service-card-enhanced h3 {
+        font-size: 16px;
+    }
+
+    .service-btn {
+        width: 100%;
+    }
+}

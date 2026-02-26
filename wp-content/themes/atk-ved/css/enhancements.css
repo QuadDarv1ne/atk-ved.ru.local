@@ -195,6 +195,177 @@
 }
 
 /* ==========================================================================
+   ИНДИКАЦИЯ ОБЯЗАТЕЛЬНЫХ ПОЛЕЙ И ВАЛИДАЦИЯ v2.0
+   ========================================================================== */
+
+/* Обязательные поля - красный звёздочка */
+.required,
+label .required-mark {
+    color: #e31e24;
+    font-weight: 700;
+    margin-left: 3px;
+    font-size: 14px;
+}
+
+/* Стили для полей с валидацией */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c2c2c;
+}
+
+/* Валидация в реальном времени */
+input:not([type="checkbox"]):not([type="radio"]):valid,
+textarea:valid,
+select:valid {
+    border-left: 3px solid #4caf50 !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown) {
+    border-left: 3px solid #e31e24 !important;
+}
+
+/* Поля без валидации (пустые) */
+input:not([type="checkbox"]):not([type="radio"]):placeholder-shown,
+textarea:placeholder-shown {
+    border-left: 3px solid transparent !important;
+}
+
+/* Сообщения об ошибках валидации */
+.validation-message {
+    display: none;
+    font-size: 12px;
+    color: #e31e24;
+    margin-top: 6px;
+    padding-left: 10px;
+    border-left: 2px solid #e31e24;
+    animation: slideInLeft 0.3s ease;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+input:invalid:not(:placeholder-shown) + .validation-message,
+textarea:invalid:not(:placeholder-shown) + .validation-message {
+    display: block;
+}
+
+/* Анимация тряски при ошибке */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.field-error {
+    animation: shake 0.4s ease;
+}
+
+/* Успешная валидация с иконкой */
+.input-group {
+    position: relative;
+}
+
+.input-success {
+    position: relative;
+}
+
+.input-success::after {
+    content: '✓';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4caf50;
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:valid:not(:placeholder-shown) ~ .input-success,
+textarea:valid:not(:placeholder-shown) ~ .input-success {
+    opacity: 1;
+}
+
+/* Подсказки для полей */
+.field-hint {
+    font-size: 12px;
+    color: #757575;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.field-hint svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* Индикатор сложности пароля */
+.password-strength {
+    margin-top: 8px;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength-bar.weak {
+    width: 33%;
+    background: #f44336;
+}
+
+.password-strength-bar.medium {
+    width: 66%;
+    background: #ff9800;
+}
+
+.password-strength-bar.strong {
+    width: 100%;
+    background: #4caf50;
+}
+
+/* Стили для ошибок форм (существующие) */
+.field-error {
+    border-color: #e31e24 !important;
+    box-shadow: 0 0 0 2px rgba(227, 30, 36, 0.2) !important;
+}
+
+.form-error {
+    color: #e31e24;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* ==========================================================================
    Honeypot Field - скрытое поле для защиты от спама
    ========================================================================== */
 .hp-field {

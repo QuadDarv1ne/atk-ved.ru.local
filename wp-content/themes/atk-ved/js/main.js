@@ -100,21 +100,81 @@ jQuery(document).ready(function($) {
         checkVisible();
     }
 
+    // ============================================================================
+    // УЛУЧШЕННОЕ МОБИЛЬНОЕ МЕНЮ v2.0
+    // ============================================================================
+    
+    // Создание overlay для затемнения фона
+    if ($('.menu-overlay').length === 0) {
+        $('body').append('<div class="menu-overlay"></div>');
+    }
+
     // Мобильное меню с улучшенной анимацией
     $('.menu-toggle').on('click', function(e) {
         e.stopPropagation();
-        $('.main-nav').toggleClass('active');
-        $(this).toggleClass('active');
-        $('body').toggleClass('menu-open');
+        const isOpen = $('.main-nav').hasClass('active');
+        
+        if (isOpen) {
+            // Закрытие меню
+            closeMobileMenu();
+        } else {
+            // Открытие меню
+            openMobileMenu();
+        }
+    });
+
+    // Закрытие меню при клике на overlay
+    $('.menu-overlay').on('click', function() {
+        closeMobileMenu();
     });
 
     // Закрыть меню при клике вне его
     $(document).on('click', function(e) {
         if (!$(e.target).closest('.main-nav, .menu-toggle').length) {
-            $('.main-nav').removeClass('active');
-            $('.menu-toggle').removeClass('active');
-            $('body').removeClass('menu-open');
+            closeMobileMenu();
         }
+    });
+
+    // Закрытие меню по Escape
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('.main-nav').hasClass('active')) {
+            closeMobileMenu();
+        }
+    });
+
+    // Функции управления меню
+    function openMobileMenu() {
+        $('.main-nav').addClass('active');
+        $('.menu-toggle').addClass('active');
+        $('.menu-overlay').addClass('active');
+        $('body').addClass('menu-open');
+        
+        // Блокировка скролла
+        const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+        $('body').css('padding-right', scrollBarWidth + 'px');
+        
+        // Фокус на первый элемент меню для доступности
+        setTimeout(() => {
+            $('.main-nav a').first().focus();
+        }, 400);
+    }
+
+    function closeMobileMenu() {
+        $('.main-nav').removeClass('active');
+        $('.menu-toggle').removeClass('active');
+        $('.menu-overlay').removeClass('active');
+        $('body').removeClass('menu-open');
+        
+        // Возврат скролла
+        $('body').css('padding-right', '');
+        
+        // Возврат фокуса на кнопку меню
+        $('.menu-toggle').focus();
+    }
+
+    // Закрытие меню после клика на якорную ссылку
+    $('.main-nav a[href^="#"]').on('click', function() {
+        closeMobileMenu();
     });
 
     // Оптимизированный параллакс эффект для hero секции
@@ -1941,11 +2001,175 @@ jQuery(document).ready(function($) {
         $('.gallery-nav.next').on('click', function() {
             showImage((currentImage + 1) % totalImages);
         });
-        
+
         // Автопрокрутка изображений
         setInterval(() => {
             showImage((currentImage + 1) % totalImages);
         }, 4000);
     }
+
+    // ============================================================================
+    // УЛУЧШЕННАЯ ВАЛИДАЦИЯ ФОРМ v2.0
+    // ============================================================================
+
+    // Добавление маркеров обязательных полей
+    $('input[required], textarea[required], select[required]').each(function() {
+        const $field = $(this);
+        const $label = $field.closest('.form-group').find('label');
+        
+        if ($label.length && !$label.find('.required').length) {
+            $label.append(' <span class="required" aria-label="обязательное поле">*</span>');
+        }
+    });
+
+    // Валидация email в реальном времени
+    $('input[type="email"]').on('blur', function() {
+        const $field = $(this);
+        const email = $field.val().trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (email && !emailRegex.test(email)) {
+            $field.addClass('field-error');
+            showFieldError($field, 'Введите корректный email');
+        } else {
+            $field.removeClass('field-error');
+            hideFieldError($field);
+        }
+    });
+
+    // Валидация телефона в реальном времени
+    $('input[type="tel"]').on('blur', function() {
+        const $field = $(this);
+        const phone = $field.val().trim().replace(/\D/g, '');
+        
+        if (phone && phone.length < 10) {
+            $field.addClass('field-error');
+            showFieldError($field, 'Введите корректный номер телефона');
+        } else {
+            $field.removeClass('field-error');
+            hideFieldError($field);
+        }
+    });
+
+    // Валидация при вводе
+    $('input:not([type="checkbox"]):not([type="radio"]), textarea').on('input', function() {
+        const $field = $(this);
+        
+        // Убираем ошибку при начале ввода
+        if ($field.hasClass('field-error') && $field.val().trim()) {
+            $field.removeClass('field-error');
+            hideFieldError($field);
+        }
+    });
+
+    // Валидация при потере фокуса
+    $('input:not([type="checkbox"]):not([type="radio"]), textarea').on('blur', function() {
+        const $field = $(this);
+        const value = $field.val().trim();
+        const minLength = $field.attr('minlength') || 0;
+        
+        if (value && value.length < minLength) {
+            $field.addClass('field-error');
+            showFieldError($field, `Минимальная длина - ${minLength} симв.`);
+        }
+    });
+
+    // Функция показа ошибки поля
+    function showFieldError($field, message) {
+        hideFieldError($field);
+        
+        const errorHtml = `<div class="validation-message">${message}</div>`;
+        $field.after(errorHtml);
+    }
+
+    // Функция скрытия ошибки поля
+    function hideFieldError($field) {
+        $field.next('.validation-message').remove();
+    }
+
+    // Улучшенная отправка форм с валидацией
+    $('form').on('submit', function(e) {
+        const $form = $(this);
+        let isValid = true;
+        let firstErrorField = null;
+
+        // Валидация обязательных полей
+        $form.find('input[required], textarea[required], select[required]').each(function() {
+            const $field = $(this);
+            const value = $field.val().trim();
+            const type = $field.attr('type');
+            
+            // Пропускаем чекбоксы и радио
+            if (type === 'checkbox' || type === 'radio') {
+                return;
+            }
+            
+            if (!value) {
+                isValid = false;
+                $field.addClass('field-error');
+                
+                if (!firstErrorField) {
+                    firstErrorField = $field;
+                }
+                
+                // Показываем сообщение об ошибке
+                const fieldName = $field.closest('.form-group').find('label').text().replace('*', '').trim() || 'Поле';
+                showFieldError($field, `${fieldName} обязательно для заполнения`);
+            }
+        });
+
+        // Валидация email
+        $form.find('input[type="email"]').each(function() {
+            const $field = $(this);
+            const email = $field.val().trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                isValid = false;
+                $field.addClass('field-error');
+                
+                if (!firstErrorField) {
+                    firstErrorField = $field;
+                }
+                
+                showFieldError($field, 'Введите корректный email');
+            }
+        });
+
+        // Валидация минимальной длины
+        $form.find('input[minlength], textarea[minlength]').each(function() {
+            const $field = $(this);
+            const value = $field.val().trim();
+            const minLength = parseInt($field.attr('minlength'));
+            
+            if (value && value.length < minLength) {
+                isValid = false;
+                $field.addClass('field-error');
+                
+                if (!firstErrorField) {
+                    firstErrorField = $field;
+                }
+                
+                showFieldError($field, `Минимальная длина - ${minLength} симв.`);
+            }
+        });
+
+        // Если есть ошибки - предотвращаем отправку и фокусируемся на первом ошибочном поле
+        if (!isValid && firstErrorField) {
+            e.preventDefault();
+            
+            // Плавный скролл к первой ошибке
+            $('html, body').animate({
+                scrollTop: firstErrorField.offset().top - 150
+            }, 500);
+            
+            firstErrorField.focus();
+            
+            // Показываем уведомление
+            if (typeof atkShowToast === 'function') {
+                atkShowToast('Пожалуйста, исправьте ошибки в форме', 'error');
+            }
+        }
+    });
 
 });

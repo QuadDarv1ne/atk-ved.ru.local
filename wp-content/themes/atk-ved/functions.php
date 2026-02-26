@@ -73,6 +73,7 @@ $atk_includes = [
     '/inc/loyalty-system.php',
     '/inc/dark-mode.php',
     '/inc/performance-optimizer.php',
+    '/inc/delivery-map.php',
 ];
 
 foreach ( $atk_includes as $file ) {

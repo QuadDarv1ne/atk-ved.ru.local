@@ -1,9 +1,185 @@
 /**
  * Стили для калькулятора доставки
- * 
+ *
  * @package ATK_VED
  * @since 2.0.0
  */
+
+/* ==========================================================================
+   ТАБЛИЦА СРАВНЕНИЯ СПОСОБОВ ДОСТАВКИ v2.0
+   ========================================================================== */
+
+.delivery-comparison {
+    margin-top: 40px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 18px 20px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.comparison-table th {
+    background: linear-gradient(135deg, #f8f8f8, #f0f0f0);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #2c2c2c;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.comparison-table th:first-child {
+    text-align: left;
+    padding-left: 25px;
+}
+
+.comparison-table td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #2c2c2c;
+    padding-left: 25px;
+}
+
+.comparison-table tr {
+    transition: all 0.3s ease;
+}
+
+.comparison-table tr:hover {
+    background: rgba(227, 30, 36, 0.03);
+}
+
+.comparison-table tr.recommended {
+    background: rgba(76, 175, 80, 0.05);
+    border-left: 3px solid #4caf50;
+}
+
+.comparison-table tr.recommended td:first-child::after {
+    content: '✓ Рекомендуется';
+    display: block;
+    font-size: 11px;
+    color: #4caf50;
+    font-weight: 500;
+    margin-top: 5px;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* Рейтинги */
+.rating {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.rating-star {
+    color: #ffc107;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.rating-star.empty {
+    color: #e0e0e0;
+}
+
+/* Бейджи */
+.comparison-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-left: 8px;
+}
+
+.badge-fast {
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(33, 150, 243, 0.05));
+    color: #2196f3;
+    border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.badge-cheap {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.05));
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.badge-optimal {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(255, 152, 0, 0.05));
+    color: #ff9800;
+    border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.badge-reliable {
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.15), rgba(156, 39, 176, 0.05));
+    color: #9c27b0;
+    border: 1px solid rgba(156, 39, 176, 0.2);
+}
+
+/* Иконки методов доставки */
+.delivery-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Заголовок секции */
+.comparison-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+.comparison-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #757575;
+    margin-bottom: 25px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .delivery-comparison {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .comparison-table {
+        min-width: 600px;
+        font-size: 13px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: 12px 10px;
+    }
+
+    .rating-star {
+        font-size: 14px;
+    }
+
+    .comparison-badge {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   ОСНОВНЫЕ СТИЛИ КАЛЬКУЛЯТОРА
+   ========================================================================== */
 
 .delivery-calculator {
     background: #fff;

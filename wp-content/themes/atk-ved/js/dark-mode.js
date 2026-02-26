@@ -232,9 +232,98 @@
     // Инициализация при загрузке документа
     $(document).ready(function() {
         DarkMode.init();
+        initThemeToggle();
     });
-    
+
+    // ============================================================================
+    // УЛУЧШЕННЫЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ v2.0
+    // ============================================================================
+
+    function initThemeToggle() {
+        // Создаем кнопку переключения темы, если её нет
+        if ($('.theme-toggle').length === 0) {
+            $('body').append(`
+                <button class="theme-toggle" 
+                        type="button" 
+                        aria-label="Переключить тему"
+                        title="Переключить тему">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            `);
+        }
+
+        const $toggle = $('.theme-toggle');
+        const $body = $('body');
+
+        // Проверка сохранённой темы
+        const savedTheme = localStorage.getItem('atk_ved_theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // Применяем тему
+        if (savedTheme === 'dark') {
+            $body.addClass('dark-mode');
+        } else if (savedTheme === 'light') {
+            $body.removeClass('dark-mode');
+        } else if (systemPrefersDark) {
+            $body.addClass('auto-dark');
+        }
+
+        // Переключение темы
+        $toggle.on('click', function() {
+            const isDark = $body.hasClass('dark-mode');
+            
+            // Анимация иконки
+            $(this).find('svg').css('transform', 'rotate(180deg)');
+            setTimeout(() => {
+                $(this).find('svg').css('transform', 'rotate(0deg)');
+            }, 300);
+
+            // Переключаем тему
+            if (isDark) {
+                $body.removeClass('dark-mode').addClass('light-mode');
+                localStorage.setItem('atk_ved_theme', 'light');
+            } else {
+                $body.removeClass('light-mode auto-dark').addClass('dark-mode');
+                localStorage.setItem('atk_ved_theme', 'dark');
+            }
+
+            // Анимация фона
+            $body.css('transition', 'all 0.3s ease');
+            setTimeout(() => {
+                $body.css('transition', '');
+            }, 300);
+        });
+
+        // Слушатель системных настроек
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            // Применяем системную тему только если нет пользовательских предпочтений
+            if (!localStorage.getItem('atk_ved_theme')) {
+                if (e.matches) {
+                    $body.addClass('auto-dark').removeClass('dark-mode');
+                } else {
+                    $body.removeClass('auto-dark dark-mode');
+                }
+            }
+        });
+
+        // Показываем кнопку после загрузки
+        $toggle.css('opacity', '0').animate({ opacity: '1' }, 500);
+    }
+
     // Экспорт для использования в других скриптах
     window.ATK_VED_DarkMode = DarkMode;
-    
+
 })(jQuery);

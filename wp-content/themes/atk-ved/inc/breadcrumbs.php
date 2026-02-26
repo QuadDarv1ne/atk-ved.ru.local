@@ -271,62 +271,167 @@ add_shortcode('breadcrumbs', 'atk_ved_breadcrumbs_shortcode');
 function atk_ved_breadcrumbs_styles(): void {
     ?>
     <style>
+        /* Улучшенные breadcrumbs v2.0 */
         .breadcrumbs {
-            padding: 15px 0;
-            background: #f8f9fa;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f0f0 100%);
             border-bottom: 1px solid #e9ecef;
         }
-        
+
+        .container .breadcrumbs {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
         .breadcrumbs-list {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             list-style: none;
             margin: 0;
             padding: 0;
             font-size: 14px;
         }
-        
+
         .breadcrumbs-item,
         .breadcrumbs-current {
             display: inline-flex;
             align-items: center;
+            gap: 8px;
         }
-        
+
         .breadcrumbs-item a {
             color: #666;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.2s ease;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        
+
         .breadcrumbs-item a:hover {
             color: #e31e24;
+            background: rgba(227, 30, 36, 0.05);
         }
-        
+
+        .breadcrumbs-item a::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.6;
+        }
+
+        .breadcrumbs-item a:hover::before {
+            opacity: 1;
+        }
+
         .breadcrumbs-current {
             color: #2c2c2c;
-            font-weight: 500;
+            font-weight: 600;
+            padding: 4px 8px;
         }
-        
+
         .breadcrumbs-separator {
             color: #999;
-            margin: 0 5px;
+            margin: 0 2px;
+            font-size: 12px;
         }
-        
+
+        /* Адаптивность */
         @media (max-width: 768px) {
             .breadcrumbs {
-                padding: 10px 0;
+                padding: 12px 0;
             }
-            
+
             .breadcrumbs-list {
                 font-size: 13px;
+                gap: 5px;
             }
+
+            .breadcrumbs-item a {
+                padding: 3px 6px;
+            }
+
+            .breadcrumbs-item a::before {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        /* Тёмная тема */
+        @media (prefers-color-scheme: dark) {
+            body.auto-dark .breadcrumbs {
+                background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+                border-bottom-color: #333;
+            }
+
+            body.auto-dark .breadcrumbs-item a {
+                color: #e0e0e0;
+            }
+
+            body.auto-dark .breadcrumbs-item a:hover {
+                color: #ff6b6b;
+                background: rgba(255, 107, 107, 0.1);
+            }
+
+            body.auto-dark .breadcrumbs-current {
+                color: #fff;
+            }
+
+            body.auto-dark .breadcrumbs-separator {
+                color: #666;
+            }
+        }
+
+        body.dark-mode .breadcrumbs {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            border-bottom-color: #333;
+        }
+
+        body.dark-mode .breadcrumbs-item a {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .breadcrumbs-item a:hover {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        body.dark-mode .breadcrumbs-current {
+            color: #fff;
+        }
+
+        body.dark-mode .breadcrumbs-separator {
+            color: #666;
         }
     </style>
     <?php
 }
 add_action('wp_head', 'atk_ved_breadcrumbs_styles');
+
+/**
+ * Автоматическое отображение breadcrumbs
+ */
+function atk_ved_display_breadcrumbs(): void {
+    $show_on_front = get_theme_mod('atk_ved_breadcrumbs_show_home', true);
+
+    // Не показываем на главной, если отключено
+    if (is_front_page() && !$show_on_front) {
+        return;
+    }
+
+    // Показываем только не на главной странице
+    if (!is_front_page()) {
+        atk_ved_breadcrumbs();
+    }
+}
+add_action('wp_body_open', 'atk_ved_display_breadcrumbs', 15);
 
 /**
  * Настройки breadcrumbs в Customizer
