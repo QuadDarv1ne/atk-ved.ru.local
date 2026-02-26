@@ -54,12 +54,8 @@ class Enqueue {
             wp_enqueue_style( 'atk-modern-clean', get_template_directory_uri() . '/css/modern-clean.css', [ 'atk-front-page' ], $v, 'all' );
         }
 
-        // Модальные окна и формы
-        wp_enqueue_style( 'atk-modals', get_template_directory_uri() . '/css/modals.css', [], $v );
-        wp_enqueue_style( 'atk-form', get_template_directory_uri() . '/css/form-loader.css', [], $v );
-        
-        // Слайдеры и галереи
-        wp_enqueue_style( 'atk-sliders', get_template_directory_uri() . '/css/sliders.css', [], $v );
+        // Модальные окна и формы (объединенные)
+        wp_enqueue_style( 'atk-components', get_template_directory_uri() . '/css/components.css', [], $v );
 
         // Страницы калькулятора/трекинга
         if ( $this->is_calc_page() ) {
@@ -80,14 +76,11 @@ class Enqueue {
         // Основные скрипты (оптимизированные)
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-callback', get_template_directory_uri() . '/js/callback-modal.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-reviews', get_template_directory_uri() . '/js/reviews-slider.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-gallery', get_template_directory_uri() . '/js/gallery.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [ 'jquery' ], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {
-            wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/hero-counters.js', [ 'jquery' ], $v, true );
-            wp_enqueue_script( 'atk-stats', get_template_directory_uri() . '/js/statistics.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/counters.js', [ 'jquery' ], $v, true );
             wp_enqueue_script( 'atk-share', get_template_directory_uri() . '/js/share.js', [], $v, true );
         }
 

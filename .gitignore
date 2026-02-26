@@ -3,66 +3,81 @@
 # =============================================================================
 /wp-admin/
 /wp-includes/
-/wp-config.php
-/wp-content/*.php
+/wp-*.php
+/xmlrpc.php
+/index.php
 readme.html
 readme.txt
 license.txt
-xmlrpc.php
+wp-config.php
+wp-config-sample.php
+wp-comments-post.php
+wp-cron.php
 wp-links-opml.php
+wp-load.php
+wp-login.php
+wp-mail.php
+wp-settings.php
+wp-signup.php
 wp-trackback.php
 
 # =============================================================================
-# DEPENDENCIES
+# WORDPRESS CONTENT (системные файлы)
 # =============================================================================
-/vendor/
-/node_modules/
-composer.lock
-package-lock.json
+/wp-content/index.php
+/wp-content/mu-plugins/
+/wp-content/object-cache.php
+/wp-content/advanced-cache.php
+/wp-content/db.php
+/wp-content/sunrise.php
+/wp-content/maintenance.php
 
 # =============================================================================
-# BUILD OUTPUT
-# =============================================================================
-/dist/
-/build/
-*.min.css
-*.min.js
-*.map
-
-# =============================================================================
-# WORDPRESS PLUGINS (все кроме кастомных)
+# WORDPRESS PLUGINS
 # =============================================================================
 /wp-content/plugins/*
 !/wp-content/plugins/
-/wp-content/plugins/.gitkeep
+!/wp-content/plugins/.gitkeep
+# Если есть кастомные плагины, раскомментируйте:
+# !/wp-content/plugins/my-custom-plugin/
 
 # =============================================================================
 # WORDPRESS THEMES (только активная тема)
 # =============================================================================
-/wp-content/themes/*/
+/wp-content/themes/*
 !/wp-content/themes/atk-ved/
 /wp-content/themes/atk-ved/node_modules/
 /wp-content/themes/atk-ved/vendor/
+/wp-content/themes/atk-ved/.sass-cache/
+/wp-content/themes/atk-ved/package-lock.json
+/wp-content/themes/atk-ved/composer.lock
 
 # =============================================================================
 # UPLOADS & MEDIA
 # =============================================================================
-/wp-content/uploads/
+/wp-content/uploads/*
+!/wp-content/uploads/.gitkeep
 /wp-content/avatars/
 /wp-content/galleries/
 /wp-content/blogs.dir/
+/wp-content/ai1wm-backups/
 
 # =============================================================================
-# CACHE & TEMP
+# CACHE & OPTIMIZATION
 # =============================================================================
 /wp-content/cache/
 /wp-content/backups/
 /wp-content/backup-db/
 /wp-content/upgrade/
+/wp-content/updraft/
 /wp-content/w3tc-config/
+/wp-content/wflogs/
+/wp-content/et-cache/
+/wp-content/litespeed/
 *.cache
 *.tmp
 *.temp
+.htaccess.bak
 
 # =============================================================================
 # LOGS
@@ -70,83 +85,260 @@ package-lock.json
 *.log
 /logs/
 /wp-content/logs/
+/wp-content/debug.log
 debug.log
 error_log
+php_error.log
 php_errorlog
+access.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
 
 # =============================================================================
 # DATABASE
 # =============================================================================
 *.sql
 *.sql.gz
+*.sql.bz2
 *.db
 *.sqlite
+*.sqlite3
 /database/
+/db-backup/
 /docker/mysql/*.sql
+!/docker/mysql/init.sql
 
 # =============================================================================
 # ENVIRONMENT & SECRETS
 # =============================================================================
 .env
-.env.*
+.env.local
+.env.*.local
+.env.production
+.env.staging
+.env.development
 !.env.example
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
 /config/secrets/
 /config/credentials/
 auth.json
+.htpasswd
+
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+/vendor/
+/node_modules/
+/bower_components/
+composer.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# =============================================================================
+# BUILD & DIST
+# =============================================================================
+/dist/
+/build/
+/public/build/
+*.min.css
+*.min.js
+*.map
+*.css.map
+*.js.map
+/assets/dist/
 
 # =============================================================================
 # IDE & EDITORS
 # =============================================================================
+# JetBrains
 /.idea/
+*.iml
+*.iws
+*.ipr
+
+# VSCode
 /.vscode/
+!/.vscode/settings.json
+!/.vscode/tasks.json
+!/.vscode/launch.json
+!/.vscode/extensions.json
+*.code-workspace
+
+# AI Assistants
 /.kiro/
 /.qoder/
+/.cursor/
+/.aider/
+
+# Vim
 *.swp
 *.swo
+*.swn
 *~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+
+# Eclipse
 .project
 .settings/
+.buildpath
+.classpath
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# Atom
+.atom/
+
+# OS Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 desktop.ini
-*.sublime-*
+$RECYCLE.BIN/
 
 # =============================================================================
-# TESTING & CI
+# TESTING & CI/CD
 # =============================================================================
 /tests/
+/test/
 /.phpunit.result.cache
 /coverage/
+/.nyc_output/
 /vendor/bin/phpunit
 phpunit.xml
 !phpunit.xml.dist
+.phpunit.cache
+codeception.yml
+!codeception.dist.yml
 
 # =============================================================================
-# DOCKER & LOCAL DEV
+# DOCKER & CONTAINERS
 # =============================================================================
 /docker/mysql/data/
+/docker/postgres/data/
+/docker/redis/data/
 docker-compose.override.yml
 .docker/
+.dockerignore
 
 # =============================================================================
-# MISC
+# VERSION CONTROL
+# =============================================================================
+.svn/
+.git/
+.gitattributes
+
+# =============================================================================
+# SECURITY & BACKUPS
 # =============================================================================
 *.bak
 *.backup
 *.old
 *.orig
+*.save
+*-backup-*
+*-old.*
+*.~*
+/backups/
+/backup/
+
+# =============================================================================
+# TEMPORARY & MISC
+# =============================================================================
 /wordpress/
 /wp/
+/tmp/
+/temp/
 test-*.php
 test-*.html
+test-*.js
 start-*.bat
 start-*.ps1
 setup.php
+install.php
 /archive/
 /img-project/
+/screenshots/
+*.draft
+*.wip
+
+# =============================================================================
+# WORDPRESS SPECIFIC PLUGINS CACHE
+# =============================================================================
+# WP Rocket
+/wp-content/wp-rocket-config/
+/wp-content/cache/wp-rocket/
+/wp-content/cache/busting/
+
+# WP Super Cache
+/wp-content/wp-cache-config.php
+/wp-content/cache/supercache/
+
+# W3 Total Cache
+/wp-content/w3tc/
+
+# LiteSpeed Cache
+/wp-content/.litespeed_conf.dat
+
+# Autoptimize
+/wp-content/cache/autoptimize/
+
+# WP Fastest Cache
+/wp-content/cache/all/
+/wp-content/cache/wpfc-minified/
+
+# =============================================================================
+# COMPOSER & NPM
+# =============================================================================
+/vendor/autoload.php
+/vendor/composer/
+composer.phar
+npm-shrinkwrap.json
+
+# =============================================================================
+# SASS & CSS PREPROCESSORS
+# =============================================================================
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map
+
+# =============================================================================
+# WEBPACK & BUNDLERS
+# =============================================================================
+webpack-stats.json
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# =============================================================================
+# CUSTOM PROJECT FILES
+# =============================================================================
+# Добавьте сюда специфичные для проекта файлы
