@@ -232,47 +232,6 @@ function atk_ved_load_more_reviews() {
 add_action('wp_ajax_atk_ved_load_more_reviews', 'atk_ved_load_more_reviews');
 add_action('wp_ajax_nopriv_atk_ved_load_more_reviews', 'atk_ved_load_more_reviews');
 
-// Обработчик поиска
-function atk_ved_ajax_search() {
-    check_ajax_referer('atk_ved_nonce', 'nonce');
-    
-    $search_query = sanitize_text_field($_POST['query']);
-    
-    if (strlen($search_query) < 3) {
-        wp_send_json_error(array('message' => 'Введите минимум 3 символа'));
-    }
-    
-    $args = array(
-        's' => $search_query,
-        'post_type' => array('post', 'page', 'service', 'faq'),
-        'posts_per_page' => 5,
-    );
-    
-    $query = new WP_Query($args);
-    
-    if ($query->have_posts()) {
-        $results = array();
-        
-        while ($query->have_posts()) {
-            $query->the_post();
-            $results[] = array(
-                'title' => get_the_title(),
-                'url' => get_permalink(),
-                'excerpt' => wp_trim_words(get_the_excerpt(), 15),
-                'type' => get_post_type(),
-            );
-        }
-        
-        wp_send_json_success(array('results' => $results));
-    } else {
-        wp_send_json_error(array('message' => 'Ничего не найдено'));
-    }
-    
-    wp_reset_postdata();
-}
-add_action('wp_ajax_atk_ved_search', 'atk_ved_ajax_search');
-add_action('wp_ajax_nopriv_atk_ved_search', 'atk_ved_ajax_search');
-
 // Регистрация кастомного типа записи для форм обратной связи
 function atk_ved_register_contact_form_post_type() {
     register_post_type('contact_form', array(
