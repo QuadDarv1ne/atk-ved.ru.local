@@ -95,6 +95,18 @@ if ( file_exists( $contact_form_file ) ) {
     require_once $contact_form_file;
 }
 
+// Load Image Optimization
+$image_opt_file = ATK_VED_DIR . '/inc/image-optimization.php';
+if ( file_exists( $image_opt_file ) ) {
+    require_once $image_opt_file;
+}
+
+// Load Performance Optimization
+$performance_file = ATK_VED_DIR . '/inc/performance.php';
+if ( file_exists( $performance_file ) ) {
+    require_once $performance_file;
+}
+
 // ============================================
 // 3. Admin Features (Refactored)
 // ============================================
