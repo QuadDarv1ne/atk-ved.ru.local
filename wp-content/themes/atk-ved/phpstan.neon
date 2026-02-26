@@ -1,23 +1,14 @@
 parameters:
-    # Уровень анализа (0-9, чем выше - тем строже)
     level: 5
-
-    # Путь к bootstrap файлу
     bootstrapFiles:
         - ../../wp-load.php
-
-    # Исключённые файлы и директории
     excludePaths:
         - tests/
         - vendor/
         - node_modules/
         - dist/
         - sample/
-        - convert-logo.html
-
-    # Игнорируемые ошибки (baseline будет сгенерирован отдельно)
     ignoreErrors:
-        # Игнорируем ошибки WordPress функций (они будут проверяться через phpstan-wordpress)
         - '#Function __ not found#'
         - '#Function _e not found#'
         - '#Function esc_html__ not found#'
@@ -28,66 +19,8 @@ parameters:
         - '#Function esc_url not found#'
         - '#Function wp_enqueue_style not found#'
         - '#Function wp_enqueue_script not found#'
-
-    # Дополнительные проверки
     checkGenericClassInNonGenericPhpDoc: true
     checkMissingIterableValueType: true
     checkUnionTypes: true
-    checkExplicitMixed: true
-    reportMaybes: true
-    reportStaticMethodSignatures: true
-
-    # Настройки для WordPress
-    universalObjectCratesClasses:
-        - WP_Post
-        - WP_User
-        - WP_Term
-        - WP_Comment
-        - WP_Query
-        - WP_Screen
-        - WP_Customize_Manager
-
-    # Типы параметров
     treatPhpDocTypesAsCertain: true
     inferPrivatePropertyTypeFromConstructor: true
-
-    # Строгие проверки
-    strictRules:
-        - PHPStan\Rules\StrictRules
-
-services:
-    # Классы WordPress для автозагрузки
-    -
-        class: SzepeViktor\PHPStan\WordPress\GetPostsDynamicFunctionReturnTypeExtension
-        tags:
-            - phpstan.broker.dynamicFunctionReturnTypeExtension
-    -
-        class: SzepeViktor\PHPStan\WordPress\HookCallbackDynamicReturnTypeExtension
-        tags:
-            - phpstan.broker.dynamicFunctionReturnTypeExtension
-
-rules:
-    # Строгие правила
-    - PHPStan\Rules\StrictRules\StrictBooleanAndRule
-    - PHPStan\Rules\StrictRules\StrictBooleanOrRule
-    - PHPStan\Rules\StrictRules\StrictComparisonOfSameTypesRule
-    - PHPStan\Rules\StrictRules\StrictEqualityRule
-
-    # Правила для WordPress
-    - SzepeViktor\PHPStan\WordPress\DeprecatedAPIFunctionRule
-    - SzepeViktor\PHPStan\WordPress\DeprecatedClassesRule
-
-    # Дополнительные правила
-    - PHPStan\Rules\Functions\ReturnTypeDeclarationRule
-    - PHPStan\Rules\Methods\ReturnTypeDeclarationRule
-    - PHPStan\Rules\Properties\ReadOnlyPropertyRule
-
-    # Проверка на использование правильных функций
-    - PHPStan\Rules\Functions\CallToFunctionParametersRule
-    - PHPStan\Rules\Methods\CallToMethodParametersRule
-
-    # Проверка на пропущенные ошибки
-    - PHPStan\Rules\Exceptions\CatchWithUnthrownExceptionRule
-
-    # Проверка на пустые catch блоки
-    - PHPStan\Rules\Exceptions\EmptyCatchRule

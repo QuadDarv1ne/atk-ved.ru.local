@@ -573,18 +573,43 @@ input:focus, textarea:focus, select:focus {
 
 /* Переключатель режима высокого контраста */
 .toggle-high-contrast {
-    position: fixed;
-    top: 10px;
-    right: 10px;
+    position: relative;
     z-index: 9999;
-    padding: 8px 12px;
-    background: #e31e24;
-    color: white;
+    padding: 8px;
+    background: transparent;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    display: block;
+    font-size: 16px;
+    color: #2c2c2c;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.toggle-high-contrast:hover,
+.toggle-high-contrast:focus {
+    background-color: #f0f0f0;
+    outline: 2px solid #e31e24;
+    outline-offset: 2px;
+}
+
+.toggle-high-contrast.active {
+    color: #e31e24;
+    background-color: #ffecec;
+}
+
+.dark-mode .toggle-high-contrast {
+    color: #f0f0f0;
+}
+
+.dark-mode .toggle-high-contrast:hover,
+.dark-mode .toggle-high-contrast:focus {
+    background-color: #404040;
+    outline-color: #ff6b6b;
+}
+
+.dark-mode .toggle-high-contrast.active {
+    color: #ff6b6b;
+    background-color: #330000;
 }
 
 /* Класс для отключения высокого контраста */

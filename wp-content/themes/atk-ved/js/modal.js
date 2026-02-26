@@ -281,9 +281,36 @@
             }
         });
         
-        // Замена alert на toast в существующих формах
+            // Замена alert на toast в существующих формах
         window.atkShowToast = showToast;
         window.atkOpenModal = openRequestModal;
     });
+    
+    // Загружаем настройки при готовности DOM
+    $(document).ready(function() {
+        // Вызываем общую функцию инициализации доступности, если она существует
+        if (typeof window.loadHighContrastSetting === 'function') {
+            window.loadHighContrastSetting();
+        }
+    });
+    
+    // Функция для шаринга страницы
+    function sharePage() {
+        if (navigator.share) {
+            navigator.share({
+                title: document.title,
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            // Резервный вариант - копирование ссылки в буфер обмена
+            navigator.clipboard.writeText(window.location.href).then(function() {
+                showToast('Ссылка скопирована!', 'info', 2000);
+            }).catch(function(err) {
+                console.error('Ошибка при копировании ссылки: ', err);
+            });
+        }
+    }
+    
+    window.sharePage = sharePage;
     
 })(jQuery);

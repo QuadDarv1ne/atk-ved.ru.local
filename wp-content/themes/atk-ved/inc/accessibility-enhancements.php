@@ -196,10 +196,85 @@ class ATK_VED_Accessibility_Enhancements {
                 document.addEventListener('DOMContentLoaded', function() {
                     setupModalFocusManagement();
                     window.AtkA11yAnnouncer.init();
+                    enhanceKeyboardNavigation();
+                    enhanceFormButtonFocus();
                 });
             } else {
                 setupModalFocusManagement();
                 window.AtkA11yAnnouncer.init();
+                enhanceKeyboardNavigation();
+                enhanceFormButtonFocus();
+            }
+            
+            // Улучшенная навигация с клавиатуры для меню
+            function enhanceKeyboardNavigation() {
+                // Улучшаем навигацию для основного меню
+                const mainNav = document.querySelector('.main-nav ul');
+                if (mainNav) {
+                    const menuItems = mainNav.querySelectorAll('a');
+                    
+                    menuItems.forEach(item => {
+                        // Обработка нажатия Enter или Space
+                        item.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                this.click();
+                            }
+                        });
+                        
+                        // Обработка стрелок для навигации
+                        item.addEventListener('keydown', function(e) {
+                            if (e.altKey || e.ctrlKey || e.metaKey) return;
+                            
+                            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                const nextItem = this.parentNode.nextElementSibling;
+                                if (nextItem && nextItem.querySelector('a')) {
+                                    nextItem.querySelector('a').focus();
+                                } else {
+                                    // Если это последний элемент, переходим к первому
+                                    menuItems[0].focus();
+                                }
+                            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                const prevItem = this.parentNode.previousElementSibling;
+                                if (prevItem && prevItem.querySelector('a')) {
+                                    prevItem.querySelector('a').focus();
+                                } else {
+                                    // Если это первый элемент, переходим к последнему
+                                    menuItems[menuItems.length - 1].focus();
+                                }
+                            }
+                        });
+                    });
+                }
+                
+                // Улучшаем доступность для мобильного меню
+                const menuToggle = document.querySelector('.menu-toggle');
+                if (menuToggle) {
+                    menuToggle.addEventListener('click', function() {
+                        const expanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', !expanded);
+                        
+                        // При открытии меню перемещаем фокус на первое элемент меню
+                        if (!expanded) {
+                            setTimeout(() => {
+                                const firstMenuItem = document.querySelector('.main-nav a');
+                                if (firstMenuItem) {
+                                    firstMenuItem.focus();
+                                }
+                            }, 100);
+                        }
+                    });
+                    
+                    // Обработка клавиш для кнопки переключения меню
+                    menuToggle.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.click();
+                        }
+                    });
+                }
             }
             
             // Улучшенная обработка ошибок форм для вспомогательных технологий
@@ -227,7 +302,9 @@ class ATK_VED_Accessibility_Enhancements {
                         field.setAttribute('aria-describedby', errorId);
                         
                         // Объявляем ошибку через вспомогательные технологии
-                        window.AtkA11yAnnouncer.announce(errorMessage, 'assertive');
+                        if (window.AtkA11yAnnouncer && typeof window.AtkA11yAnnouncer.announce === 'function') {
+                            window.AtkA11yAnnouncer.announce(errorMessage, 'assertive');
+                        }
                     }
                 }, true);
                 
@@ -237,14 +314,66 @@ class ATK_VED_Accessibility_Enhancements {
                     if (form.classList.contains('ajax-form')) {
                         // При успешной отправке формы объявляем результат
                         form.addEventListener('ajaxSuccess', function() {
-                            window.AtkA11yAnnouncer.announce('<?php esc_attr_e( 'Форма успешно отправлена', 'atk-ved' ); ?>', 'polite');
+                            if (window.AtkA11yAnnouncer && typeof window.AtkA11yAnnouncer.announce === 'function') {
+                                window.AtkA11yAnnouncer.announce('<?php esc_attr_e( 'Форма успешно отправлена', 'atk-ved' ); ?>', 'polite');
+                            }
                         });
                     }
                 });
             }
             
+            // Улучшенное управление фокусом для кнопок форм
+            function enhanceFormButtonFocus() {
+                // Обеспечиваем правильное управление фокусом для кнопок "Оставить заявку"
+                const requestButtons = document.querySelectorAll('.cta-button, .open-modal');
+                
+                requestButtons.forEach(button => {
+                    button.setAttribute('role', 'button');
+                    button.setAttribute('tabindex', '0');
+                    
+                    // Обработка клавиш для кнопок
+                    button.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.click();
+                        }
+                    });
+                });
+            }
+            
+            
+            
             // Инициализация улучшенной обработки ошибок форм
             enhanceFormErrorHandling();
+            
+            // Улучшенное восстановление фокуса после AJAX-запросов
+            function enhanceAjaxFocusManagement() {
+                // Сохраняем элемент, который имел фокус до AJAX-запроса
+                let focusedElementBeforeAjax = null;
+                
+                // Перехватываем начало AJAX-запросов
+                document.addEventListener('ajaxSend', function() {
+                    focusedElementBeforeAjax = document.activeElement;
+                });
+                
+                // Восстанавливаем фокус после завершения AJAX-запроса
+                document.addEventListener('ajaxComplete', function() {
+                    if (focusedElementBeforeAjax && focusedElementBeforeAjax.focus) {
+                        // Небольшая задержка для обеспечения обновления DOM
+                        setTimeout(function() {
+                            focusedElementBeforeAjax.focus();
+                        }, 100);
+                    }
+                });
+                
+                // Также добавляем обработчик для обычных submit событий
+                document.addEventListener('submit', function() {
+                    focusedElementBeforeAjax = document.activeElement;
+                });
+            }
+            
+            // Инициализация управления фокусом для AJAX
+            enhanceAjaxFocusManagement();
             
             // Улучшенная поддержка пользовательских настроек доступности
             function applyUserAccessibilityPreferences() {
@@ -266,8 +395,53 @@ class ATK_VED_Accessibility_Enhancements {
                 }
             }
             
+            // Функция переключения режима высокой контрастности
+            function toggleHighContrast() {
+                const html = document.documentElement;
+                const body = document.body;
+                const button = document.querySelector('.toggle-high-contrast');
+                
+                html.classList.toggle('high-contrast-mode');
+                body.classList.toggle('high-contrast-mode');
+                
+                // Сохраняем состояние в localStorage
+                const isHighContrast = html.classList.contains('high-contrast-mode');
+                localStorage.setItem('a11y-high-contrast', isHighContrast);
+                localStorage.setItem('highContrastMode', isHighContrast);
+                
+                // Обновляем aria-pressed атрибут
+                if (button) {
+                    button.setAttribute('aria-pressed', isHighContrast);
+                    
+                    // Обновляем внешний вид кнопки
+                    if (isHighContrast) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                }
+            }
+            
+            // Загружаем состояние высокой контрастности при инициализации
+            function loadHighContrastSetting() {
+                const savedSetting = localStorage.getItem('highContrastMode') || localStorage.getItem('a11y-high-contrast');
+                if (savedSetting === 'true') {
+                    document.documentElement.classList.add('high-contrast-mode');
+                    document.body.classList.add('high-contrast-mode');
+                    const button = document.querySelector('.toggle-high-contrast');
+                    if (button) {
+                        button.classList.add('active');
+                        button.setAttribute('aria-pressed', 'true');
+                    }
+                }
+            }
+            
             // Применяем настройки при загрузке
             applyUserAccessibilityPreferences();
+            loadHighContrastSetting();
+            
+            // Добавляем функцию в глобальный объект для использования в других скриптах
+            window.toggleHighContrast = toggleHighContrast;
         })();
         </script>
         <?php
@@ -414,7 +588,7 @@ function atk_ved_enhance_form_accessibility($form) {
         $attributes = isset($matches[1]) ? $matches[1] : (isset($matches[2]) ? $matches[2] : $matches[3]);
         
         // Проверяем, содержит ли тег уже ARIA-атрибуты
-        if (strpos($attributes, 'aria-describedby') !== false || strpos($attributes, 'aria-label') !== false) {
+        if (strpos($attributes, 'aria-describedby') !== false || strpos($attributes, 'aria-label') !== false || strpos($attributes, 'aria-labelledby') !== false) {
             return $tag; // Уже имеет ARIA-описание
         }
         
@@ -434,15 +608,34 @@ function atk_ved_enhance_form_accessibility($form) {
                 $label_text = trim(strip_tags($label_matches[1]));
                 $error_id = $field_id . '-error';
                 
-                // Добавляем ARIA-описание
-                if (strpos($tag, 'aria-describedby') === false) {
-                    $updated_tag = str_replace('<' . substr($tag, 1, strpos($tag, ' ') - 1), '<' . substr($tag, 1, strpos($tag, ' ') - 1) . ' aria-describedby="' . $error_id . '"', $tag);
+                // Добавляем aria-labelledby вместо aria-describedby для связи с лейблом
+                if (strpos($tag, 'aria-labelledby') === false && strpos($tag, 'aria-label') === false) {
+                    $label_id = $field_id . '-label';
+                    $updated_tag = str_replace('<' . substr($tag, 1, strpos($tag, ' ') - 1), '<' . substr($tag, 1, strpos($tag, ' ') - 1) . ' aria-labelledby="' . $label_id . '"', $tag);
                     return $updated_tag;
                 }
             }
         }
         
         return $tag;
+    }, $form);
+    
+    // Обновляем label'ы, чтобы они имели id для связи с полями
+    $form = preg_replace_callback('/<label([^>]*)for=["\']([^"\']*)["\']([^>]*)>/', function($matches) {
+        $full_tag = $matches[0];
+        $before_for = $matches[1];
+        $field_id = $matches[2];
+        $after_for = $matches[3];
+        
+        $label_id = $field_id . '-label';
+        
+        // Проверяем, есть ли уже id у label
+        if (strpos($before_for, 'id=') === false && strpos($after_for, 'id=') === false) {
+            $updated_tag = str_replace('<label', '<label id="' . $label_id . '"', $full_tag);
+            return $updated_tag;
+        }
+        
+        return $full_tag;
     }, $form);
     
     return $form;
