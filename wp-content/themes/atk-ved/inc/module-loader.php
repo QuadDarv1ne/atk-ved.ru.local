@@ -37,7 +37,7 @@ class ATK_VED_Module_Loader {
             'always' => true,
             'files' => [
                 '/inc/security.php',
-                '/inc/security-advanced.php',
+                '/inc/advanced-security.php',
                 '/inc/logger.php',
             ],
         ],

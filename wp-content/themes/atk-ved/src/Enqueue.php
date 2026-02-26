@@ -32,25 +32,25 @@ class Enqueue {
 
         // === Стили ===
 
-        // Базовые стили (критичные)
+        // Базовые стили
         wp_enqueue_style( 'atk-variables', get_template_directory_uri() . '/css/variables.css', [], $v );
         wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-variables' ], $v );
-        wp_enqueue_style( 'atk-base', get_template_directory_uri() . '/css/base.css', [ 'atk-style' ], $v );
+        wp_enqueue_style( 'atk-base', get_template_directory_uri() . '/css/base.css', [], $v );
         
         // Критический CSS inline
         $this->enqueue_critical_css();
 
-        // UI компоненты и доступность
-        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui.css', [ 'atk-style' ], $v );
+        // UI и доступность
+        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui.css', [], $v );
         wp_enqueue_style( 'atk-a11y', get_template_directory_uri() . '/css/a11y.css', [], $v );
 
         // Главная страница
         if ( is_front_page() ) {
-            wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [ 'atk-style' ], $v );
-            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing.css', [ 'atk-ui' ], $v );
+            wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [], $v );
+            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing.css', [], $v );
         }
 
-        // Модальные окна и формы (объединенные)
+        // Компоненты
         wp_enqueue_style( 'atk-components', get_template_directory_uri() . '/css/components.css', [], $v );
 
         // Страницы калькулятора/трекинга
