@@ -118,16 +118,16 @@ function atk_ved_log_security_event( string $event, string $details = '' ): void
 /**
  * Получение данных компании
  *
- * @return array Данные компании
+ * @return array<string, string> Данные компании
  */
 function atk_ved_get_company_info(): array {
-    return [
-        'name'    => get_theme_mod('atk_ved_company_name', 'АТК ВЭД'),
-        'phone'   => get_theme_mod('atk_ved_phone', ''),
-        'email'   => get_theme_mod('atk_ved_email', ''),
-        'address' => get_theme_mod('atk_ved_address', ''),
-        'years'   => get_theme_mod('atk_ved_years', 5),
-    ];
+	return [
+		'name'    => get_theme_mod( 'atk_ved_company_name', 'АТК ВЭД' ),
+		'phone'   => get_theme_mod( 'atk_ved_phone', '' ),
+		'email'   => get_theme_mod( 'atk_ved_email', '' ),
+		'address' => get_theme_mod( 'atk_ved_address', '' ),
+		'years'   => get_theme_mod( 'atk_ved_years', '5' ),
+	];
 }
 
 /**
@@ -136,8 +136,9 @@ function atk_ved_get_company_info(): array {
  * @return bool
  */
 function atk_ved_is_ajax(): bool {
-    return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	return ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) &&
+		strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) === 'xmlhttprequest';
 }
 
 /**
@@ -146,7 +147,7 @@ function atk_ved_is_ajax(): bool {
  * @return bool
  */
 function atk_ved_is_mobile(): bool {
-    return wp_is_mobile();
+	return wp_is_mobile();
 }
 
 /**
