@@ -1,0 +1,108 @@
+/**
+ * UI Components - Оптимизированная версия
+ * @package ATK_VED
+ */
+
+/* Modals */
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)}
+.modal.active,.modal.is-open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);opacity:0;transition:opacity .3s}
+.modal.is-open .modal-backdrop{opacity:1}
+.modal-content{position:relative;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.15);max-width:500px;width:90%;max-height:90vh;overflow:auto;opacity:0;transform:translateY(-50px) scale(.9);transition:opacity .3s,transform .3s}
+.modal.is-open .modal-content,.modal.active .modal-content{opacity:1;transform:translateY(0) scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #e0e0e0}
+.modal-title{font-size:24px;font-weight:700;color:#2c2c2c;margin:0}
+.modal-close{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:#f8f9fa;border:none;border-radius:50%;cursor:pointer;transition:all .3s;color:#666}
+.modal-close:hover{background:#e0e0e0;color:#2c2c2c;transform:rotate(90deg)}
+.modal-body{padding:24px}
+.modal-footer{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:16px 24px;border-top:1px solid #e0e0e0;background:#f8f9fa;border-radius:0 0 12px 12px}
+
+/* Tabs */
+.tabs{width:100%}
+.tabs-header{display:flex;gap:0;border-bottom:2px solid #e0e0e0;overflow-x:auto}
+.tab-button{display:flex;align-items:center;gap:8px;padding:16px 24px;font-size:14px;font-weight:500;color:#666;background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .3s;white-space:nowrap;margin-bottom:-2px}
+.tab-button:hover{color:#e31e24;background:rgba(227,30,36,.05)}
+.tab-button.is-active{color:#e31e24;border-bottom-color:#e31e24;font-weight:600}
+.tabs-content{position:relative}
+.tab-panel{display:none;padding:24px 0}
+.tab-panel.is-active{display:block;animation:fadeIn .3s ease}
+
+/* Accordions */
+.accordion{width:100%}
+.accordion-item{border:1px solid #e0e0e0;border-radius:8px;margin-bottom:12px;overflow:hidden;background:#fff;transition:all .3s}
+.accordion-item:hover{border-color:#ccc;box-shadow:0 2px 4px rgba(0,0,0,.08)}
+.accordion-item.is-active{border-color:#e31e24;box-shadow:0 0 0 3px rgba(227,30,36,.1)}
+.accordion-header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:transparent;border:none;cursor:pointer;transition:all .3s;text-align:left;font-size:16px;font-weight:600;color:#2c2c2c}
+.accordion-header:hover{background:#f8f9fa}
+.accordion-icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px;color:#666;transition:all .3s;flex-shrink:0}
+.accordion-item.is-active .accordion-icon{color:#e31e24}
+.accordion-icon svg{width:20px;height:20px;transition:transform .3s}
+.accordion-item.is-active .accordion-icon svg{transform:rotate(180deg)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.accordion-item.is-active .accordion-body{max-height:1000px}
+.accordion-content{padding:0 20px 20px;color:#666;line-height:1.6}
+
+/* Buttons Enhanced */
+.cta-button,.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;border:none;border-radius:30px;cursor:pointer;transition:all .3s;overflow:hidden;z-index:1}
+.btn-primary{background:linear-gradient(135deg,#e31e24 0%,#c01a1f 100%);color:#fff;box-shadow:0 4px 15px rgba(227,30,36,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(227,30,36,.4)}
+.btn-secondary{background:transparent;color:#e31e24;border:2px solid #e31e24}
+.btn-secondary:hover{background:#e31e24;color:#fff}
+.btn-outline{background:transparent;color:#2c2c2c;border:2px solid #e0e0e0}
+.btn-outline:hover{border-color:#e31e24;color:#e31e24}
+.btn-sm{padding:10px 20px;font-size:13px}
+.btn-lg{padding:18px 36px;font-size:16px}
+.btn-loading{pointer-events:none;color:transparent!important}
+.btn-loading::after{content:'';position:absolute;width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+
+/* Forms Enhanced */
+input[type="text"],input[type="email"],input[type="tel"],input[type="url"],input[type="password"],input[type="number"],textarea,select{width:100%;padding:14px 18px;font-size:15px;color:#2c2c2c;background:#fff;border:2px solid #e0e0e0;border-radius:8px;transition:all .3s;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#e31e24;box-shadow:0 0 0 4px rgba(227,30,36,.1)}
+.form-group{position:relative;margin-bottom:24px}
+.form-group label{position:absolute;top:14px;left:18px;font-size:15px;color:#666;pointer-events:none;transition:all .3s;background:transparent;padding:0 4px}
+.form-group input:focus~label,.form-group input:not(:placeholder-shown)~label,.form-group textarea:focus~label,.form-group textarea:not(:placeholder-shown)~label{top:-10px;left:12px;font-size:12px;color:#e31e24;background:#fff}
+.form-group.success input{border-color:#28a745}
+.form-group.error input{border-color:#dc3545}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:12px;font-weight:600;border-radius:9999px;text-transform:uppercase;letter-spacing:.5px}
+.badge-primary{background:rgba(227,30,36,.1);color:#e31e24}
+.badge-success{background:rgba(40,167,69,.1);color:#28a745}
+.badge-warning{background:rgba(255,193,7,.1);color:#ffc107}
+.badge-error{background:rgba(220,53,69,.1);color:#dc3545}
+
+/* Progress */
+.progress{width:100%;height:8px;background:#e0e0e0;border-radius:9999px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#e31e24,#ff4d4f);border-radius:9999px;transition:width .3s}
+
+/* Tooltips */
+.tooltip{position:relative;display:inline-block}
+.tooltip::after{content:attr(data-tooltip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-8px);padding:8px 12px;font-size:13px;color:#fff;background:#2c2c2c;border-radius:8px;white-space:nowrap;opacity:0;visibility:hidden;transition:all .3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.tooltip:hover::after{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-4px)}
+
+/* Skeleton Loading */
+.skeleton{background:linear-gradient(90deg,#f8f9fa 25%,#e0e0e0 50%,#f8f9fa 75%);background-size:200% 100%;animation:loading 1.5s ease-in-out infinite;border-radius:8px}
+@keyframes loading{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-text{height:16px;margin-bottom:8px}
+.skeleton-title{height:24px;margin-bottom:12px}
+.skeleton-image{width:100%;height:200px;margin-bottom:12px}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive */
+@media(max-width:768px){
+.modal{padding:8px}
+.modal-content{max-height:95vh}
+.modal-header,.modal-body{padding:16px}
+.modal-footer{padding:12px 16px;flex-direction:column-reverse}
+.modal-footer .btn{width:100%}
+.accordion-header{padding:12px 16px;font-size:14px}
+.accordion-content{padding:0 16px 16px;font-size:14px}
+.cta-button,.btn{width:100%;justify-content:center}
+}
+
+/* Accessibility */
+.tab-button:focus-visible,.accordion-header:focus-visible,.modal-close:focus-visible{outline:2px solid #e31e24;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.modal-content,.tab-panel,.accordion-body,.accordion-icon svg{transition:none!important;animation:none!important}}

@@ -20,8 +20,6 @@ class Enqueue {
     public function init(): void {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'wp_head', [ $this, 'preload_resources' ], 1 );
-        add_action( 'wp_footer', [ $this, 'add_web_share_api' ] );
-        add_action( 'wp_footer', [ $this, 'add_background_sync_js' ] );
     }
 
     /**
@@ -35,17 +33,15 @@ class Enqueue {
         // === Стили ===
 
         // Базовые стили (критичные)
-        wp_enqueue_style( 'atk-design-tokens', get_template_directory_uri() . '/css/design-tokens.css', [], $v );
-        wp_enqueue_style( 'atk-modern-design', get_template_directory_uri() . '/css/modern-design.css', [ 'atk-design-tokens' ], $v );
-        wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-modern-design' ], $v );
+        wp_enqueue_style( 'atk-variables', get_template_directory_uri() . '/css/variables.css', [], $v );
+        wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-variables' ], $v );
         wp_enqueue_style( 'atk-core', get_template_directory_uri() . '/css/core.css', [ 'atk-style' ], $v );
         
         // Критический CSS inline
         $this->enqueue_critical_css();
 
-        // UI компоненты
-        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui-components.css', [ 'atk-style' ], $v );
-        wp_enqueue_style( 'atk-ui-enhanced', get_template_directory_uri() . '/css/ui-enhancements.css', [ 'atk-ui' ], $v );
+        // UI компоненты (объединенные)
+        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui.css', [ 'atk-style' ], $v );
         
         // Анимации и доступность
         wp_enqueue_style( 'atk-animations', get_template_directory_uri() . '/css/animations.css', [], $v );
@@ -54,10 +50,7 @@ class Enqueue {
         // Главная страница
         if ( is_front_page() ) {
             wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [ 'atk-style' ], $v );
-            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing-sections.css', [ 'atk-ui' ], $v );
-            wp_enqueue_style( 'atk-hero', get_template_directory_uri() . '/css/hero-counters.css', [], $v );
-            wp_enqueue_style( 'atk-stats', get_template_directory_uri() . '/css/statistics.css', [], $v );
-            // Современный чистый дизайн - загружается последним для перекрытия старых стилей
+            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing.css', [ 'atk-ui' ], $v );
             wp_enqueue_style( 'atk-modern-clean', get_template_directory_uri() . '/css/modern-clean.css', [ 'atk-front-page' ], $v, 'all' );
         }
 
@@ -86,9 +79,7 @@ class Enqueue {
 
         // Основные скрипты (оптимизированные)
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui-components.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui-enhanced', get_template_directory_uri() . '/js/ui-components-enhanced.js', [ 'jquery', 'atk-core' ], $v, true );
-        wp_enqueue_script( 'atk-modal', get_template_directory_uri() . '/js/modal.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-callback', get_template_directory_uri() . '/js/callback-modal.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-reviews', get_template_directory_uri() . '/js/reviews-slider.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-gallery', get_template_directory_uri() . '/js/gallery.js', [ 'jquery' ], $v, true );
@@ -97,7 +88,11 @@ class Enqueue {
         if ( is_front_page() ) {
             wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/hero-counters.js', [ 'jquery' ], $v, true );
             wp_enqueue_script( 'atk-stats', get_template_directory_uri() . '/js/statistics.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-share', get_template_directory_uri() . '/js/share.js', [], $v, true );
         }
+
+        // Формы с background sync
+        wp_enqueue_script( 'atk-forms', get_template_directory_uri() . '/js/forms.js', [], $v, true );
 
         // Калькулятор и трекинг
         if ( $this->is_calc_page() ) {
@@ -143,7 +138,7 @@ class Enqueue {
      * @return void
      */
     private function localize_script(): void {
-        wp_localize_script( 'atk-main', 'atkVed', [
+        wp_localize_script( 'atk-core', 'atkVed', [
             'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
             'nonce'     => wp_create_nonce( 'atk_ved_nonce' ),
             'siteUrl'   => home_url( '/' ),
@@ -171,23 +166,17 @@ class Enqueue {
         if ( is_front_page() ) {
             printf(
                 '<link rel="preload" href="%s" as="style">' . "\n",
-                esc_url( get_template_directory_uri() . '/css/modern-design.css' )
+                esc_url( get_template_directory_uri() . '/css/front-page.css' )
             );
             printf(
                 '<link rel="preload" href="%s" as="script">' . "\n",
-                esc_url( get_template_directory_uri() . '/js/main.js' )
+                esc_url( get_template_directory_uri() . '/js/core.js' )
             );
         }
 
         echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
         echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
-        echo '<link rel="dns-prefetch" href="//www.google-analytics.com">' . "\n";
         echo '<link rel="dns-prefetch" href="//mc.yandex.ru">' . "\n";
-        
-        // Additional resource hints for performance
-        echo '<link rel="preconnect" href="https://www.googletagmanager.com">' . "\n";
-        echo '<link rel="preconnect" href="https://connect.facebook.net">' . "\n";
-        echo '<link rel="dns-prefetch" href="//yastatic.net">' . "\n";
     }
 
     /**
@@ -206,125 +195,5 @@ class Enqueue {
                     || has_shortcode( $post->post_content, 'atk_tracking' )
                 )
             );
-    }
-    
-    /**
-     * Add Web Share API functionality.
-     * 
-     * @return void
-     */
-    public function add_web_share_api(): void {
-        if (is_front_page()) {
-            $site_description = get_bloginfo('description');
-            echo '<script>
-                function sharePage() {
-                    if (navigator.share) {
-                        navigator.share({
-                            title: document.title,
-                            text: "' . esc_js($site_description) . '",
-                            url: window.location.href
-                        }).catch(console.error);
-                    } else {
-                        // Fallback to clipboard API
-                        navigator.clipboard.writeText(window.location.href);
-                        alert("Ссылка скопирована в буфер обмена!");
-                    }
-                }
-            </script>';
-        }
-    }
-    
-    /**
-     * Add background sync functionality for forms.
-     * 
-     * @return void
-     */
-    public function add_background_sync_js(): void {
-        echo '<script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Handle form submissions for background sync
-                const forms = document.querySelectorAll("form");
-                
-                forms.forEach(function(form) {
-                    form.addEventListener("submit", function(e) {
-                        // Check if form is an AJAX form
-                        if (form.classList.contains("ajax-form") || form.classList.contains("contact-form") || form.classList.contains("newsletter-form")) {
-                            // Allow AJAX forms to handle themselves
-                            return;
-                        }
-                        
-                        // For regular forms, we can still register background sync capability
-                        if ("serviceWorker" in navigator && "SyncManager" in window) {
-                            navigator.serviceWorker.ready.then(function(reg) {
-                                // Register background sync for form submission
-                                reg.sync.register("contact-form-sync").catch(function(error) {
-                                    console.log("Background sync registration failed:", error);
-                                });
-                            });
-                        }
-                    });
-                });
-                
-                // Specifically handle contact forms with AJAX
-                const contactForms = document.querySelectorAll(".contact-form, .quick-search-form, #calculator-form");
-                
-                contactForms.forEach(function(form) {
-                    form.addEventListener("submit", function(e) {
-                        e.preventDefault();
-                        
-                        // Collect form data
-                        const formData = new FormData(form);
-                        const serializedData = new URLSearchParams(formData).toString();
-                        
-                        // Try to submit via fetch
-                        fetch(form.action || "./", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded",
-                            },
-                            body: serializedData
-                        })
-                        .then(function(response) {
-                            if (response.ok) {
-                                return response.json();
-                            }
-                            throw new Error("Network response was not ok");
-                        })
-                        .then(function(data) {
-                            // Handle success
-                            if (data.queued) {
-                                alert("Форма добавлена в очередь для отправки");
-                            } else {
-                                alert("Форма успешно отправлена");
-                            }
-                            form.reset();
-                        })
-                        .catch(function(error) {
-                            console.error("Form submission error:", error);
-                            
-                            // If offline, queue for background sync
-                            if ("serviceWorker" in navigator && "SyncManager" in window) {
-                                navigator.serviceWorker.ready.then(function(reg) {
-                                    // Store form data for sync
-                                    if (typeof localStorage !== "undefined") {
-                                        const queuedForms = JSON.parse(localStorage.getItem("queued_forms") || "[]");
-                                        queuedForms.push({
-                                            id: Date.now(),
-                                            url: form.action || "./",
-                                            payload: serializedData,
-                                            timestamp: Date.now()
-                                        });
-                                        localStorage.setItem("queued_forms", JSON.stringify(queuedForms));
-                                    }
-                                    
-                                    reg.sync.register("contact-form-sync");
-                                    alert("Форма будет отправлена при восстановлении соединения");
-                                });
-                            }
-                        });
-                    });
-                });
-            });
-        </script>';
     }
 }
