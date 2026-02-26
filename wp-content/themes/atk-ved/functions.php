@@ -62,69 +62,8 @@ if ( class_exists( '\ATKVed\Theme' ) ) {
     \ATKVed\Theme::get_instance();
 }
 
-$atk_includes = [
-    '/inc/custom-post-types.php',
-    '/inc/helpers.php',
-    '/inc/ajax-handlers.php',
-    '/inc/translations.php',
-    '/inc/security.php',
-    '/inc/security-advanced.php',
-    '/inc/recaptcha.php',
-    '/inc/cookie-banner.php',
-    '/inc/logger.php',
-    '/inc/pwa.php',
-    '/inc/seo.php',
-    '/inc/sitemap.php',
-    '/inc/breadcrumbs.php',
-    '/inc/calculator.php',
-    '/inc/shipment-tracking.php',
-    '/inc/ui-components.php',
-    '/inc/acf-field-groups.php',
-    '/inc/acf-options.php',
-    '/inc/acf-blocks.php',
-    '/inc/rest-api.php',
-    '/inc/rest-cache.php',
-    '/inc/callback-widget.php',
-    '/inc/chat-widget.php',
-    '/inc/woocommerce.php',
-    '/inc/amocrm.php',
-    '/inc/conversion.php',
-    '/inc/email-templates.php',
-    '/inc/admin-dashboard.php',
-    '/inc/notifications.php',
-    '/inc/image-manager.php',
-    '/inc/enhanced-ui-components.php',
-    '/inc/advanced-ui-components.php',
-    '/inc/accessibility-enhancements.php',
-    '/inc/health-check.php',
-    '/inc/demo-import.php',
-    // Восстановленные секции
-    '/inc/new-sections.php',
-    '/inc/cta-section.php',
-    '/inc/faq-section.php',
-    '/inc/reviews-section.php',
-    '/inc/process-section.php',
-    // Фотостоки
-    '/inc/stock-photos.php',
-    '/inc/stock-photos-integration.php',
-    // Доставка
-    '/inc/delivery-map.php',
-    // Производительность
-    '/inc/performance-cdn.php',
-    // Улучшенная производительность
-    '/inc/enhanced-performance.php',
-    // Улучшенная система PWA
-    '/inc/enhanced-pwa.php',
-    // Улучшенная оптимизация изображений
-    '/inc/enhanced-image-optimization.php',
-];
-
-foreach ( $atk_includes as $file ) {
-    $path = ATK_VED_DIR . $file;
-    if ( file_exists( $path ) ) {
-        require_once $path;
-    }
-}
+// Оптимизированная загрузка модулей через Module Loader
+require_once ATK_VED_DIR . '/inc/module-loader.php';
 
 add_action( 'admin_enqueue_scripts', function( $hook ) {
     global $post_type;

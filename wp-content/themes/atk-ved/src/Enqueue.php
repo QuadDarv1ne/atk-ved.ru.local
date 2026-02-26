@@ -52,12 +52,12 @@ class Enqueue {
 
         // Главная страница
         if ( is_front_page() ) {
+            wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [ 'atk-style' ], $v );
             wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing-sections.css', [ 'atk-ui' ], $v );
             wp_enqueue_style( 'atk-hero', get_template_directory_uri() . '/css/hero-counters.css', [], $v );
             wp_enqueue_style( 'atk-stats', get_template_directory_uri() . '/css/statistics.css', [], $v );
-            wp_enqueue_style( 'atk-ux-improvements', get_template_directory_uri() . '/css/ux-improvements.css', [ 'atk-landing' ], $v );
             // Современный чистый дизайн - загружается последним для перекрытия старых стилей
-            wp_enqueue_style( 'atk-modern-clean', get_template_directory_uri() . '/css/modern-clean.css', [ 'atk-ux-improvements' ], $v, 'all' );
+            wp_enqueue_style( 'atk-modern-clean', get_template_directory_uri() . '/css/modern-clean.css', [ 'atk-front-page' ], $v, 'all' );
         }
 
         // Модальные окна и формы
@@ -117,13 +117,20 @@ class Enqueue {
      * @return void
      */
     private function enqueue_critical_css(): void {
-        $transient_key = 'atk_ved_critical_css';
+        $transient_key = 'atk_ved_critical_css_v2';
         $critical_css  = get_transient( $transient_key );
 
         if ( false === $critical_css ) {
-            $critical_file = get_template_directory() . '/css/critical.css';
-            $critical_css  = file_exists( $critical_file ) ? file_get_contents( $critical_file ) : '';
-            set_transient( $transient_key, $critical_css, DAY_IN_SECONDS );
+            $critical_file = get_template_directory() . '/css/critical-inline.css';
+            if ( file_exists( $critical_file ) ) {
+                $critical_css = file_get_contents( $critical_file );
+                // Минифицируем еще больше
+                $critical_css = preg_replace( '/\s+/', ' ', $critical_css );
+                $critical_css = str_replace( [ ' {', '{ ', ' }', '} ', ': ', ' :', '; ', ' ;' ], [ '{', '{', '}', '}', ':', ':', ';', ';' ], $critical_css );
+                set_transient( $transient_key, $critical_css, WEEK_IN_SECONDS );
+            } else {
+                $critical_css = '';
+            }
         }
 
         if ( $critical_css ) {
