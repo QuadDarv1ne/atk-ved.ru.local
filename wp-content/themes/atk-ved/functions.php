@@ -1,108 +1,166 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
+
 /**
  * ATK VED Theme Functions
  *
  * @package ATKVed
- * @version 3.3.0
+ * @version 3.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Define constants first
+// ============================================
+// 1. Constants & Version Check (Critical First)
+// ============================================
+
 if ( ! defined( 'ATK_VED_DIR' ) ) {
     define( 'ATK_VED_DIR', get_template_directory() );
 }
+
 if ( ! defined( 'ATK_VED_URI' ) ) {
     define( 'ATK_VED_URI', get_template_directory_uri() );
 }
 
-// Load theme version
-$version_file = get_template_directory() . '/version.php';
+// Load version config early
+ $version_file = ATK_VED_DIR . '/version.php';
 if ( file_exists( $version_file ) ) {
     require_once $version_file;
 }
 
-// Load Composer autoloader for theme
-$composer_autoload = get_template_directory() . '/vendor/autoload.php';
+// PHP Version Check (Must be before loading theme classes)
+if ( defined( 'ATK_VED_MIN_PHP_VERSION' ) && version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
+    add_action( 'admin_notices', function() {
+        printf(
+            '<div class="notice notice-error"><p><strong>ATK VED Theme Error:</strong> PHP version %1$s or higher is required. You are running version %2$s.</p></div>',
+            esc_html( ATK_VED_MIN_PHP_VERSION ),
+            esc_html( PHP_VERSION )
+        );
+    } );
+    return; // Stop theme execution
+}
+
+// ============================================
+// 2. Autoloading & Initialization
+// ============================================
+
+// Try Composer autoload first
+ $composer_autoload = ATK_VED_DIR . '/vendor/autoload.php';
 if ( file_exists( $composer_autoload ) ) {
     require_once $composer_autoload;
-}
+} else {
+    // Fallback: Manual class mapping (Optimized)
+    // Note: Ideally, structure classes to match PSR-4 to avoid this map
+    spl_autoload_register( function ( $class ) {
+        $prefix = 'ATKVed\\';
+        $base_dir = ATK_VED_DIR . '/src/';
 
-// Manually include core classes (fallback if no Composer autoload)
-$core_files = [
-    '/src/Base.php',
-    '/src/Setup.php',
-    '/src/Enqueue.php',
-    '/src/Ajax.php',
-    '/src/Shortcodes.php',
-    '/src/Customizer.php',
-    '/src/Theme.php',
-    '/src/Loader.php',
-];
+        // Does the class use the namespace prefix?
+        $len = strlen( $prefix );
+        if ( strncmp( $prefix, $class, $len ) !== 0 ) {
+            return;
+        }
 
-foreach ( $core_files as $file ) {
-    $path = get_template_directory() . $file;
-    if ( file_exists( $path ) ) {
-        require_once $path;
-    }
-}
+        $relative_class = substr( $class, $len );
+        $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
 
-// Check PHP version
-if ( defined( 'ATK_VED_MIN_PHP_VERSION' ) && version_compare( PHP_VERSION, ATK_VED_MIN_PHP_VERSION, '<' ) ) {
-    add_action( 'admin_notice', function() {
-        echo '<div class="notice notice-error"><p>PHP ' . esc_html( ATK_VED_MIN_PHP_VERSION ) . '+ required. Current: ' . esc_html( PHP_VERSION ) . '</p></div>';
+        if ( file_exists( $file ) ) {
+            require_once $file;
+        }
     } );
-    return;
 }
 
-// Initialize theme
+// Initialize Theme Core
 if ( class_exists( '\ATKVed\Theme' ) ) {
     \ATKVed\Theme::getInstance();
 }
 
-// Оптимизированная загрузка модулей через Module Loader
-require_once ATK_VED_DIR . '/inc/module-loader.php';
+// Load Module Loader
+ $module_loader = ATK_VED_DIR . '/inc/module-loader.php';
+if ( file_exists( $module_loader ) ) {
+    require_once $module_loader;
+}
 
-add_action( 'admin_enqueue_scripts', function( $hook ) {
-    global $post_type;
-    if ( ! in_array( $post_type, [ 'testimonial_file' ], true ) ) {
+// ============================================
+// 3. Admin Features (Refactored)
+// ============================================
+
+/**
+ * Setup Admin assets and columns for 'testimonial_file' CPT
+ */
+add_action( 'admin_init', function() {
+    global $pagenow;
+
+    // We only need this logic in admin area
+    if ( ! is_admin() ) {
         return;
     }
-    if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
-        return;
-    }
-    wp_enqueue_media();
-    wp_enqueue_style(  'atk-admin', ATK_VED_URI . '/admin/admin-styles.css', [], ATK_VED_VERSION );
-    wp_enqueue_script( 'atk-admin', ATK_VED_URI . '/admin/admin-enhancements.js', [ 'jquery' ], ATK_VED_VERSION, true );
-    wp_localize_script( 'atk-admin', 'atkAdmin', [
-        'nonce'   => wp_create_nonce( 'atk_ved_admin_nonce' ),
-        'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-    ] );
-} );
 
-add_filter( 'manage_testimonial_file_posts_columns', function( $cols ) {
-    return [
-        'cb'        => $cols['cb'],
-        'thumbnail' => __( 'Preview', 'atk-ved' ),
-        'title'     => __( 'Title', 'atk-ved' ),
-        'company'   => __( 'Company', 'atk-ved' ),
-        'file_type' => __( 'Type', 'atk-ved' ),
-        'date'      => $cols['date'],
-    ];
-} );
+    // Define the post type once
+    $target_post_type = 'testimonial_file';
 
-add_action( 'manage_testimonial_file_posts_custom_column', function( $col, $id ) {
-    switch ( $col ) {
-        case 'thumbnail':
-            echo has_post_thumbnail( $id ) ? get_the_post_thumbnail( $id, [ 60, 60 ] ) : '—';
-            break;
-        case 'company':
-            echo get_post_meta( $id, '_company_name', true ) ?: '—';
-            break;
-        case 'file_type':
-            echo strtoupper( sanitize_key( get_post_meta( $id, '_file_type', true ) ) ) ?: '—';
-            break;
-    }
-}, 10, 2 );
+    // Enqueue Scripts/Styles
+    add_action( 'admin_enqueue_scripts', function( $hook ) use ( $target_post_type ) {
+        $screen = get_current_screen();
+
+        // Check screen post_type and hook
+        if ( ! $screen || $screen->post_type !== $target_post_type ) {
+            return;
+        }
+        
+        if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
+            return;
+        }
+
+        wp_enqueue_media();
+        wp_enqueue_style( 
+            'atk-admin', 
+            ATK_VED_URI . '/admin/admin-styles.css', 
+            [], 
+            defined('ATK_VED_VERSION') ? ATK_VED_VERSION : '1.0.0' 
+        );
+        wp_enqueue_script( 
+            'atk-admin', 
+            ATK_VED_URI . '/admin/admin-enhancements.js', 
+            [ 'jquery' ], 
+            defined('ATK_VED_VERSION') ? ATK_VED_VERSION : '1.0.0', 
+            true 
+        );
+        wp_localize_script( 'atk-admin', 'atkAdmin', [
+            'nonce'   => wp_create_nonce( 'atk_ved_admin_nonce' ),
+            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+        ] );
+    } );
+
+    // Customize Admin Columns
+    add_filter( "manage_{$target_post_type}_posts_columns", function( $cols ) {
+        return [
+            'cb'        => $cols['cb'] ?? '<input type="checkbox" />',
+            'thumbnail' => __( 'Preview', 'atk-ved' ),
+            'title'     => __( 'Title', 'atk-ved' ),
+            'company'   => __( 'Company', 'atk-ved' ),
+            'file_type' => __( 'Type', 'atk-ved' ),
+            'date'      => $cols['date'] ?? __( 'Date', 'atk-ved' ),
+        ];
+    } );
+
+    add_action( "manage_{$target_post_type}_posts_custom_column", function( $col, $id ) {
+        switch ( $col ) {
+            case 'thumbnail':
+                echo has_post_thumbnail( $id ) 
+                    ? get_the_post_thumbnail( $id, [ 60, 60 ], [ 'class' => 'attachment-60x60 size-60x60 wp-post-image' ] ) 
+                    : '—';
+                break;
+            case 'company':
+                $company = get_post_meta( $id, '_company_name', true );
+                echo esc_html( $company ?: '—' );
+                break;
+            case 'file_type':
+                $type = get_post_meta( $id, '_file_type', true );
+                echo $type ? '<span class="atk-badge">' . esc_html( strtoupper( sanitize_key( $type ) ) ) . '</span>' : '—';
+                break;
+        }
+    }, 10, 2 );
+} );

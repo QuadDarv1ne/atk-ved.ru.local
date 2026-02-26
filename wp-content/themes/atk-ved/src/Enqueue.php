@@ -86,6 +86,11 @@ class Enqueue {
             wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [ 'atk-hero-section' ], $v );
         }
 
+        // Blog and archives
+        if ( is_home() || is_archive() || is_search() ) {
+            wp_enqueue_style( 'atk-blog', get_template_directory_uri() . '/css/blog.css', [ 'atk-base' ], $v );
+        }
+
         // Страницы калькулятора/трекинга
         if ( $this->is_calc_page() ) {
             wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [ 'atk-base' ], $v );
