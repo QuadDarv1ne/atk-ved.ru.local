@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  # WordPress
+  wordpress:
+    image: wordpress:6.4-php8.1-apache
+    container_name: atk_ved_wordpress
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', true );
+        define( 'SCRIPT_DEBUG', true );
+        define( 'WP_LOCAL_DEV', true );
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - wordpress_data:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - atk_ved_network
+
+  # MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: atk_ved_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
+      MYSQL_USER: ${MYSQL_USER:-wordpress}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - atk_ved_network
+
+  # phpMyAdmin (опционально)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: atk_ved_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER:-wordpress}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "${PMA_PORT:-8081}:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - atk_ved_network
+    profiles:
+      - tools
+
+  # Redis (опционально для кэширования)
+  redis:
+    image: redis:7-alpine
+    container_name: atk_ved_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - atk_ved_network
+    profiles:
+      - cache
+
+  # Mailhog (тестирование email)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: atk_ved_mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_PORT:-8025}:8025"
+      - "1025:1025"
+    networks:
+      - atk_ved_network
+    profiles:
+      - tools
+
+networks:
+  atk_ved_network:
+    driver: bridge
+
+volumes:
+  wordpress_data:
+    driver: local
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local

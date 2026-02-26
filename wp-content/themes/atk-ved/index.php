@@ -84,15 +84,25 @@ $company = atk_ved_get_company_info();
                     <?php
                     $hero_img = get_theme_mod( 'atk_ved_hero_image', ATK_VED_URI . '/images/hero/hero-boxes.jpg' );
                     ?>
-                    <img
-                        src="<?php echo esc_url( $hero_img ); ?>"
-                        alt="<?php esc_attr_e( 'Товары из Китая для маркетплейсов', 'atk-ved' ); ?>"
-                        width="640"
-                        height="560"
-                        loading="eager"
-                        fetchpriority="high"
-                        decoding="sync"
-                    >
+                    <div class="hero-images-container" style="position: relative; display: block; width: 640px; height: 560px;">
+                        <img
+                            src="<?php echo esc_url( $hero_img ); ?>"
+                            alt="<?php esc_attr_e( 'Товары из Китая для маркетплейсов', 'atk-ved' ); ?>"
+                            width="640"
+                            height="560"
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="sync"
+                        >
+                        <img
+                            src="<?php echo get_template_directory_uri(); ?>/images/services/delivery-service.png"
+                            alt="<?php esc_attr_e( 'Доставка товаров из Китая', 'atk-ved' ); ?>"
+                            width="200"
+                            height="150"
+                            loading="eager"
+                            style="position: absolute; top: 20px; right: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 200px; height: auto; z-index: 10;"
+                        >
+                    </div>
                 </div>
 
             </div>

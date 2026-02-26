@@ -42,6 +42,8 @@ class Enqueue {
         wp_enqueue_style( 'atk-ui-extra', Base::uri() . '/css/additional-components.css', [ 'atk-ui' ], $v );
         wp_enqueue_style( 'atk-animations', Base::uri() . '/css/animations-enhanced.css', [], '3.3' );
         wp_enqueue_style( 'atk-dark-mode', Base::uri() . '/css/dark-mode-toggle.css', [], '3.3' );
+        wp_enqueue_style( 'atk-a11y', Base::uri() . '/css/accessibility.css', [], $v );
+        wp_enqueue_style( 'atk-ui-enhanced', Base::uri() . '/css/ui-enhancements.css', [ 'atk-ui' ], $v );
 
         // Критический CSS inline
         $this->enqueue_critical_css();
@@ -88,6 +90,7 @@ class Enqueue {
         wp_enqueue_script( 'atk-gallery', Base::uri() . '/js/gallery.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-enhance', Base::uri() . '/js/enhancements.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-tracking-js', Base::uri() . '/js/tracking.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-ui-enhanced', Base::uri() . '/js/ui-components-enhanced.js', [ 'jquery', 'atk-main' ], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {

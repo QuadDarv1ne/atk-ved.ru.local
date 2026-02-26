@@ -1,120 +1,128 @@
-# WordPress Git Ignore
+# =============================================================================
+# WORDPRESS CORE (если не в composer)
+# =============================================================================
+/wp-admin/
+/wp-includes/
+/wp-config.php
+/wp-content/*.php
+/readme.html
+/readme.txt
+/license.txt
+/install.php
+/wp-settings.php
+/xmlrpc.php
+/wp-links-opml.php
+/wp-trackback.php
 
-## WordPress Core Files (exclude from repo)
-wp-admin/
-wp-includes/
-wp-*.php
-xmlrpc.php
-license.txt
-readme.html
-wp-activate.php
-wp-blog-header.php
-wp-comments-post.php
-wp-config-sample.php
-wp-cron.php
-wp-links-opml.php
-wp-load.php
-wp-login.php
-wp-mail.php
-wp-settings.php
-wp-signup.php
-wp-trackback.php
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+/vendor/
+/node_modules/
 
-## Локальные конфигурации
-wp-config.php
-wp-config-local.php
-wp-content/local.php
+# =============================================================================
+# BUILD OUTPUT
+# =============================================================================
+/dist/
+/build/
+*.min.css
+*.min.js
+*.map
 
-## Логи и отладка
-*.log
-wp-content/debug.log
-wp-content/uploads/*.log
+# =============================================================================
+# WORDPRESS PLUGINS (все кроме исключений)
+# =============================================================================
+/wp-content/plugins/*
+# Исключения — плагины в composer
+!/wp-content/plugins/
+/wp-content/plugins/.gitkeep
 
-## Временные файлы
+# =============================================================================
+# WORDPRESS THEMES (все кроме активной)
+# =============================================================================
+/wp-content/themes/*/
+!/wp-content/themes/atk-ved/
+/wp-content/themes/atk-ved/node_modules/
+/wp-content/themes/atk-ved/vendor/
+
+# =============================================================================
+# UPLOADS & MEDIA
+# =============================================================================
+/wp-content/uploads/
+/wp-content/avatars/
+/wp-content/galleries/
+/wp-content/blogs.dir/
+
+# =============================================================================
+# CACHE & TEMP
+# =============================================================================
+/wp-content/cache/
+/wp-content/backups/
+/wp-content/backup-db/
+*.cache
 *.tmp
 *.temp
-*.cache
+
+# =============================================================================
+# LOGS
+# =============================================================================
+*.log
+logs/
+debug.log
+error_log
+php_errorlog
+
+# =============================================================================
+# DATABASE
+# =============================================================================
+*.sql
+*.sql.gz
+*.db
+*.sqlite
+/database/
+
+# =============================================================================
+# ENVIRONMENT
+# =============================================================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+/config/secrets/
+/config/credentials/
+
+# =============================================================================
+# IDE & EDITORS
+# =============================================================================
+/.idea/
+/.vscode/
 *.swp
 *.swo
 *~
-
-## Системные файлы
+.project
+.settings/
 .DS_Store
 Thumbs.db
 desktop.ini
 
-## IDE и редакторы
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
-.project
-.settings/
-.phpintel/
+# =============================================================================
+# TESTING & CI
+# =============================================================================
+/tests/
+/.phpunit.result.cache
+/coverage/
+/vendor/bin/phpunit
 
-## Composer
-vendor/
-composer.lock
-
-## Node.js
-node_modules/
-package-lock.json
-yarn.lock
-
-## Сборка и дист
-dist/
-build/
-*.min.js
-*.min.css
-
-## Тесты
-phpunit.xml
-.phpunit.result.cache
-tests/
-phpcs.xml
-phpcs.xml.dist
-
-## Бекапы и дампы
-*.sql
-*.sql.gz
+# =============================================================================
+# MISC
+# =============================================================================
 *.bak
 *.backup
-dump/
-backups/
-
-## Загрузки и медиа (опционально)
-# wp-content/uploads/
-
-## Кэш WordPress
-wp-content/cache/
-wp-content/upgrade/
-
-## Плагины и темы разработки (раскомментировать при необходимости)
-# wp-content/plugins/my-custom-plugin/
-# wp-content/themes/my-custom-theme/
-
-## Серверные конфиги
-nginx.conf
-*.conf
-
-## SSL сертификаты (локальные)
-*.crt
-*.key
-*.pem
-
-## OpenServer
-.osp/
-ospanel/
-
-## Laragon
-laragon/
-
-##.env файлы
-.env
-.env.local
-.env.*.local
-ACCOUNT's.md
-
-## Большие файлы
-*.pdf
-img-project/
+*.old
+*.orig
+*.sage/
+/wordpress/
+/wp/
+/salts.php
+docs/ACCOUNT's.md

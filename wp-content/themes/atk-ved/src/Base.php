@@ -17,7 +17,7 @@ final class Base {
     /**
      * Версия темы.
      */
-    public const VERSION = '3.0.0';
+    public const VERSION = '3.3.0';
 
     /**
      * Путь к директории темы.

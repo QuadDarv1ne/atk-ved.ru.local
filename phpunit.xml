@@ -1,0 +1,31 @@
+<?php
+/**
+ * PHPUnit Configuration for ATK VED Theme
+ * 
+ * @package ATK_VED
+ * @since 2.4.0
+ */
+
+$tests_dir = dirname(__FILE__);
+$project_dir = dirname($tests_dir);
+
+require_once $tests_dir . '/bootstrap.php';
+
+class ATK_VED_PHPUnit_TestSuite extends PHPUnit\Framework\TestSuite {
+    public static function suite() {
+        $suite = new self('ATK VED Theme Tests');
+        
+        // Add test files
+        $test_files = array(
+            $tests_dir . '/UnitTest.php',
+        );
+        
+        foreach ($test_files as $file) {
+            if (file_exists($file)) {
+                require_once $file;
+            }
+        }
+        
+        return $suite;
+    }
+}

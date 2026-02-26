@@ -1,92 +1,59 @@
-﻿<?php
+<?php declare(strict_types=1);
 /**
- * АТК ВЭД Theme Functions
+ * ATK VED Theme Functions
  *
  * @package ATKVed
- * @since   1.0.0
  * @version 3.0.0
  */
 
-declare( strict_types=1 );
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-// Защита от прямого доступа
-defined( 'ABSPATH' ) || exit;
-
-// ============================================================================
-// КОНСТАНТЫ (для обратной совместимости)
-// ============================================================================
-
-define( 'ATK_VED_VERSION', '3.0.0' );
+define( 'ATK_VED_VERSION', '3.3.0' );
 define( 'ATK_VED_DIR', get_template_directory() );
 define( 'ATK_VED_URI', get_template_directory_uri() );
 
-// ============================================================================
-// ИНИЦИАЛИЗАЦИЯ (PSR-4 + Composer Autoloader)
-// ============================================================================
-
-// Проверка PHP version
 if ( version_compare( PHP_VERSION, '8.1', '<' ) ) {
     add_action( 'admin_notice', function() {
-        ?>
-        <div class="notice notice-error">
-            <p>Требуется PHP 8.1 или выше. Текущая версия: <?php echo esc_html( PHP_VERSION ); ?></p>
-        </div>
-        <?php
+        echo '<div class="notice notice-error"><p>PHP 8.1+ required. Current: ' . esc_html( PHP_VERSION ) . '</p></div>';
     } );
     return;
 }
 
-// Подключаем загрузчик
 require_once get_template_directory() . '/src/Loader.php';
-
 \ATKVed\Loader::init();
 
-// ============================================================================
-// ПОДКЛЮЧЕНИЕ ФАЙЛОВ ИЗ /inc/ (обратная совместимость)
-// ============================================================================
-
 $atk_includes = [
-    // Ядро
     '/inc/custom-post-types.php',
     '/inc/helpers.php',
     '/inc/ajax-handlers.php',
     '/inc/translations.php',
-    // Безопасность
     '/inc/security.php',
     '/inc/security-advanced.php',
     '/inc/recaptcha.php',
     '/inc/cookie-banner.php',
-    // Оптимизация
     '/inc/logger.php',
     '/inc/pwa.php',
-    // SEO
     '/inc/seo.php',
     '/inc/sitemap.php',
     '/inc/breadcrumbs.php',
-    // Функциональность
     '/inc/calculator.php',
     '/inc/shipment-tracking.php',
     '/inc/ui-components.php',
-    // ACF
     '/inc/acf-field-groups.php',
     '/inc/acf-options.php',
     '/inc/acf-blocks.php',
-    // REST API
     '/inc/rest-api.php',
     '/inc/rest-cache.php',
-    // Виджеты
     '/inc/callback-widget.php',
     '/inc/chat-widget.php',
-    // E-commerce
     '/inc/woocommerce.php',
     '/inc/amocrm.php',
-    // Конверсия / Email
     '/inc/conversion.php',
     '/inc/email-templates.php',
-    // Админка
     '/inc/admin-dashboard.php',
     '/inc/notifications.php',
-    // UI
     '/inc/image-manager.php',
     '/inc/enhanced-ui-components.php',
     '/inc/advanced-ui-components.php',
@@ -112,61 +79,47 @@ foreach ( $atk_includes as $file ) {
     $path = ATK_VED_DIR . $file;
     if ( file_exists( $path ) ) {
         require_once $path;
-    } else {
-        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( 'ATK VED: missing include — ' . $path );
-        }
     }
 }
 
-// ============================================================================
-// ADMIN: стили, скрипты, колонки CPT
-// ============================================================================
-
-add_action( 'admin_enqueue_scripts', function ( string $hook ) {
+add_action( 'admin_enqueue_scripts', function( $hook ) {
     global $post_type;
-    $is_cpt_screen = in_array( $post_type, [ 'testimonial_file' ], true )
-        && in_array( $hook, [ 'post.php', 'post-new.php' ], true );
-
-    if ( ! $is_cpt_screen ) return;
-
+    if ( ! in_array( $post_type, [ 'testimonial_file' ], true ) ) {
+        return;
+    }
+    if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
+        return;
+    }
     wp_enqueue_media();
-    wp_enqueue_style(  'atk-admin', ATK_VED_URI . '/admin/admin-styles.css',       [], ATK_VED_VERSION );
-    wp_enqueue_script( 'atk-admin', ATK_VED_URI . '/admin/admin-enhancements.js',  [ 'jquery' ], ATK_VED_VERSION, true );
+    wp_enqueue_style(  'atk-admin', ATK_VED_URI . '/admin/admin-styles.css', [], ATK_VED_VERSION );
+    wp_enqueue_script( 'atk-admin', ATK_VED_URI . '/admin/admin-enhancements.js', [ 'jquery' ], ATK_VED_VERSION, true );
     wp_localize_script( 'atk-admin', 'atkAdmin', [
         'nonce'   => wp_create_nonce( 'atk_ved_admin_nonce' ),
         'ajaxUrl' => admin_url( 'admin-ajax.php' ),
     ] );
 } );
 
-add_filter( 'manage_testimonial_file_posts_columns', function ( array $cols ): array {
+add_filter( 'manage_testimonial_file_posts_columns', function( $cols ) {
     return [
         'cb'        => $cols['cb'],
-        'thumbnail' => __( 'Превью', 'atk-ved' ),
-        'title'     => __( 'Название', 'atk-ved' ),
-        'company'   => __( 'Компания', 'atk-ved' ),
-        'file_type' => __( 'Тип', 'atk-ved' ),
+        'thumbnail' => __( 'Preview', 'atk-ved' ),
+        'title'     => __( 'Title', 'atk-ved' ),
+        'company'   => __( 'Company', 'atk-ved' ),
+        'file_type' => __( 'Type', 'atk-ved' ),
         'date'      => $cols['date'],
     ];
 } );
 
-add_action( 'manage_testimonial_file_posts_custom_column', function ( string $col, int $id ): void {
+add_action( 'manage_testimonial_file_posts_custom_column', function( $col, $id ) {
     switch ( $col ) {
         case 'thumbnail':
-            echo has_post_thumbnail( $id )
-                ? get_the_post_thumbnail( $id, [ 60, 60 ] )
-                : '<span aria-hidden="true" style="color:#ccc">—</span>';
+            echo has_post_thumbnail( $id ) ? get_the_post_thumbnail( $id, [ 60, 60 ] ) : '—';
             break;
         case 'company':
-            $company = get_post_meta( $id, '_company_name', true );
-            echo $company
-                ? esc_html( $company )
-                : '<span style="color:#ccc">—</span>';
+            echo get_post_meta( $id, '_company_name', true ) ?: '—';
             break;
         case 'file_type':
-            $type  = sanitize_key( (string) get_post_meta( $id, '_file_type', true ) );
-            $label = strtoupper( $type );
-            echo $label ? esc_html( $label ) : '—';
+            echo strtoupper( sanitize_key( get_post_meta( $id, '_file_type', true ) ) ) ?: '—';
             break;
     }
 }, 10, 2 );

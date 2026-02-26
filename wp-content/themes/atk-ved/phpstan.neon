@@ -1,0 +1,19 @@
+parameters:
+    level: 5
+    paths:
+        - inc/
+        - src/
+        - admin/
+    excludePaths:
+        - inc/acf-*.php
+        - vendor/
+    typecheckSharpClassNames: false
+    ignoreErrors:
+        # Игнорируем WordPress функции
+        - '#Function (wp_|add_|do_|get_|the_|esc_|sanitize_)[a-zA-Z_]+ not found#'
+        - '#Class (WP_Query|WP_Customize_Manager|WP_Error|WP_Post|WP_User) not found#'
+        - '#Access to an undefined property (post_|term_).*#'
+        
+    # Дополнительные правила
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
