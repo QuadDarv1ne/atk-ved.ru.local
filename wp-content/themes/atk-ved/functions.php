@@ -44,6 +44,7 @@ $atk_includes = [
     '/inc/cache-manager.php',
     // SEO
     '/inc/seo.php',
+    '/inc/seo-advanced.php',
     '/inc/sitemap.php',
     '/inc/breadcrumbs.php',
     // Функциональность
@@ -74,6 +75,7 @@ $atk_includes = [
     '/inc/enhanced-ui-components.php',
     '/inc/advanced-ui-components.php',
     '/inc/accessibility-enhancements.php',
+    '/inc/accessibility.php',
     '/inc/health-check.php',
     '/inc/demo-import.php',
     '/inc/demo-content.php',
@@ -547,6 +549,55 @@ function atk_ved_is_safe_url( string $url ): bool {
     $scheme = parse_url( $url, PHP_URL_SCHEME );
     return in_array( strtolower( (string) $scheme ), [ 'https', 'http', 'tg' ], true );
 }
+
+
+/**
+ * Add resource hints for performance optimization.
+ */
+function atk_ved_add_resource_hints( $hints, $relation_type ) {
+    if ( 'preconnect' === $relation_type ) {
+        $hints[] = 'https://fonts.googleapis.com';
+        $hints[] = 'https://fonts.gstatic.com';
+        $hints[] = 'https://www.google-analytics.com';
+        $hints[] = 'https://www.googletagmanager.com';
+        $hints[] = 'https://connect.facebook.net';
+    }
+    
+    if ( 'dns-prefetch' === $relation_type ) {
+        $hints[] = '//yastatic.net';
+        $hints[] = '//mc.yandex.ru';
+    }
+    
+    return $hints;
+}
+add_filter( 'wp_resource_hints', 'atk_ved_add_resource_hints', 10, 2 );
+
+
+// ============================================================================
+// WEB SHARE API
+// ============================================================================
+
+function atk_ved_add_web_share_api() {
+    if (is_front_page()) {
+        $site_description = get_bloginfo('description');
+        echo '<script>
+            function sharePage() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: document.title,
+                        text: "' . esc_js($site_description) . '",
+                        url: window.location.href
+                    }).catch(console.error);
+                } else {
+                    // Fallback to clipboard API
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Ссылка скопирована в буфер обмена!");
+                }
+            }
+        </script>';
+    }
+}
+add_action('wp_footer', 'atk_ved_add_web_share_api');
 
 
 // ============================================================================
