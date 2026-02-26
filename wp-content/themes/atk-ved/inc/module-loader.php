@@ -59,7 +59,6 @@ class ATK_VED_Module_Loader {
                 '/inc/pwa.php',
                 '/inc/enhanced-pwa.php',
                 '/inc/enhanced-performance.php',
-                '/inc/performance-cdn.php',
                 '/inc/enhanced-image-optimization.php',
             ],
         ],
