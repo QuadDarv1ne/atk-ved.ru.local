@@ -1,69 +1,325 @@
 /**
- * Accessibility - Оптимизированная версия
+ * Accessibility - Optimized & Enhanced
  * @package ATK_VED
  */
 
-/* Skip Links */
-.skip-link{position:absolute;top:-100px;left:20px;padding:15px 25px;background:#e31e24;color:#fff;font-weight:600;text-decoration:none;border-radius:0 0 8px 8px;transition:top .3s ease;z-index:9999}
-.skip-link:focus{top:0;outline:3px solid #ff6b6b;outline-offset:2px}
-
-/* Screen Reader Only */
-.sr-only,.screen-reader-text{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.sr-only-focusable:focus,.screen-reader-text:focus{position:static!important;width:auto;height:auto;padding:inherit;margin:inherit;overflow:visible;clip:auto;white-space:normal}
-
-/* Focus Styles */
-a:focus,button:focus,input:focus,select:focus,textarea:focus,[tabindex]:focus{outline:3px solid #e31e24;outline-offset:2px}
-button:focus,.cta-button:focus{outline:3px solid #e31e24;outline-offset:3px;box-shadow:0 0 0 5px rgba(227,30,36,.3)}
-.service-card:focus-within,.step-card:focus-within{box-shadow:0 0 0 3px #e31e24}
-
-/* Reduced Motion */
-@media(prefers-reduced-motion:reduce){
-*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+/* =========================================
+   1. Skip Links (Переход к контенту)
+   ========================================= */
+.skip-link {
+    position: fixed; /* Fixed надежнее absolute при скролле */
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%); /* Центрирование */
+    padding: 15px 30px;
+    background: var(--primary, #e31e24);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 99999; /* Максимальный z-index */
+    transition: top 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* High Contrast */
-@media(prefers-contrast:high){
-body{background:#fff;color:#000}
-a{color:#0000ee;text-decoration:underline}
-a:hover{color:#c00}
-button,.cta-button{background:#000;color:#fff;border:3px solid #000}
-input,select,textarea{background:#fff;color:#000;border:2px solid #000}
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid #fff;
+    outline-offset: 2px;
 }
 
-/* Form Accessibility */
-label{display:block;margin-bottom:5px;font-weight:600;color:#2c2c2c}
-label.required::after{content:' *';color:#e31e24}
-.wpcf7-not-valid-tip{color:#e31e24;font-size:14px;margin-top:5px;padding:8px 12px;background:#fff5f5;border-left:3px solid #e31e24;border-radius:4px}
-.wpcf7-form-control.wpcf7-not-valid{border-color:#e31e24;border-width:2px;background:#fff5f5}
-.wpcf7-response-output.wpcf7-mail-sent-ok{background:#f0fff4;border-color:#22c55e;color:#166534;padding:15px 20px;border-radius:8px}
-
-/* Focus Visible */
-@supports selector(:focus-visible){
-a:focus:not(:focus-visible),button:focus:not(:focus-visible),input:focus:not(:focus-visible){outline:none}
-a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #e31e24;outline-offset:2px}
+/* =========================================
+   2. Screen Reader Only (Только для скринридеров)
+   ========================================= */
+.sr-only,
+.screen-reader-text {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-/* Modal Accessibility */
-[role="dialog"]{z-index:9999}
-[role="dialog"] .modal-content{max-height:90vh;overflow-y:auto}
-[role="dialog"] [data-close]{position:absolute;top:15px;right:15px;padding:10px;background:transparent;border:none;cursor:pointer;font-size:24px;color:#666;border-radius:4px;transition:all .2s ease}
-[role="dialog"] [data-close]:hover,[role="dialog"] [data-close]:focus{background:#f0f0f0;color:#000}
+/* Показываем скрытый элемент при фокусе (например, skip-link) */
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+    position: static !important;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
 
-/* WCAG Contrast */
-body{color:#2c2c2c}
-a{color:#e31e24}
-a:hover{color:#b9151a}
-.text-secondary{color:#666}
-h1,h2,h3,h4,h5,h6{color:#1a1a1a}
-.btn,.cta-button{color:#fff;background-color:#e31e24;border:2px solid #e31e24}
-.btn:hover,.cta-button:hover{background-color:#b9151a;border-color:#b9151a}
-input,textarea,select{border:2px solid #ccc;color:#2c2c2c;background-color:#fff}
-input:focus,textarea:focus,select:focus{border-color:#e31e24;box-shadow:0 0 0 3px rgba(227,30,36,.2)}
+/* =========================================
+   3. Focus Styles (Управление фокусом)
+   ========================================= */
 
-/* Print */
-@media print{
-.skip-links,[role="dialog"],.modal,.no-print{display:none!important}
-a{text-decoration:underline}
-a[href]::after{content:" (" attr(href) ")";font-size:12px;color:#666}
-body{font-size:12pt;line-height:1.5}
+/* Базовый стиль фокуса (Fallback для старых браузеров и Safari) */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[tabindex]:focus {
+    outline: 3px solid var(--primary, #e31e24);
+    outline-offset: 2px;
+    transition: outline-offset 0.15s ease;
+}
+
+/* Улучшенные тени для кнопок */
+button:focus,
+.cta-button:focus,
+.btn:focus {
+    box-shadow: 0 0 0 5px rgba(227, 30, 36, 0.3);
+}
+
+/* Карточки с внутренними ссылками */
+.service-card:focus-within,
+.step-card:focus-within {
+    box-shadow: 0 0 0 3px var(--primary, #e31e24);
+    transition: box-shadow 0.2s ease;
+}
+
+/* Современный Focus-Visible (Отключает фокус при клике мышью) */
+@supports selector(:focus-visible) {
+    /* Убираем outline при обычном фокусе, если браузер поддерживает focus-visible */
+    a:focus:not(:focus-visible),
+    button:focus:not(:focus-visible),
+    input:focus:not(:focus-visible),
+    select:focus:not(:focus-visible),
+    textarea:focus:not(:focus-visible),
+    [tabindex]:focus:not(:focus-visible) {
+        outline: none;
+        box-shadow: none;
+    }
+
+    /* Включаем outline только при клавиатурной навигации */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+        outline: 3px solid var(--primary, #e31e24);
+        outline-offset: 2px;
+    }
+    
+    button:focus-visible,
+    .cta-button:focus-visible {
+        box-shadow: 0 0 0 5px rgba(227, 30, 36, 0.3);
+    }
+}
+
+/* =========================================
+   4. Motion & Preferences (Предпочтения)
+   ========================================= */
+
+/* Отключение анимаций */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important; /* Важно: отключаем плавный скролл */
+    }
+}
+
+/* Высокая контрастность (macOS / стандартная) */
+@media (prefers-contrast: more) {
+    body {
+        background: #fff;
+        color: #000;
+    }
+    
+    a { color: #0000ee; text-decoration: underline; }
+    a:hover { color: #c00; }
+    
+    button, .cta-button {
+        background: #000;
+        color: #fff;
+        border: 2px solid #000;
+    }
+    
+    input, select, textarea {
+        background: #fff;
+        color: #000;
+        border: 2px solid #000;
+    }
+}
+
+/* Forced Colors Mode (Windows High Contrast) */
+@media (forced-colors: active) {
+    /* В этом режиме система управляет цветами.
+       Наша задача — убедиться, что границы видимы. */
+    .btn, .cta-button, button {
+        border: 2px solid currentColor;
+    }
+    
+    /* Восстанавливаем границы для инпутов, если они пропали */
+    input, select, textarea {
+        border: 2px solid currentColor;
+    }
+    
+    /* Убираем фоны, которые могут мешать */
+    .service-card, .step-card {
+        border: 1px solid currentColor;
+        background: transparent;
+    }
+}
+
+/* =========================================
+   5. Form Accessibility (Формы)
+   ========================================= */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--text, #2c2c2c);
+}
+
+label.required::after {
+    content: ' *';
+    color: var(--primary, #e31e24);
+    font-weight: 700;
+}
+
+/* Ошибки валидации (Contact Form 7 Example) */
+.wpcf7-not-valid-tip {
+    color: var(--primary, #e31e24);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wpcf7-form-control.wpcf7-not-valid {
+    border-color: var(--primary, #e31e24) !important;
+    border-width: 2px;
+    background-color: rgba(227, 30, 36, 0.05);
+}
+
+/* Сообщения об успехе */
+.wpcf7-response-output {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    border: 2px solid transparent;
+}
+
+.wpcf7-response-output.wpcf7-mail-sent-ok {
+    background: #f0fff4;
+    border-color: #22c55e;
+    color: #166534;
+}
+
+.wpcf7-response-output.wpcf7-validation-errors {
+     background: #fff5f5;
+     border-color: var(--primary, #e31e24);
+     color: #b91c1c;
+}
+
+/* =========================================
+   6. Modal Accessibility (Модальные окна)
+   ========================================= */
+[role="dialog"] {
+    z-index: 9999;
+}
+
+[role="dialog"] .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+    /* Важно: убедиться, что скролл есть всегда при необходимости */
+    overscroll-behavior: contain; 
+}
+
+[role="dialog"] [data-close] {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 10px;
+    background: transparent;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-size: 24px;
+    color: #666;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+[role="dialog"] [data-close"]:hover,
+[role="dialog"] [data-close"]:focus {
+    background: #f0f0f0;
+    color: #000;
+    border-color: currentColor;
+}
+
+/* =========================================
+   7. Typography & Contrast (Типографика)
+   ========================================= */
+body {
+    color: var(--text, #2c2c2c);
+}
+
+a {
+    color: var(--primary, #e31e24);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-hover, #b9151a);
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-dark, #1a1a1a);
+}
+
+/* =========================================
+   8. Print Styles (Печать)
+   ========================================= */
+@media print {
+    .skip-links,
+    [role="dialog"],
+    .modal-overlay,
+    .no-print,
+    .header-actions,
+    .site-footer {
+        display: none !important;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    /* Показываем URL ссылок при печати */
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+        word-break: break-all; /* Чтобы длинные ссылки не ломали верстку */
+    }
+    
+    /* Не показывать URL для ссылок на якоря или картинки */
+    a[href^="#"]::after,
+    a[href^="javascript"]::after {
+        content: "";
+    }
+
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
 }

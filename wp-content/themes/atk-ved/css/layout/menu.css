@@ -1,5 +1,5 @@
 /**
- * Navigation Menu Styles
+ * Navigation Menu Styles (Optimized)
  * @package ATK_VED
  */
 
@@ -11,7 +11,7 @@
 .main-menu {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 32px; /* Чуть уменьшили для плотности на ноутах */
     list-style: none;
     margin: 0;
     padding: 0;
@@ -24,7 +24,7 @@
 .main-menu > li > a {
     display: block;
     padding: 10px 0;
-    color: var(--text);
+    color: var(--text, #333);
     text-decoration: none;
     font-weight: 500;
     font-size: 15px;
@@ -32,6 +32,7 @@
     position: relative;
 }
 
+/* Underline Animation */
 .main-menu > li > a::after {
     content: '';
     position: absolute;
@@ -39,13 +40,13 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--primary);
-    transition: width 0.3s ease;
+    background: var(--primary, #e31e24);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Плавный easing */
 }
 
 .main-menu > li > a:hover,
 .main-menu > li.current-menu-item > a {
-    color: var(--primary);
+    color: var(--primary, #e31e24);
 }
 
 .main-menu > li > a:hover::after,
@@ -53,7 +54,7 @@
     width: 100%;
 }
 
-/* Dropdown Menu */
+/* --- Dropdown Arrow (Desktop) --- */
 .main-menu li.menu-item-has-children > a::before {
     content: '';
     display: inline-block;
@@ -67,32 +68,42 @@
     transition: transform 0.3s ease;
 }
 
-.main-menu li.menu-item-has-children:hover > a::before {
+/* Rotate arrow on hover OR if parent has focus (keyboard nav) */
+.main-menu li.menu-item-has-children:hover > a::before,
+.main-menu li.menu-item-has-children:focus-within > a::before {
     transform: rotate(180deg);
 }
 
+/* --- Dropdown Menu (Desktop) --- */
 .sub-menu {
     position: absolute;
     top: 100%;
     left: 0;
     min-width: 220px;
     background: #fff;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border-radius: var(--radius-md);
-    padding: 10px 0;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    border-radius: var(--radius-md, 8px);
+    padding: 12px 0;
     list-style: none;
     margin: 0;
+    
+    /* Performance optimization */
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
-    transition: all 0.3s ease;
+    pointer-events: none; /* Предотвращает клики, когда меню скрыто */
+    
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
     z-index: 1000;
 }
 
-.main-menu li:hover > .sub-menu {
+/* Show logic: Hover OR Focus Within (for keyboard tab navigation) */
+.main-menu li:hover > .sub-menu,
+.main-menu li:focus-within > .sub-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    pointer-events: auto; /* Активируем клики */
 }
 
 .sub-menu li {
@@ -101,90 +112,137 @@
 
 .sub-menu a {
     display: block;
-    padding: 12px 20px;
-    color: var(--text);
+    padding: 10px 20px;
+    color: var(--text, #333);
     text-decoration: none;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
 }
 
-.sub-menu a:hover {
-    background: var(--bg-light);
-    color: var(--primary);
+.sub-menu a:hover,
+.sub-menu a:focus {
+    background: var(--bg-light, #f8f9fa);
+    color: var(--primary, #e31e24);
     padding-left: 25px;
 }
 
-/* Mobile Menu */
+/* --- Mobile Menu Panel --- */
 @media (max-width: 1024px) {
     .main-navigation {
         position: fixed;
         top: 0;
-        right: -100%;
+        right: 0;
         width: 320px;
         height: 100vh;
+        height: 100dvh; /* Modern dynamic viewport height for mobile browsers */
         background: #fff;
         box-shadow: -5px 0 30px rgba(0,0,0,0.1);
-        padding: 100px 30px 30px;
+        
+        /* Safe Area для iPhone */
+        padding-top: calc(80px + env(safe-area-inset-top)); 
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: 20px;
+        padding-right: 20px;
+        
         overflow-y: auto;
-        transition: right 0.4s ease;
+        
+        /* Используем transform вместо right для GPU-ускорения */
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 999;
     }
     
     .main-navigation.active {
-        right: 0;
+        transform: translateX(0);
     }
     
     .main-menu {
         flex-direction: column;
         align-items: stretch;
         gap: 0;
+        margin-top: 20px;
     }
     
     .main-menu > li {
-        border-bottom: 1px solid var(--border-light);
+        border-bottom: 1px solid var(--border-light, #eee);
     }
     
     .main-menu > li > a {
         padding: 18px 0;
         font-size: 16px;
+        display: flex;
+        justify-content: space-between; /* Arrow to right */
+        align-items: center;
     }
     
     .main-menu > li > a::after {
-        display: none;
+        display: none; /* Hide underline */
     }
     
+    /* Mobile Submenu (Accordion) */
     .sub-menu {
         position: static;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+        
+        /* Reset desktop styles */
         opacity: 1;
         visibility: visible;
         transform: none;
-        box-shadow: none;
-        padding: 0 0 0 20px;
+        pointer-events: auto;
+        
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease;
+        background: var(--bg-light, #f8f9fa);
+        
+        transition: max-height 0.3s ease-out;
     }
     
     .main-menu li.menu-item-has-children.open > .sub-menu {
-        max-height: 500px;
+        max-height: 1000px; /* Sufficient height */
+        transition: max-height 0.5s ease-in;
+    }
+    
+    .sub-menu a {
+        padding: 15px 20px;
+        font-size: 15px;
+    }
+    
+    .sub-menu a:hover {
+        padding-left: 25px; /* Keep logic */
     }
     
     .main-menu li.menu-item-has-children > a::before {
-        float: right;
-        margin-top: 8px;
+        /* Make arrow clickable area better */
+        width: 24px;
+        height: 24px;
+        border: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: transform 0.3s ease;
+    }
+    
+    .main-menu li.menu-item-has-children.open > a::before {
+        transform: rotate(180deg);
     }
 }
 
-/* Menu Overlay */
+/* --- Background Overlay --- */
 .menu-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 998;
+    cursor: pointer;
 }
 
 .menu-overlay.active {
@@ -192,8 +250,36 @@
     visibility: visible;
 }
 
+/* Hide overlay on desktop */
 @media (min-width: 1025px) {
     .menu-overlay {
         display: none;
+    }
+}
+
+/* --- Accessibility Focus States --- */
+.main-menu a:focus-visible {
+    outline: 2px solid var(--primary, #e31e24);
+    outline-offset: 2px;
+}
+
+/* Prevent outline on mouse click, show on Tab */
+.main-menu a:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* User Preferences */
+@media (prefers-reduced-motion: reduce) {
+    .main-navigation,
+    .main-menu > li > a,
+    .main-menu > li > a::after,
+    .main-menu li.menu-item-has-children > a::before,
+    .sub-menu,
+    .menu-overlay {
+        transition: none !important;
+    }
+    
+    .main-navigation {
+        transform: translateX(0); /* Always visible or handled by JS differently */
     }
 }

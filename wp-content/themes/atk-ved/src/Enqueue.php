@@ -61,7 +61,6 @@ class Enqueue {
         
         // 9. UI Components
         wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui.css', [ 'atk-base' ], $v );
-        wp_enqueue_style( 'atk-modern-ui', get_template_directory_uri() . '/css/modern-ui.css', [ 'atk-ui' ], $v );
         
         // 10. Feature Components
         wp_enqueue_style( 'atk-components', get_template_directory_uri() . '/css/components.css', [ 'atk-ui' ], $v );
@@ -84,7 +83,6 @@ class Enqueue {
         // 12. Page-specific styles
         if ( is_front_page() ) {
             wp_enqueue_style( 'atk-hero-section', get_template_directory_uri() . '/css/sections/hero.css', [ 'atk-base' ], $v );
-            wp_enqueue_style( 'atk-cards-modern', get_template_directory_uri() . '/css/cards-modern.css', [ 'atk-components' ], $v );
             wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [ 'atk-hero-section' ], $v );
         }
 
@@ -119,9 +117,7 @@ class Enqueue {
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [], $v, true );
         wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance.js', [], $v, true );
         wp_enqueue_script( 'atk-components', get_template_directory_uri() . '/js/components.js', [], $v, true );
-        wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui.js', [], $v, true );
         wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
-        wp_enqueue_script( 'atk-modern-interactions', get_template_directory_uri() . '/js/modern-interactions.js', [], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {
