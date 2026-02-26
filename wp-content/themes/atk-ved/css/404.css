@@ -5,57 +5,59 @@
  * @since 1.8.0
  */
 
-.error-404-section {
+.error-404 {
     padding: 100px 0;
-    background: #fafafa;
+    background: var(--bg-secondary, #fafafa);
     min-height: 80vh;
-    display: flex;
-    align-items: center;
 }
 
-.error-404-content {
-    max-width: 600px;
+.error-404__content {
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
 }
 
-.error-404-icon {
-    margin-bottom: 30px;
-    color: #e31e24;
-    opacity: 0.3;
+.error-404__visual {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-.error-404-icon svg {
-    width: 120px;
-    height: 120px;
-}
-
-.error-404-number {
+.error-404__number {
     font-size: 120px;
     font-weight: 700;
-    color: #e31e24;
+    color: var(--primary-color, #e31e24);
     line-height: 1;
-    margin-bottom: 20px;
     font-family: monospace;
 }
 
-.error-404-title {
+.error-404__icon {
+    color: var(--primary-color, #e31e24);
+    opacity: 0.3;
+}
+
+.error-404__text {
+    margin-bottom: 40px;
+}
+
+.error-404__title {
     font-size: 32px;
     font-weight: 600;
-    color: #2c2c2c;
+    color: var(--text-primary, #2c2c2c);
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-.error-404-text {
+.error-404__description {
     font-size: 16px;
-    color: #666;
+    color: var(--text-secondary, #666);
     line-height: 1.8;
-    margin-bottom: 40px;
 }
 
-.error-404-actions {
+.error-404__actions {
     display: flex;
     gap: 20px;
     justify-content: center;
@@ -63,45 +65,43 @@
     margin-bottom: 50px;
 }
 
-.error-404-actions .cta-button {
+.error-404__actions .btn {
     display: inline-flex;
     align-items: center;
     gap: 10px;
 }
 
-.error-404-actions .cta-button svg {
-    width: 16px;
-    height: 16px;
+.error-404__actions .btn svg {
+    width: 20px;
+    height: 20px;
 }
 
-.error-404-search,
-.error-404-links,
-.error-404-contact {
+.error-404__search,
+.error-404__links {
     margin-bottom: 40px;
 }
 
-.error-404-search h3,
-.error-404-links h3,
-.error-404-contact h3 {
+.error-404__search h2,
+.error-404__links h3 {
     font-size: 18px;
     font-weight: 600;
-    color: #2c2c2c;
+    color: var(--text-primary, #2c2c2c);
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.error-404-links ul {
+.error-404__nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;
 }
 
-.error-404-links a {
-    color: #666;
+.error-404__nav a {
+    color: var(--text-secondary, #666);
     text-decoration: none;
     transition: color 0.3s ease;
     display: flex;
@@ -109,76 +109,37 @@
     gap: 10px;
 }
 
-.error-404-links a::before {
+.error-404__nav a::before {
     content: '→';
-    color: #e31e24;
+    color: var(--primary-color, #e31e24);
     font-weight: 700;
 }
 
-.error-404-links a:hover {
-    color: #e31e24;
-}
-
-.error-404-contact .contact-methods {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.error-404-contact .contact-method {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    padding: 15px 30px;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    color: #2c2c2c;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.error-404-contact .contact-method:hover {
-    border-color: #e31e24;
-    color: #e31e24;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.15);
-}
-
-.error-404-contact .contact-method svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
+.error-404__nav a:hover {
+    color: var(--primary-color, #e31e24);
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .error-404-section {
+    .error-404 {
         padding: 60px 0;
     }
 
-    .error-404-number {
+    .error-404__number {
         font-size: 80px;
     }
 
-    .error-404-title {
+    .error-404__title {
         font-size: 24px;
     }
 
-    .error-404-actions {
+    .error-404__actions {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
     }
 
-    .error-404-links ul {
+    .error-404__nav ul {
         grid-template-columns: 1fr;
-    }
-
-    .error-404-contact .contact-method {
-        width: 100%;
-        justify-content: center;
     }
 }
 
@@ -194,25 +155,41 @@
     }
 }
 
-.error-404-content {
+.error-404__content {
     animation: fadeInUp 0.6s ease;
 }
 
-.error-404-number {
+.error-404__visual {
     animation: fadeInUp 0.6s ease 0.2s both;
 }
 
-.error-404-title {
+.error-404__text {
     animation: fadeInUp 0.6s ease 0.3s both;
 }
 
-.error-404-text {
+.error-404__actions {
     animation: fadeInUp 0.6s ease 0.4s both;
 }
 
-.error-404-actions,
-.error-404-search,
-.error-404-links,
-.error-404-contact {
+.error-404__search,
+.error-404__links {
     animation: fadeInUp 0.6s ease 0.5s both;
+}
+
+/* Темная тема */
+[data-theme="dark"] .error-404 {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .error-404__title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .error-404__description,
+[data-theme="dark"] .error-404__nav a {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .error-404__nav a:hover {
+    color: var(--primary-color);
 }

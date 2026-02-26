@@ -77,6 +77,9 @@ class Enqueue {
         // 13. Dark Theme
         wp_enqueue_style( 'atk-theme-dark', get_template_directory_uri() . '/css/theme-dark.css', [ 'atk-variables' ], $v );
         
+        // 14. Back to Top
+        wp_enqueue_style( 'atk-back-to-top', get_template_directory_uri() . '/css/back-to-top.css', [ 'atk-base' ], $v );
+        
         // Критический CSS inline
         $this->enqueue_critical_css();
 
@@ -95,14 +98,34 @@ class Enqueue {
         if ( $this->is_calc_page() ) {
             wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [ 'atk-base' ], $v );
             wp_enqueue_style( 'atk-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', [ 'atk-base' ], $v );
-            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator.js', [ 'jquery' ], $v, true );
-            wp_enqueue_script( 'atk-calc-fe', get_template_directory_uri() . '/js/calculator-frontend.js', [ 'jquery', 'atk-calc' ], $v, true );
-            wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator-vanilla.js', [], $v, true );
+            wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking-vanilla.js', [], $v, true );
         }
 
         // 404
         if ( is_404() ) {
             wp_enqueue_style( 'atk-404', get_template_directory_uri() . '/css/404.css', [], $v );
+        }
+
+        // Privacy Policy
+        if ( is_page_template( 'page-privacy.php' ) ) {
+            wp_enqueue_style( 'atk-privacy', get_template_directory_uri() . '/css/privacy.css', [ 'atk-base' ], $v );
+        }
+
+        // About Page
+        if ( is_page_template( 'page-about.php' ) ) {
+            wp_enqueue_style( 'atk-about', get_template_directory_uri() . '/css/about.css', [ 'atk-base' ], $v );
+        }
+
+        // Services Page
+        if ( is_page_template( 'page-services.php' ) ) {
+            wp_enqueue_style( 'atk-services', get_template_directory_uri() . '/css/services.css', [ 'atk-base' ], $v );
+        }
+
+        // Contacts Page
+        if ( is_page_template( 'page-contacts.php' ) ) {
+            wp_enqueue_style( 'atk-contacts', get_template_directory_uri() . '/css/contacts.css', [ 'atk-base' ], $v );
+            wp_enqueue_script( 'atk-contact-form', get_template_directory_uri() . '/js/contact-form.js', [], $v, true );
         }
 
         // === Скрипты ===
@@ -123,6 +146,7 @@ class Enqueue {
         wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance.js', [], $v, true );
         wp_enqueue_script( 'atk-components', get_template_directory_uri() . '/js/components.js', [], $v, true );
         wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
+        wp_enqueue_script( 'atk-back-to-top', get_template_directory_uri() . '/js/back-to-top.js', [], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {

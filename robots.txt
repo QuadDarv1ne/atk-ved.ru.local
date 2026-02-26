@@ -1,86 +1,60 @@
-# robots.txt для АТК ВЭД
-# https://atk-ved.ru.local/robots.txt
+# robots.txt для atk-ved.ru
 
-# Разрешить всем поисковым роботам
 User-agent: *
-
-# Разрешить индексацию основных страниц
 Allow: /
-Allow: /wp-content/uploads/
-Allow: /wp-content/themes/atk-ved/images/
 
-# Запретить индексацию административной части
+# Запрещаем индексацию служебных директорий
 Disallow: /wp-admin/
-Disallow: /wp-login.php
-Disallow: /wp-signup.php
-Disallow: /wp-activate.php
-
-# Запретить индексацию системных файлов
 Disallow: /wp-includes/
-Disallow: /xmlrpc.php
-Disallow: /wp-config.php
-Disallow: /wp-config-sample.php
-
-# Запретить индексацию временных и служебных директорий
+Disallow: /wp-content/plugins/
 Disallow: /wp-content/cache/
-Disallow: /wp-content/upgrade/
-Disallow: /wp-content/debug.log
-
-# Запретить индексацию результатов поиска (избегаем дублирования)
-Disallow: /?s=
-Disallow: /search/
-
-# Запретить индексацию страниц с параметрами сортировки и фильтрации
-Disallow: /*?sort=
-Disallow: /*?order=
-Disallow: /*?filter=
-
-# Запретить индексацию версий для печати
-Disallow: /*print=
-
-# Запретить индексацию комментариев и треков
+Disallow: /wp-content/themes/*/js/
+Disallow: /wp-content/themes/*/css/
+Disallow: /cgi-bin/
+Disallow: /trackback/
+Disallow: /feed/
+Disallow: /comments/
 Disallow: */trackback/
 Disallow: */feed/
 Disallow: */comments/
-Disallow: */attachment/
+Disallow: /*?*
+Disallow: /*?
+Disallow: /xmlrpc.php
+Disallow: *?s=
+Disallow: *&s=
 
-# Запретить индексацию архивов по датам (опционально)
-Disallow: /*year=
-Disallow: /*month=
-Disallow: /*day=
+# Разрешаем индексацию изображений и медиа
+Allow: /wp-content/uploads/
+Allow: /wp-content/themes/*/images/
 
-# Ссылка на XML sitemap
-Sitemap: https://atk-ved.ru.local/sitemap.xml
+# Разрешаем CSS и JS для правильного рендеринга
+Allow: /*.css$
+Allow: /*.js$
 
-# Дополнительные правила для конкретных поисковиков
+# Sitemap
+Sitemap: https://atk-ved.ru/sitemap.xml
+Sitemap: https://atk-ved.ru/sitemap_index.xml
 
-# Google
+# Основные поисковики
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 1
 
-# Яндекс
 User-agent: Yandex
 Allow: /
-Crawl-delay: 1
-Clean-Param: utm_source&utm_medium&utm_campaign
+Crawl-delay: 2
 
-# Bing
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 1
 
-# Социальные сети (для предпросмотра ссылок)
-User-agent: Twitterbot
-Allow: /
+# Блокируем плохих ботов
+User-agent: AhrefsBot
+Disallow: /
 
-User-agent: facebookexternalhit
-Allow: /
+User-agent: SemrushBot
+Disallow: /
 
-User-agent: LinkedInBot
-Allow: /
+User-agent: MJ12bot
+Disallow: /
 
-# Запретить всех остальных
-User-agent: *
-Disallow: /wp-admin/
-Disallow: /wp-includes/
+User-agent: DotBot
+Disallow: /

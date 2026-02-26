@@ -83,6 +83,18 @@ if ( file_exists( $module_loader ) ) {
     require_once $module_loader;
 }
 
+// Load SEO Functions
+$seo_file = ATK_VED_DIR . '/inc/seo.php';
+if ( file_exists( $seo_file ) ) {
+    require_once $seo_file;
+}
+
+// Load Contact Form Handler
+$contact_form_file = ATK_VED_DIR . '/inc/contact-form.php';
+if ( file_exists( $contact_form_file ) ) {
+    require_once $contact_form_file;
+}
+
 // ============================================
 // 3. Admin Features (Refactored)
 // ============================================

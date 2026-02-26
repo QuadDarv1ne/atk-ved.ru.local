@@ -1,0 +1,340 @@
+/**
+ * Стили для страницы "Услуги"
+ * 
+ * @package ATK_VED
+ */
+
+.services-page {
+    background: var(--bg-primary, #fff);
+}
+
+/* Hero */
+.services-hero {
+    padding: 100px 0 80px;
+    background: linear-gradient(135deg, var(--primary-color, #e31e24) 0%, #c41519 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.services-hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.services-hero p {
+    font-size: 20px;
+    opacity: 0.95;
+}
+
+/* Main Services */
+.services-main {
+    padding: 80px 0;
+}
+
+.service-detail {
+    margin-bottom: 80px;
+}
+
+.service-detail__content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.service-detail__icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.service-detail h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary, #2c2c2c);
+    margin-bottom: 15px;
+}
+
+.service-detail__lead {
+    font-size: 18px;
+    color: var(--text-secondary, #666);
+    margin-bottom: 40px;
+}
+
+.service-detail__features {
+    display: grid;
+    gap: 30px;
+}
+
+.feature-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 25px;
+    background: var(--bg-secondary, #fafafa);
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-item__icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.feature-item h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary, #2c2c2c);
+    margin-bottom: 8px;
+}
+
+.feature-item p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary, #666);
+}
+
+/* Additional Services */
+.services-additional {
+    padding: 80px 0;
+    background: var(--bg-secondary, #fafafa);
+}
+
+.services-additional h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary, #2c2c2c);
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.service-card {
+    background: var(--bg-primary, #fff);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.service-card__icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.service-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary, #2c2c2c);
+    margin-bottom: 15px;
+}
+
+.service-card > p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary, #666);
+    margin-bottom: 20px;
+}
+
+.service-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-card ul li {
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+    padding: 8px 0 8px 25px;
+    position: relative;
+}
+
+.service-card ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color, #e31e24);
+    font-weight: 700;
+}
+
+/* Process */
+.services-process {
+    padding: 80px 0;
+}
+
+.services-process h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary, #2c2c2c);
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.process-step {
+    text-align: center;
+    position: relative;
+}
+
+.process-step__number {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    background: var(--primary-color, #e31e24);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.process-step h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary, #2c2c2c);
+    margin-bottom: 10px;
+}
+
+.process-step p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary, #666);
+}
+
+/* CTA */
+.services-cta {
+    padding: 80px 0;
+    background: linear-gradient(135deg, var(--primary-color, #e31e24) 0%, #c41519 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.services-cta h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.services-cta p {
+    font-size: 18px;
+    margin-bottom: 40px;
+    opacity: 0.95;
+}
+
+.services-cta .btn {
+    background: #fff;
+    color: var(--primary-color, #e31e24);
+    padding: 15px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.services-cta .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .services-hero {
+        padding: 60px 0 40px;
+    }
+
+    .services-hero h1 {
+        font-size: 32px;
+    }
+
+    .services-hero p {
+        font-size: 16px;
+    }
+
+    .services-main,
+    .services-additional,
+    .services-process,
+    .services-cta {
+        padding: 60px 0;
+    }
+
+    .service-detail h2,
+    .services-additional h2,
+    .services-process h2,
+    .services-cta h2 {
+        font-size: 28px;
+    }
+
+    .service-detail__icon {
+        font-size: 48px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .process-steps {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-item {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Темная тема */
+[data-theme="dark"] .services-page {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .services-additional {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .feature-item {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .service-card {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .service-detail h2,
+[data-theme="dark"] .services-additional h2,
+[data-theme="dark"] .services-process h2,
+[data-theme="dark"] .feature-item h4,
+[data-theme="dark"] .service-card h3,
+[data-theme="dark"] .process-step h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .service-detail__lead,
+[data-theme="dark"] .feature-item p,
+[data-theme="dark"] .service-card > p,
+[data-theme="dark"] .service-card ul li,
+[data-theme="dark"] .process-step p {
+    color: var(--text-secondary);
+}
