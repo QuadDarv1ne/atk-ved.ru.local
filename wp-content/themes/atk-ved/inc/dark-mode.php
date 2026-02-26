@@ -1,217 +1,369 @@
 <?php
 /**
- * Система темной темы v3.3
- * 
+ * Dark Mode - Темная тема для сайта
+ *
  * @package ATK_VED
- * @subpackage Dark_Mode
+ * @since 3.2.0
  */
 
-if (!defined('ABSPATH')) {
-    exit;
-}
+declare( strict_types=1 );
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Класс для управления темной темой
+ */
 class ATK_VED_Dark_Mode {
-    
-    private static $instance = null;
-    
-    public static function get_instance() {
-        if (self::$instance === null) {
+
+    private static ?self $instance = null;
+
+    public static function get_instance(): self {
+        if ( self::$instance === null ) {
             self::$instance = new self();
         }
         return self::$instance;
     }
-    
+
     private function __construct() {
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-        add_action('wp_footer', array($this, 'add_toggle_button'));
-        add_action('customize_register', array($this, 'add_customizer_options'));
+        // Добавляем поддержку цветовой схемы
+        add_action( 'wp_head', [ $this, 'output_dark_mode_toggle' ], 20 );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_dark_mode_assets' ] );
+        
+        // Добавляем цветовые переменные в CSS
+        add_action( 'wp_head', [ $this, 'output_color_scheme_variables' ], 1 );
+        
+        // Поддержка системной предпочтительной темы
+        add_action( 'wp_head', [ $this, 'output_system_preference_handler' ], 5 );
     }
-    
+
     /**
-     * Подключение стилей и скриптов
+     * Подключение ресурсов для темной темы
      */
-    public function enqueue_scripts() {
-        // CSS для темной темы
-        wp_enqueue_style('atk-ved-dark-mode', get_template_directory_uri() . '/css/dark-mode.css', array(), '3.3');
-        
-        // JavaScript для переключения тем
-        wp_enqueue_script('atk-ved-dark-mode-js', get_template_directory_uri() . '/js/dark-mode.js', array('jquery'), '3.3', true);
-        
-        // Локализация
-        wp_localize_script('atk-ved-dark-mode-js', 'darkModeData', array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('dark_mode_nonce')
-        ));
+    public function enqueue_dark_mode_assets(): void {
+        // Подключаем скрипт переключения темы
+        wp_enqueue_script(
+            'atk-dark-mode',
+            get_template_directory_uri() . '/js/dark-mode.js',
+            [ 'jquery' ],
+            ATK_VED_VERSION,
+            true
+        );
+
+        // Локализация скрипта
+        wp_localize_script( 'atk-dark-mode', 'atkDarkMode', [
+            'enabled' => $this->is_dark_mode_enabled(),
+            'toggleLabel' => __( 'Переключить темную тему', 'atk-ved' ),
+            'autoDetect' => true,
+        ] );
     }
-    
+
     /**
-     * Добавление кнопки переключения темы
+     * Вывод переключателя темной темы
      */
-    public function add_toggle_button() {
-        $theme_mod = get_theme_mod('atk_ved_dark_mode_default', 'auto');
-        $show_toggle = get_theme_mod('atk_ved_show_dark_toggle', true);
-        
-        if (!$show_toggle) {
+    public function output_dark_mode_toggle(): void {
+        if ( ! $this->is_dark_mode_option_enabled() ) {
             return;
         }
-        
         ?>
-        <div class="dark-mode-toggle" data-default-theme="<?php echo esc_attr($theme_mod); ?>">
-            <button class="theme-toggle-btn" aria-label="Переключить тему" title="Переключить тему">
-                <span class="theme-icon light-icon">☀️</span>
-                <span class="theme-icon dark-icon">🌙</span>
-                <span class="theme-icon auto-icon">🌓</span>
-            </button>
-            <div class="theme-tooltip">
-                <span class="light-text">Светлая тема</span>
-                <span class="dark-text">Темная тема</span>
-                <span class="auto-text">Авто тема</span>
-            </div>
-        </div>
+        <script>
+        (function() {
+            'use strict';
+            
+            // Создание переключателя темной темы
+            function initDarkModeToggle() {
+                // Проверяем, есть ли уже переключатель
+                if (document.querySelector('.dark-mode-toggle')) {
+                    return;
+                }
+                
+                // Создаем элемент переключателя
+                const toggleButton = document.createElement('button');
+                toggleButton.className = 'dark-mode-toggle';
+                toggleButton.setAttribute('aria-label', '<?php esc_attr_e( 'Переключить темную тему', 'atk-ved' ); ?>');
+                toggleButton.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                `;
+                
+                // Добавляем к существующему элементу header-actions или создаем новый контейнер
+                let container = document.querySelector('.header-actions');
+                if (!container) {
+                    container = document.querySelector('.site-header');
+                    if (!container) {
+                        return;
+                    }
+                }
+                
+                // Вставляем перед кнопкой CTA или в конец контейнера
+                const ctaButton = container.querySelector('.cta-button');
+                if (ctaButton) {
+                    container.insertBefore(toggleButton, ctaButton);
+                } else {
+                    container.appendChild(toggleButton);
+                }
+                
+                // Обработчик переключения
+                toggleButton.addEventListener('click', function() {
+                    toggleDarkMode();
+                });
+            }
+            
+            // Функция переключения темной темы
+            function toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                
+                // Сохраняем предпочтение в localStorage
+                localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+                
+                // Обновляем класс HTML
+                if (isDark) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+                
+                // Отправляем событие для других скриптов
+                window.dispatchEvent(new CustomEvent('darkModeToggle', {
+                    detail: { enabled: isDark }
+                }));
+            }
+            
+            // Установка темы на основе предпочтений
+            function setThemeFromPreferences() {
+                // Проверяем сохраненные предпочтения
+                const savedPreference = localStorage.getItem('darkMode');
+                if (savedPreference !== null) {
+                    if (savedPreference === 'enabled') {
+                        document.body.classList.add('dark-mode');
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    }
+                    return;
+                }
+                
+                // Автоопределение на основе системных настроек
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-mode');
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('darkMode', 'enabled');
+                }
+            }
+            
+            // Инициализация при загрузке DOM
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setThemeFromPreferences();
+                    initDarkModeToggle();
+                });
+            } else {
+                setThemeFromPreferences();
+                initDarkModeToggle();
+            }
+            
+            // Отслеживание изменения системных настроек
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (localStorage.getItem('darkMode') === null) {
+                    if (e.matches) {
+                        document.body.classList.add('dark-mode');
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    }
+                }
+            });
+        })();
+        </script>
         <?php
     }
-    
+
     /**
-     * Опции в Customizer
+     * Вывод CSS переменных для цветовых схем
      */
-    public function add_customizer_options($wp_customize) {
-        // Секция темной темы
-        $wp_customize->add_section('atk_ved_dark_mode', array(
-            'title' => 'Темная тема',
-            'priority' => 30,
-        ));
-        
-        // Включить темную тему
-        $wp_customize->add_setting('atk_ved_enable_dark_mode', array(
-            'default' => true,
-            'sanitize_callback' => 'atk_ved_sanitize_checkbox'
-        ));
-        
-        $wp_customize->add_control('atk_ved_enable_dark_mode', array(
-            'label' => 'Включить темную тему',
-            'section' => 'atk_ved_dark_mode',
-            'type' => 'checkbox'
-        ));
-        
-        // Тема по умолчанию
-        $wp_customize->add_setting('atk_ved_dark_mode_default', array(
-            'default' => 'auto',
-            'sanitize_callback' => 'atk_ved_sanitize_select'
-        ));
-        
-        $wp_customize->add_control('atk_ved_dark_mode_default', array(
-            'label' => 'Тема по умолчанию',
-            'section' => 'atk_ved_dark_mode',
-            'type' => 'select',
-            'choices' => array(
-                'light' => 'Светлая',
-                'dark' => 'Темная',
-                'auto' => 'Авто (системная)'
-            )
-        ));
-        
-        // Показывать кнопку переключения
-        $wp_customize->add_setting('atk_ved_show_dark_toggle', array(
-            'default' => true,
-            'sanitize_callback' => 'atk_ved_sanitize_checkbox'
-        ));
-        
-        $wp_customize->add_control('atk_ved_show_dark_toggle', array(
-            'label' => 'Показывать кнопку переключения',
-            'section' => 'atk_ved_dark_mode',
-            'type' => 'checkbox'
-        ));
-        
-        // Переходы между темами
-        $wp_customize->add_setting('atk_ved_dark_mode_transition', array(
-            'default' => true,
-            'sanitize_callback' => 'atk_ved_sanitize_checkbox'
-        ));
-        
-        $wp_customize->add_control('atk_ved_dark_mode_transition', array(
-            'label' => 'Плавные переходы',
-            'section' => 'atk_ved_dark_mode',
-            'type' => 'checkbox'
-        ));
-    }
-    
-    /**
-     * AJAX обработчик переключения темы
-     */
-    public static function handle_theme_switch() {
-        check_ajax_referer('dark_mode_nonce', 'nonce');
-        
-        $theme = sanitize_text_field($_POST['theme'] ?? 'auto');
-        $valid_themes = array('light', 'dark', 'auto');
-        
-        if (!in_array($theme, $valid_themes)) {
-            wp_send_json_error('Invalid theme');
+    public function output_color_scheme_variables(): void {
+        ?>
+        <style>
+        :root {
+            /* Светлая тема (по умолчанию) */
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --bg-tertiary: #f5f5f5;
+            --text-primary: #2c2c2c;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --accent-primary: #e31e24;
+            --accent-secondary: #c01a1f;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
         }
         
-        // Сохраняем выбор пользователя
-        setcookie('atk_ved_theme', $theme, time() + (86400 * 30), '/'); // 30 дней
+        .dark-mode,
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #222222;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #f0f0f0;
+            --text-secondary: #cccccc;
+            --border-color: #404040;
+            --accent-primary: #ff4d4f;
+            --accent-secondary: #ff7875;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --overlay-bg: rgba(0, 0, 0, 0.8);
+        }
         
-        wp_send_json_success(array(
-            'theme' => $theme,
-            'message' => 'Theme switched successfully'
-        ));
+        /* Темная тема для конкретных элементов */
+        .dark-mode body,
+        [data-theme="dark"] body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .dark-mode .site-header,
+        [data-theme="dark"] .site-header {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        
+        .dark-mode .hero-section,
+        [data-theme="dark"] .hero-section {
+            background-color: var(--bg-secondary);
+        }
+        
+        .dark-mode .services-section,
+        [data-theme="dark"] .services-section {
+            background-color: var(--bg-primary);
+        }
+        
+        .dark-mode .service-card,
+        [data-theme="dark"] .service-card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+        
+        .dark-mode .cta-button,
+        [data-theme="dark"] .cta-button {
+            background-color: var(--accent-primary);
+        }
+        
+        .dark-mode .cta-button:hover,
+        [data-theme="dark"] .cta-button:hover {
+            background-color: var(--accent-secondary);
+        }
+        
+        .dark-mode input,
+        .dark-mode textarea,
+        .dark-mode select,
+        [data-theme="dark"] input,
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] select {
+            background-color: var(--bg-tertiary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .dark-mode .modal,
+        [data-theme="dark"] .modal {
+            background-color: var(--overlay-bg);
+        }
+        
+        .dark-mode .modal-content,
+        [data-theme="dark"] .modal-content {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        /* Изменение цветов ссылок */
+        .dark-mode a,
+        [data-theme="dark"] a {
+            color: var(--accent-primary);
+        }
+        
+        .dark-mode a:hover,
+        [data-theme="dark"] a:hover {
+            color: var(--accent-secondary);
+        }
+        
+        /* Адаптация для изображений */
+        .dark-mode img,
+        [data-theme="dark"] img {
+            filter: brightness(0.9);
+        }
+        
+        /* Адаптация для таблиц */
+        .dark-mode table,
+        [data-theme="dark"] table {
+            border-color: var(--border-color);
+        }
+        
+        .dark-mode th,
+        .dark-mode td,
+        [data-theme="dark"] th,
+        [data-theme="dark"] td {
+            border-color: var(--border-color);
+        }
+        </style>
+        <?php
     }
-    
+
     /**
-     * Получение текущей темы
+     * Вывод обработчика системных предпочтений
      */
-    public static function get_current_theme(): string {
-        // Проверяем cookie
-        if (isset($_COOKIE['atk_ved_theme'])) {
-            $theme = sanitize_text_field($_COOKIE['atk_ved_theme']);
-            if (in_array($theme, array('light', 'dark', 'auto'))) {
-                return $theme;
+    public function output_system_preference_handler(): void {
+        ?>
+        <script>
+        // Обработчик системных предпочтений цветовой схемы
+        (function() {
+            'use strict';
+            
+            // Проверяем поддержку matchMedia
+            if (window.matchMedia) {
+                // Настраиваем слушатель изменений системных предпочтений
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                
+                // При изменении системных настроек
+                mediaQuery.addListener(function(e) {
+                    // Если пользователь не сохранил свои предпочтения, используем системные
+                    if (localStorage.getItem('darkMode') === null) {
+                        if (e.matches) {
+                            document.body.classList.add('dark-mode');
+                            document.documentElement.setAttribute('data-theme', 'dark');
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                            document.documentElement.setAttribute('data-theme', 'light');
+                        }
+                    }
+                });
             }
-        }
-        
-        // Возвращаем тему по умолчанию
-        return get_theme_mod('atk_ved_dark_mode_default', 'auto');
+        })();
+        </script>
+        <?php
     }
-    
+
     /**
-     * Добавление класса темы к body
+     * Проверка включена ли темная тема
      */
-    public static function add_body_class($classes) {
-        if (!get_theme_mod('atk_ved_enable_dark_mode', true)) {
-            return $classes;
-        }
-        
-        $theme = self::get_current_theme();
-        $classes[] = 'theme-' . $theme;
-        
-        if (get_theme_mod('atk_ved_dark_mode_transition', true)) {
-            $classes[] = 'theme-transition';
-        }
-        
-        return $classes;
+    public function is_dark_mode_enabled(): bool {
+        $enabled = get_theme_mod( 'atk_ved_dark_mode_enabled', true );
+        return (bool) $enabled;
+    }
+
+    /**
+     * Проверка включена ли опция переключателя
+     */
+    public function is_dark_mode_option_enabled(): bool {
+        $show_toggle = get_theme_mod( 'atk_ved_show_dark_mode_toggle', true );
+        return (bool) $show_toggle;
     }
 }
 
 // Инициализация
-function atk_ved_init_dark_mode() {
-    $dark_mode = ATK_VED_Dark_Mode::get_instance();
-    
-    // Добавляем классы к body
-    add_filter('body_class', array('ATK_VED_Dark_Mode', 'add_body_class'));
-    
-    // AJAX обработчики
-    add_action('wp_ajax_atk_ved_switch_theme', array('ATK_VED_Dark_Mode', 'handle_theme_switch'));
-    add_action('wp_ajax_nopriv_atk_ved_switch_theme', array('ATK_VED_Dark_Mode', 'handle_theme_switch'));
+function atk_ved_init_dark_mode(): void {
+    ATK_VED_Dark_Mode::get_instance();
 }
-add_action('after_setup_theme', 'atk_ved_init_dark_mode');
-
-// Санитизация функции
-function atk_ved_sanitize_checkbox($checked) {
-    return ((isset($checked) && true == $checked) ? true : false);
-}
-
-function atk_ved_sanitize_select($input, $setting) {
-    $input = sanitize_key($input);
-    $choices = $setting->manager->get_control($setting->id)->choices;
-    return (array_key_exists($input, $choices) ? $input : $setting->default);
-}
+add_action( 'after_setup_theme', 'atk_ved_init_dark_mode' );

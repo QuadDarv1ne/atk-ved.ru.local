@@ -1,400 +1,407 @@
 <?php
 /**
- * Улучшения доступности (Accessibility Enhancements)
- * 
+ * Accessibility Enhancements - Дополнительные улучшения доступности
+ *
  * @package ATK_VED
- * @since 2.2.0
+ * @since 3.2.0
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Добавление улучшений доступности
+ * Класс для дополнительных улучшений доступности
  */
-function atk_ved_accessibility_enhancements() {
-    // Добавляем стили для индикатора фокуса
-    add_action('wp_head', 'atk_ved_add_focus_styles');
-    
-    // Улучшаем навигацию
-    add_filter('wp_nav_menu_items', 'atk_ved_add_skip_links', 10, 2);
-    
-    // Улучшаем изображения
-    add_filter('wp_get_attachment_image_attributes', 'atk_ved_add_img_alt_attributes', 10, 2);
-    
-    // Добавляем ARIA-роли
-    add_action('wp_footer', 'atk_ved_add_aria_landmarks');
-    
-    // Улучшаем формы
-    add_action('wp_footer', 'atk_ved_add_form_accessibility');
-    
-    // Добавляем возможность увеличения текста
-    add_action('wp_footer', 'atk_ved_add_text_scaling_controls');
-}
-add_action('after_setup_theme', 'atk_ved_accessibility_enhancements');
+class ATK_VED_Accessibility_Enhancements {
 
-/**
- * Добавление стилей для индикатора фокуса
- */
-function atk_ved_add_focus_styles() {
-    echo '<style>
-        /* Улучшенный индикатор фокуса для доступности */
-        a:focus,
-        button:focus,
-        input:focus,
-        textarea:focus,
-        select:focus,
-        *[tabindex]:focus {
-            outline: 3px solid #e31e24;
-            outline-offset: 2px;
-            border-radius: 2px;
-        }
-        
-        /* Убираем фокус для мышиных пользователей */
-        .js-focus-visible :focus:not(.focus-visible) {
-            outline: none;
-        }
-        
-        .js-focus-visible .focus-visible {
-            outline: 3px solid #e31e24;
-            outline-offset: 2px;
-            border-radius: 2px;
-        }
-        
-        /* Скрытие вспомогательных элементов для sighted users, но доступных для screen readers */
-        .screen-reader-text {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        .screen-reader-text:focus {
-            position: static;
-            width: auto;
-            height: auto;
-            margin: 0;
-            overflow: visible;
-            clip: auto;
-            white-space: normal;
-            padding: 15px 23px 14px;
-            background: #f1f1f1;
-            color: #0073aa;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 3px;
-            box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
-            z-index: 100000;
-        }
-    </style>';
-}
+    private static ?self $instance = null;
 
-/**
- * Добавление ссылок для пропуска навигации
- */
-function atk_ved_add_skip_links($items, $args) {
-    // Добавляем ссылки для пропуска только в главное меню
-    if ($args->theme_location === 'primary') {
-        $skip_links = '
-            <div class="skip-links" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden;">
-                <a class="screen-reader-text skip-link" href="#main-content">Перейти к основному содержанию</a>
-                <a class="screen-reader-text skip-link" href="#main-navigation">Перейти к навигации</a>
-                <a class="screen-reader-text skip-link" href="#search-form">Перейти к поиску</a>
-            </div>';
-        
-        return $skip_links . $items;
+    public static function get_instance(): self {
+        if ( self::$instance === null ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
-    return $items;
-}
 
-/**
- * Улучшение атрибутов alt для изображений
- */
-function atk_ved_add_img_alt_attributes($attr, $attachment) {
-    if (empty($attr['alt'])) {
-        $attachment_title = get_the_title($attachment->ID);
-        if (!empty($attachment_title)) {
-            $attr['alt'] = $attachment_title;
-        } else {
-            $attr['alt'] = 'Изображение';
-        }
+    private function __construct() {
+        // Улучшенная навигация с клавиатуры
+        add_action( 'wp_footer', [ $this, 'output_enhanced_keyboard_navigation' ], 30 );
+        
+        // Улучшенная ARIA разметка
+        add_filter( 'body_class', [ $this, 'add_enhanced_a11y_classes' ] );
+        
+        // Улучшения для вспомогательных технологий
+        add_action( 'wp_head', [ $this, 'output_a11y_improvements' ], 20 );
     }
-    return $attr;
-}
 
-/**
- * Добавление ARIA-ландшафта
- */
-function atk_ved_add_aria_landmarks() {
-    echo '<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Добавляем ARIA роли к основным областям
-            const mainContent = document.querySelector("main, [role=\"main\"]") || document.querySelector("body");
-            if (mainContent && !mainContent.hasAttribute("role")) {
-                mainContent.setAttribute("role", "main");
-                mainContent.setAttribute("aria-label", "Основное содержание");
-            }
-            
-            const header = document.querySelector("header") || document.querySelector(".site-header");
-            if (header) {
-                header.setAttribute("role", "banner");
-                header.setAttribute("aria-label", "Шапка сайта");
-            }
-            
-            const navigation = document.querySelector("nav") || document.querySelector(".main-nav");
-            if (navigation) {
-                navigation.setAttribute("role", "navigation");
-                navigation.setAttribute("aria-label", "Основная навигация");
-            }
-            
-            const footer = document.querySelector("footer") || document.querySelector(".site-footer");
-            if (footer) {
-                footer.setAttribute("role", "contentinfo");
-                footer.setAttribute("aria-label", "Подвал сайта");
-            }
-            
-            // Добавляем ARIA для кнопок
-            const buttons = document.querySelectorAll("button:not([aria-label]):not([aria-describedby])");
-            buttons.forEach(function(button) {
-                if (!button.getAttribute("title") && button.textContent.trim()) {
-                    button.setAttribute("aria-label", button.textContent.trim());
-                }
-            });
-            
-            // Добавляем ARIA для форм
-            const forms = document.querySelectorAll("form");
-            forms.forEach(function(form, index) {
-                if (!form.hasAttribute("aria-label") && !form.hasAttribute("aria-labelledby")) {
-                    form.setAttribute("aria-label", "Форма " + (index + 1));
-                }
-            });
-            
-            // Добавляем ARIA для всплывающих окон
-            const modals = document.querySelectorAll("[id*=\"modal\"], .modal");
-            modals.forEach(function(modal, index) {
-                if (modal.hasAttribute("role") || modal.classList.contains("modal")) {
-                    modal.setAttribute("role", "dialog");
-                    modal.setAttribute("aria-modal", "true");
-                    if (!modal.hasAttribute("aria-label") && !modal.hasAttribute("aria-labelledby")) {
-                        modal.setAttribute("aria-label", "Модальное окно " + (index + 1));
-                    }
-                }
-            });
-        });
-    </script>';
-}
+    /**
+     * Добавление улучшенных классов доступности
+     */
+    public function add_enhanced_a11y_classes( array $classes ): array {
+        $classes[] = 'a11y-ready';
+        
+        // Проверка, включена ли навигация с клавиатуры
+        if ( isset( $_GET['keyboard-navigation'] ) || $this->is_keyboard_navigation_active() ) {
+            $classes[] = 'keyboard-navigation-active';
+        }
+        
+        return $classes;
+    }
 
-/**
- * Улучшение доступности форм
- */
-function atk_ved_add_form_accessibility() {
-    echo '<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Добавляем ARIA для полей форм
-            const inputs = document.querySelectorAll("input, textarea, select");
-            inputs.forEach(function(input) {
-                if (!input.hasAttribute("aria-label") && 
-                    !input.hasAttribute("aria-labelledby") &&
-                    !input.id) {
+    /**
+     * Проверка активности навигации с клавиатуры
+     */
+    private function is_keyboard_navigation_active(): bool {
+        // Проверяем, был ли последний ввод с клавиатуры
+        return isset( $_COOKIE['keyboard-navigation'] ) && $_COOKIE['keyboard-navigation'] === 'true';
+    }
+
+    /**
+     * Вывод улучшенной навигации с клавиатуры
+     */
+    public function output_enhanced_keyboard_navigation(): void {
+        ?>
+        <script>
+        (function() {
+            'use strict';
+            
+            // Обнаружение навигации с клавиатуры
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab' || e.keyCode === 9) {
+                    // Устанавливаем cookie для отслеживания навигации с клавиатуры
+                    document.body.classList.add('keyboard-navigation');
+                    document.documentElement.classList.add('keyboard-navigation');
                     
-                    // Пытаемся найти связанную метку
-                    const parentLabel = input.closest("label");
-                    if (parentLabel && parentLabel.textContent.trim()) {
-                        input.setAttribute("aria-label", parentLabel.textContent.trim());
-                    } else {
-                        const label = document.querySelector("label[for=\"" + input.name + "\"]");
-                        if (label && label.textContent.trim()) {
-                            input.setAttribute("aria-label", label.textContent.trim());
-                        }
-                    }
-                }
-                
-                // Для обязательных полей
-                if (input.hasAttribute("required")) {
-                    input.setAttribute("aria-required", "true");
+                    // Устанавливаем cookie на 30 минут
+                    var date = new Date();
+                    date.setTime(date.getTime() + (30 * 60 * 1000));
+                    document.cookie = "keyboard-navigation=true; expires=" + date.toUTCString() + "; path=/";
                 }
             });
             
-            // Добавляем обработчик для уведомлений об ошибках
-            const formErrors = document.querySelectorAll(".form-error");
-            formErrors.forEach(function(error, index) {
-                const relatedInput = error.previousElementSibling;
-                if (relatedInput && relatedInput.tagName.match(/INPUT|TEXTAREA|SELECT/i)) {
-                    const errorId = "error-" + Date.now() + "-" + index;
-                    error.id = errorId;
-                    relatedInput.setAttribute("aria-describedby", errorId);
-                    relatedInput.setAttribute("aria-invalid", "true");
-                }
+            // Обнаружение мышиной навигации
+            document.addEventListener('mousedown', function() {
+                document.body.classList.remove('keyboard-navigation');
+                document.documentElement.classList.remove('keyboard-navigation');
+                
+                // Удаляем cookie
+                document.cookie = "keyboard-navigation=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             });
-        });
-    </script>';
-}
-
-/**
- * Добавление элементов управления масштабированием текста
- */
-function atk_ved_add_text_scaling_controls() {
-    echo '<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Добавляем кнопки управления размером текста
-            if (!document.querySelector(".text-scaling-controls")) {
-                const controlsHTML = `
-                    <div class="text-scaling-controls" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; gap: 10px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                        <button id="text-increase" aria-label="Увеличить размер текста" style="padding: 8px 12px; border: 1px solid #ddd; background: #f8f8f8; cursor: pointer;">A+</button>
-                        <button id="text-decrease" aria-label="Уменьшить размер текста" style="padding: 8px 12px; border: 1px solid #ddd; background: #f8f8f8; cursor: pointer;">A-</button>
-                        <button id="text-reset" aria-label="Сбросить размер текста" style="padding: 8px 12px; border: 1px solid #ddd; background: #f8f8f8; cursor: pointer;">A</button>
-                    </div>
-                `;
+            
+            // Улучшенное управление фокусом для модальных окон
+            function setupModalFocusManagement() {
+                const modals = document.querySelectorAll('[role="dialog"], .modal[aria-modal="true"]');
                 
-                document.body.insertAdjacentHTML("beforeend", controlsHTML);
-                
-                let currentScale = 1;
-                const minScale = 0.8;
-                const maxScale = 1.5;
-                const scaleStep = 0.1;
-                
-                document.getElementById("text-increase").addEventListener("click", function() {
-                    if (currentScale < maxScale) {
-                        currentScale += scaleStep;
-                        document.body.style.transform = "scale(" + currentScale + ")";
-                        document.body.style.transformOrigin = "top left";
-                    }
-                });
-                
-                document.getElementById("text-decrease").addEventListener("click", function() {
-                    if (currentScale > minScale) {
-                        currentScale -= scaleStep;
-                        document.body.style.transform = "scale(" + currentScale + ")";
-                        document.body.style.transformOrigin = "top left";
-                    }
-                });
-                
-                document.getElementById("text-reset").addEventListener("click", function() {
-                    currentScale = 1;
-                    document.body.style.transform = "scale(1)";
-                });
-            }
-        });
-    </script>';
-}
-
-/**
- * Улучшение доступности для аккордеонов
- */
-function atk_ved_enhance_accordion_accessibility() {
-    echo '<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Улучшаем доступность аккордеонов
-            const accordions = document.querySelectorAll(".accordion-item, .faq-item");
-            accordions.forEach(function(item, index) {
-                const header = item.querySelector(".accordion-header, .faq-question") || item.querySelector("button, [role=\"button\"]");
-                if (header) {
-                    header.setAttribute("role", "button");
-                    header.setAttribute("tabindex", "0");
-                    header.setAttribute("aria-expanded", item.classList.contains("is-active") ? "true" : "false");
+                modals.forEach(function(modal) {
+                    // Сохраняем элемент, который имел фокус до открытия модального окна
+                    let previouslyFocusedElement = document.activeElement;
                     
-                    const content = item.querySelector(".accordion-body, .faq-answer") || header.nextElementSibling;
-                    if (content) {
-                        const contentId = "accordion-content-" + index;
-                        content.id = contentId;
-                        header.setAttribute("aria-controls", contentId);
+                    // Находим все интерактивные элементы в модальном окне
+                    const focusableElements = modal.querySelectorAll(
+                        'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+                    );
+                    
+                    if (focusableElements.length === 0) return;
+                    
+                    const firstFocusable = focusableElements[0];
+                    const lastFocusable = focusableElements[focusableElements.length - 1];
+                    
+                    // Фокус на первый элемент при открытии модального окна
+                    if (modal.hasAttribute('aria-hidden') && modal.getAttribute('aria-hidden') === 'false') {
+                        firstFocusable.focus();
                     }
                     
-                    // Обработчики клавиатуры
-                    header.addEventListener("keydown", function(e) {
-                        if (e.key === "Enter" || e.key === " ") {
+                    // Обработка Tab и Shift+Tab внутри модального окна
+                    modal.addEventListener('keydown', function(e) {
+                        if (e.key !== 'Tab') return;
+                        
+                        if (e.shiftKey && document.activeElement === firstFocusable) {
+                            // Если нажат Shift+Tab на первом элементе, перемещаем фокус на последний
                             e.preventDefault();
-                            header.click();
+                            lastFocusable.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                            // Если нажат Tab на последнем элементе, перемещаем фокус на первый
+                            e.preventDefault();
+                            firstFocusable.focus();
                         }
                     });
-                }
-            });
-        });
-    </script>';
-}
-add_action('wp_footer', 'atk_ved_enhance_accordion_accessibility');
-
-/**
- * Улучшение доступности для табов
- */
-function atk_ved_enhance_tabs_accessibility() {
-    echo '<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Улучшаем доступность табов
-            const tabLists = document.querySelectorAll(".tabs");
-            tabLists.forEach(function(tabList) {
-                const tabs = tabList.querySelectorAll(".tab-button");
-                const panels = tabList.querySelectorAll(".tab-panel");
-                
-                tabs.forEach(function(tab, index) {
-                    tab.setAttribute("role", "tab");
-                    tab.setAttribute("tabindex", "-1"); // Только активный таб получает tabindex="0"
                     
-                    const panel = panels[index];
-                    if (panel) {
-                        const panelId = "tab-panel-" + Date.now() + "-" + index;
-                        panel.id = panelId;
-                        tab.setAttribute("aria-controls", panelId);
-                        panel.setAttribute("role", "tabpanel");
-                        panel.setAttribute("aria-labelledby", tab.id || "tab-" + index);
-                        
-                        if (tab.classList.contains("is-active")) {
-                            tab.setAttribute("tabindex", "0");
-                            tab.setAttribute("aria-selected", "true");
-                            panel.setAttribute("aria-hidden", "false");
-                        } else {
-                            tab.setAttribute("aria-selected", "false");
-                            panel.setAttribute("aria-hidden", "true");
+                    // Возвращаем фокус на элемент, который был сфокусирован до открытия модального окна
+                    modal.addEventListener('transitionend', function() {
+                        if (this.classList.contains('closed')) {
+                            if (previouslyFocusedElement && previouslyFocusedElement.focus) {
+                                previouslyFocusedElement.focus();
+                            }
                         }
+                    });
+                });
+            }
+            
+            // Улучшенное объявление для вспомогательных технологий
+            window.AtkA11yAnnouncer = {
+                container: null,
+                
+                init: function() {
+                    // Создаем контейнер для объявления
+                    this.container = document.getElementById('a11y-announcer');
+                    
+                    if (!this.container) {
+                        this.container = document.createElement('div');
+                        this.container.id = 'a11y-announcer';
+                        this.container.setAttribute('aria-live', 'polite');
+                        this.container.setAttribute('aria-atomic', 'true');
+                        this.container.setAttribute('aria-relevant', 'additions text');
+                        this.container.style.position = 'absolute';
+                        this.container.style.left = '-10000px';
+                        this.container.style.top = 'auto';
+                        this.container.style.width = '1px';
+                        this.container.style.height = '1px';
+                        this.container.style.overflow = 'hidden';
+                        
+                        document.body.appendChild(this.container);
+                    }
+                },
+                
+                announce: function(message, priority) {
+                    if (!this.container) {
+                        this.init();
+                    }
+                    
+                    // Устанавливаем приоритет
+                    if (priority === 'assertive') {
+                        this.container.setAttribute('aria-live', 'assertive');
+                    } else {
+                        this.container.setAttribute('aria-live', 'polite');
+                    }
+                    
+                    // Очищаем и устанавливаем новое сообщение
+                    this.container.textContent = '';
+                    // Даем браузеру немного времени, затем устанавливаем сообщение
+                    setTimeout(function() {
+                        window.AtkA11yAnnouncer.container.textContent = message;
+                    }, 100);
+                    
+                    // Сбрасываем приоритет обратно на polite
+                    if (priority === 'assertive') {
+                        setTimeout(function() {
+                            window.AtkA11yAnnouncer.container.setAttribute('aria-live', 'polite');
+                        }, 100);
+                    }
+                }
+            };
+            
+            // Инициализируем при загрузке DOM
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setupModalFocusManagement();
+                    window.AtkA11yAnnouncer.init();
+                });
+            } else {
+                setupModalFocusManagement();
+                window.AtkA11yAnnouncer.init();
+            }
+            
+            // Улучшенная обработка ошибок форм для вспомогательных технологий
+            function enhanceFormErrorHandling() {
+                // Обновляем обработку ошибок форм
+                document.addEventListener('invalid', function(e) {
+                    const field = e.target;
+                    const errorMessage = field.validationMessage;
+                    
+                    if (errorMessage) {
+                        // Добавляем ARIA-описание ошибки
+                        const errorId = field.id + '-error';
+                        let errorElement = document.getElementById(errorId);
+                        
+                        if (!errorElement) {
+                            errorElement = document.createElement('div');
+                            errorElement.id = errorId;
+                            errorElement.className = 'sr-only form-error-message';
+                            errorElement.setAttribute('aria-live', 'assertive');
+                            errorElement.setAttribute('role', 'alert');
+                            document.body.appendChild(errorElement);
+                        }
+                        
+                        errorElement.textContent = errorMessage;
+                        field.setAttribute('aria-describedby', errorId);
+                        
+                        // Объявляем ошибку через вспомогательные технологии
+                        window.AtkA11yAnnouncer.announce(errorMessage, 'assertive');
+                    }
+                }, true);
+                
+                // Обработка успешных отправок форм
+                document.addEventListener('submit', function(e) {
+                    const form = e.target;
+                    if (form.classList.contains('ajax-form')) {
+                        // При успешной отправке формы объявляем результат
+                        form.addEventListener('ajaxSuccess', function() {
+                            window.AtkA11yAnnouncer.announce('<?php esc_attr_e( 'Форма успешно отправлена', 'atk-ved' ); ?>', 'polite');
+                        });
                     }
                 });
+            }
+            
+            // Инициализация улучшенной обработки ошибок форм
+            enhanceFormErrorHandling();
+            
+            // Улучшенная поддержка пользовательских настроек доступности
+            function applyUserAccessibilityPreferences() {
+                // Проверяем сохраненные настройки пользователя
+                const highContrast = localStorage.getItem('a11y-high-contrast');
+                const fontSize = localStorage.getItem('a11y-font-size');
+                const reducedMotion = localStorage.getItem('a11y-reduced-motion');
                 
-                // Добавляем навигацию клавишами
-                tabs.forEach(function(tab) {
-                    tab.addEventListener("keydown", function(e) {
-                        let newTab;
-                        switch(e.key) {
-                            case "ArrowLeft":
-                            case "ArrowUp":
-                                e.preventDefault();
-                                newTab = tab.previousElementSibling || tabs[tabs.length - 1];
-                                break;
-                            case "ArrowRight":
-                            case "ArrowDown":
-                                e.preventDefault();
-                                newTab = tab.nextElementSibling || tabs[0];
-                                break;
-                            case "Home":
-                                e.preventDefault();
-                                newTab = tabs[0];
-                                break;
-                            case "End":
-                                e.preventDefault();
-                                newTab = tabs[tabs.length - 1];
-                                break;
-                        }
-                        
-                        if (newTab) {
-                            tabs.forEach(t => t.setAttribute("tabindex", "-1"));
-                            newTab.setAttribute("tabindex", "0");
-                            newTab.focus();
-                            newTab.click();
-                        }
-                    });
-                });
-            });
-        });
-    </script>';
+                if (highContrast === 'true') {
+                    document.documentElement.classList.add('high-contrast-mode');
+                }
+                
+                if (fontSize) {
+                    document.documentElement.style.setProperty('--a11y-font-scale', fontSize);
+                }
+                
+                if (reducedMotion === 'true') {
+                    document.documentElement.classList.add('reduced-motion-mode');
+                }
+            }
+            
+            // Применяем настройки при загрузке
+            applyUserAccessibilityPreferences();
+        })();
+        </script>
+        <?php
+    }
+
+    /**
+     * Вывод улучшений для вспомогательных технологий
+     */
+    public function output_a11y_improvements(): void {
+        ?>
+        <style>
+        /* Улучшения для пользователей с нарушениями зрения */
+        .high-contrast-mode {
+            filter: contrast(1.5) brightness(1.1);
+        }
+        
+        /* Улучшения для пользователей с нарушениями восприятия движений */
+        .reduced-motion-mode * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+        
+        /* Улучшенные индикаторы фокуса */
+        .keyboard-navigation :focus,
+        .keyboard-navigation :focus-visible {
+            outline: 3px solid #005fcc;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+        
+        /* Улучшенные индикаторы фокуса для темной темы */
+        .dark-mode.keyboard-navigation :focus,
+        .dark-mode.keyboard-navigation :focus-visible {
+            outline: 3px solid #4d9eff;
+            outline-offset: 2px;
+        }
+        
+        /* Улучшенная видимость элементов управления */
+        .keyboard-navigation .control-element,
+        .keyboard-navigation button,
+        .keyboard-navigation a,
+        .keyboard-navigation input,
+        .keyboard-navigation select,
+        .keyboard-navigation textarea,
+        .keyboard-navigation [tabindex]:not([tabindex="-1"]) {
+            position: relative;
+        }
+        
+        .keyboard-navigation .control-element::after,
+        .keyboard-navigation button::after,
+        .keyboard-navigation a::after,
+        .keyboard-navigation input::after,
+        .keyboard-navigation select::after,
+        .keyboard-navigation textarea::after,
+        .keyboard-navigation [tabindex]::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            pointer-events: none;
+        }
+        
+        .keyboard-navigation .control-element:focus::after,
+        .keyboard-navigation button:focus::after,
+        .keyboard-navigation a:focus::after,
+        .keyboard-navigation input:focus::after,
+        .keyboard-navigation select:focus::after,
+        .keyboard-navigation textarea:focus::after,
+        .keyboard-navigation [tabindex]:focus::after {
+            border-color: #005fcc;
+        }
+        
+        /* Тема для высокой контрастности */
+        .high-contrast-mode {
+            background: #000 !important;
+            color: #fff !important;
+        }
+        
+        .high-contrast-mode a,
+        .high-contrast-mode button,
+        .high-contrast-mode input,
+        .high-contrast-mode select,
+        .high-contrast-mode textarea {
+            background: #fff !important;
+            color: #000 !important;
+            border: 2px solid #fff !important;
+        }
+        
+        .high-contrast-mode .btn,
+        .high-contrast-mode .button {
+            background: #fff !important;
+            color: #000 !important;
+            border: 2px solid #000 !important;
+        }
+        
+        .high-contrast-mode .btn:hover,
+        .high-contrast-mode .button:hover {
+            background: #000 !important;
+            color: #fff !important;
+        }
+        
+        /* Скрытие вспомогательных элементов */
+        .sr-only {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+        
+        .sr-only.focusable:active,
+        .sr-only.focusable:focus {
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+            clip: auto !important;
+            white-space: normal !important;
+        }
+        </style>
+        <?php
+    }
 }
-add_action('wp_footer', 'atk_ved_enhance_tabs_accessibility');
+
+// Инициализация
+function atk_ved_init_accessibility_enhancements(): void {
+    ATK_VED_Accessibility_Enhancements::get_instance();
+}
+add_action( 'after_setup_theme', 'atk_ved_init_accessibility_enhancements' );

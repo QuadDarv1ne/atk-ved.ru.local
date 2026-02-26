@@ -1,515 +1,296 @@
 <?php
 /**
- * Advanced Security System
- * Расширенная система безопасности
- * 
+ * Advanced Security - Расширенные меры безопасности
+ *
  * @package ATK_VED
- * @since 2.9.1
+ * @since 3.2.0
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Класс для расширенной безопасности
  */
 class ATK_VED_Advanced_Security {
-    
-    /**
-     * Инициализация системы безопасности
-     */
-    public static function init(): void {
-        // Базовые меры безопасности
-        self::implement_basic_security();
-        
-        // Расширенные меры
-        self::implement_advanced_security();
-        
-        // AJAX обработчики
-        add_action('wp_ajax_atk_ved_security_scan', array(__CLASS__, 'ajax_security_scan'));
-        add_action('wp_ajax_atk_ved_security_report', array(__CLASS__, 'ajax_security_report'));
-        add_action('wp_ajax_atk_ved_security_fix', array(__CLASS__, 'ajax_security_fix'));
-        
-        // Планирование регулярных проверок
-        if (!wp_next_scheduled('atk_ved_daily_security_check')) {
-            wp_schedule_event(time(), 'daily', 'atk_ved_daily_security_check');
+
+    private static ?self $instance = null;
+
+    public static function get_instance(): self {
+        if ( self::$instance === null ) {
+            self::$instance = new self();
         }
-        add_action('atk_ved_daily_security_check', array(__CLASS__, 'scheduled_security_check'));
+        return self::$instance;
     }
-    
-    /**
-     * Реализация базовых мер безопасности
-     */
-    private static function implement_basic_security(): void {
-        // Скрытие версии WordPress
-        remove_action('wp_head', 'wp_generator');
-        add_filter('the_generator', '__return_empty_string');
+
+    private function __construct() {
+        // Установка заголовков безопасности
+        add_action( 'wp_headers', [ $this, 'set_security_headers' ] );
+        add_action( 'send_headers', [ $this, 'send_security_headers' ] );
         
-        // Отключение редактирования файлов
-        if (!defined('DISALLOW_FILE_EDIT')) {
-            define('DISALLOW_FILE_EDIT', true);
-        }
+        // Дополнительная защита от XSS
+        add_filter( 'wp_kses_allowed_html', [ $this, 'enhance_kses_config' ], 10, 2 );
         
-        // Защита wp-config.php
-        add_action('init', function() {
-            if (strpos($_SERVER['REQUEST_URI'] ?? '', 'wp-config.php') !== false) {
-                status_header(403);
-                wp_die('Access forbidden', 'Forbidden', array('response' => 403));
-            }
-        });
+        // Защита от CSRF
+        add_action( 'wp_ajax_nopriv_atk_verify_nonce', [ $this, 'verify_nonce_callback' ] );
+        add_action( 'wp_ajax_atk_verify_nonce', [ $this, 'verify_nonce_callback' ] );
         
-        // Отключение XML-RPC
-        add_filter('xmlrpc_enabled', '__return_false');
+        // Защита от brute force атак
+        add_action( 'wp_login_failed', [ $this, 'log_failed_login_attempts' ] );
+        add_filter( 'authenticate', [ $this, 'check_brute_force_attack' ], 99 );
         
-        // Скрытие информации о пользователях в REST API
-        add_filter('rest_authentication_errors', function($result) {
-            if (!is_user_logged_in() && !is_wp_error($result)) {
-                return new WP_Error('rest_forbidden', 'REST API access restricted', array('status' => 403));
-            }
-            return $result;
-        });
+        // Безопасность файлов
+        add_filter( 'wp_handle_upload_prefilter', [ $this, 'secure_file_upload' ] );
+        
+        // Защита от clickjacking
+        add_action( 'wp_headers', [ $this, 'add_frame_options_header' ] );
     }
-    
+
     /**
-     * Реализация расширенных мер безопасности
+     * Установка заголовков безопасности
      */
-    private static function implement_advanced_security(): void {
-        // Защита от брутфорса
-        add_action('wp_login_failed', array(__CLASS__, 'handle_login_failure'));
-        add_action('wp_login', array(__CLASS__, 'handle_successful_login'));
+    public function set_security_headers( array $headers ): array {
+        // Content Security Policy
+        $csp_directives = [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com",
+            "img-src 'self' data: https: blob:",
+            "connect-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net",
+            "frame-src 'self' https://www.youtube.com https://player.vimeo.com",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'self'",
+        ];
+
+        $headers['Content-Security-Policy'] = implode( '; ', $csp_directives );
         
-        // Защита от SQL инъекций
-        add_filter('query', array(__CLASS__, 'sanitize_sql_queries'));
+        // Strict Transport Security
+        $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload';
         
-        // Защита от XSS
-        add_filter('wp_kses_allowed_html', array(__CLASS__, 'restrict_allowed_html'), 10, 2);
+        // X-Content-Type-Options
+        $headers['X-Content-Type-Options'] = 'nosniff';
         
-        // Защита заголовков
-        add_action('send_headers', array(__CLASS__, 'add_security_headers'));
+        // X-Frame-Options
+        $headers['X-Frame-Options'] = 'SAMEORIGIN';
         
-        // Защита от hotlinking
-        add_action('init', array(__CLASS__, 'prevent_hotlinking'));
+        // Referrer Policy
+        $headers['Referrer-Policy'] = 'strict-origin-when-cross-origin';
         
-        // Мониторинг подозрительной активности
-        add_action('init', array(__CLASS__, 'monitor_suspicious_activity'));
+        // Permissions Policy
+        $headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()';
+        
+        return $headers;
     }
-    
+
     /**
-     * Обработка неудачной попытки входа
+     * Отправка заголовков безопасности
      */
-    public static function handle_login_failure(string $username): void {
-        $ip = self::get_client_ip();
-        $attempts = get_transient("login_attempts_{$ip}") ?: 0;
-        
-        // Увеличиваем счетчик попыток
-        $attempts++;
-        set_transient("login_attempts_{$ip}", $attempts, 15 * MINUTE_IN_SECONDS);
-        
-        // Блокировка при превышении лимита
-        if ($attempts >= 5) {
-            self::log_security_event('Brute force attempt blocked', array(
-                'ip' => $ip,
-                'username' => $username,
-                'attempts' => $attempts
-            ));
+    public function send_security_headers(): void {
+        if ( ! headers_sent() ) {
+            // Content Security Policy
+            $csp_directives = [
+                "default-src 'self'",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net",
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+                "font-src 'self' https://fonts.gstatic.com",
+                "img-src 'self' data: https: blob:",
+                "connect-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net",
+                "frame-src 'self' https://www.youtube.com https://player.vimeo.com",
+                "object-src 'none'",
+                "base-uri 'self'",
+                "form-action 'self'",
+                "frame-ancestors 'self'",
+            ];
+
+            header( 'Content-Security-Policy: ' . implode( '; ', $csp_directives ), false );
             
-            // Добавляем IP в список заблокированных
-            $blocked_ips = get_option('atk_blocked_ips', array());
-            $blocked_ips[$ip] = time() + (24 * HOUR_IN_SECONDS); // Блокировка на 24 часа
-            update_option('atk_blocked_ips', $blocked_ips);
-        }
-    }
-    
-    /**
-     * Обработка успешного входа
-     */
-    public static function handle_successful_login(string $user_login): void {
-        $ip = self::get_client_ip();
-        
-        // Очищаем счетчик попыток
-        delete_transient("login_attempts_{$ip}");
-        
-        // Логируем успешный вход
-        self::log_security_event('Successful login', array(
-            'username' => $user_login,
-            'ip' => $ip
-        ));
-    }
-    
-    /**
-     * Санитизация SQL запросов
-     */
-    public static function sanitize_sql_queries(string $query): string {
-        // Проверка на опасные паттерны
-        $dangerous_patterns = array(
-            '/\b(UNION|SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER)\b/i',
-            '/(\.\.\/)+/',
-            '/(;|--|#)/'
-        );
-        
-        foreach ($dangerous_patterns as $pattern) {
-            if (preg_match($pattern, $query)) {
-                self::log_security_event('Suspicious SQL query detected', array(
-                    'query' => $query,
-                    'pattern' => $pattern
-                ));
-                
-                // Возвращаем безопасный запрос
-                return "SELECT 1";
-            }
-        }
-        
-        return $query;
-    }
-    
-    /**
-     * Ограничение разрешенного HTML
-     */
-    public static function restrict_allowed_html(array $tags, string $context): array {
-        if ($context === 'post') {
-            // Удаляем потенциально опасные теги
-            unset($tags['script'], $tags['iframe'], $tags['object'], $tags['embed']);
+            // Strict Transport Security
+            header( 'Strict-Transport-Security: max-age=31536000; includeSubDomains; preload', false );
             
-            // Ограничиваем атрибуты
-            if (isset($tags['a'])) {
-                $tags['a'] = array('href' => true, 'title' => true);
-            }
-        }
-        
-        return $tags;
-    }
-    
-    /**
-     * Добавление заголовков безопасности
-     */
-    public static function add_security_headers(): void {
-        $headers = array(
-            'X-Content-Type-Options' => 'nosniff',
-            'X-Frame-Options' => 'SAMEORIGIN',
-            'X-XSS-Protection' => '1; mode=block',
-            'Referrer-Policy' => 'strict-origin-when-cross-origin',
-            'Permissions-Policy' => 'geolocation=(), microphone=(), camera=()',
-            'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains; preload'
-        );
-        
-        foreach ($headers as $header => $value) {
-            header("{$header}: {$value}");
-        }
-    }
-    
-    /**
-     * Предотвращение hotlinking
-     */
-    public static function prevent_hotlinking(): void {
-        if (!is_admin() && isset($_SERVER['HTTP_REFERER'])) {
-            $referer = $_SERVER['HTTP_REFERER'];
-            $site_url = home_url();
+            // X-Content-Type-Options
+            header( 'X-Content-Type-Options: nosniff', false );
             
-            // Проверяем, что запрос идет не с нашего сайта
-            if (strpos($referer, $site_url) === false) {
-                $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-                
-                // Проверка на изображения
-                if (preg_match('/\.(jpg|jpeg|png|gif|webp|pdf|zip)$/i', $request_uri)) {
-                    status_header(403);
-                    wp_die('Direct access forbidden', 'Forbidden', array('response' => 403));
-                }
-            }
-        }
-    }
-    
-    /**
-     * Мониторинг подозрительной активности
-     */
-    public static function monitor_suspicious_activity(): void {
-        // Проверка заблокированных IP
-        $blocked_ips = get_option('atk_blocked_ips', array());
-        $current_ip = self::get_client_ip();
-        
-        if (isset($blocked_ips[$current_ip]) && $blocked_ips[$current_ip] > time()) {
-            status_header(403);
-            wp_die('Your IP has been temporarily blocked due to security concerns', 'Access Denied', array('response' => 403));
-        }
-        
-        // Очистка устаревших записей
-        foreach ($blocked_ips as $ip => $expire_time) {
-            if ($expire_time < time()) {
-                unset($blocked_ips[$ip]);
-            }
-        }
-        update_option('atk_blocked_ips', $blocked_ips);
-    }
-    
-    /**
-     * AJAX сканирование безопасности
-     */
-    public static function ajax_security_scan(): void {
-        check_ajax_referer('atk_ved_nonce', 'nonce');
-        
-        if (!current_user_can('manage_options')) {
-            wp_die('Unauthorized');
-        }
-        
-        $scan_results = self::perform_security_scan();
-        wp_send_json_success($scan_results);
-    }
-    
-    /**
-     * AJAX отчет по безопасности
-     */
-    public static function ajax_security_report(): void {
-        check_ajax_referer('atk_ved_nonce', 'nonce');
-        
-        if (!current_user_can('manage_options')) {
-            wp_die('Unauthorized');
-        }
-        
-        $report = self::generate_security_report();
-        wp_send_json_success($report);
-    }
-    
-    /**
-     * AJAX исправление проблем безопасности
-     */
-    public static function ajax_security_fix(): void {
-        check_ajax_referer('atk_ved_nonce', 'nonce');
-        
-        if (!current_user_can('manage_options')) {
-            wp_die('Unauthorized');
-        }
-        
-        $fix_type = sanitize_text_field($_POST['fix_type'] ?? '');
-        $result = self::apply_security_fix($fix_type);
-        
-        wp_send_json_success($result);
-    }
-    
-    /**
-     * Планирование регулярной проверки безопасности
-     */
-    public static function scheduled_security_check(): void {
-        $scan_results = self::perform_security_scan();
-        
-        // Отправка уведомления при обнаружении проблем
-        if (!empty($scan_results['issues'])) {
-            $admin_email = get_option('admin_email');
-            $subject = '[' . get_bloginfo('name') . '] Security Alert';
-            $message = "Security issues detected:\n\n";
+            // X-Frame-Options
+            header( 'X-Frame-Options: SAMEORIGIN', false );
             
-            foreach ($scan_results['issues'] as $issue) {
-                $message .= "- {$issue['title']}: {$issue['description']}\n";
-            }
+            // Referrer Policy
+            header( 'Referrer-Policy: strict-origin-when-cross-origin', false );
             
-            wp_mail($admin_email, $subject, $message);
+            // Permissions Policy
+            header( 'Permissions-Policy: geolocation=(), microphone=(), camera=()', false );
+        }
+    }
+
+    /**
+     * Усиление конфигурации KSES
+     */
+    public function enhance_kses_config( array $allowed, string $context ): array {
+        if ( 'post' === $context ) {
+            // Добавляем безопасные атрибуты для SVG
+            $allowed['svg'] = [
+                'class' => true,
+                'id' => true,
+                'style' => true,
+                'viewBox' => true,
+                'xmlns' => true,
+                'width' => true,
+                'height' => true,
+                'fill' => true,
+                'stroke' => true,
+                'stroke-width' => true,
+                'stroke-linecap' => true,
+                'stroke-linejoin' => true,
+            ];
+            
+            $allowed['path'] = [
+                'd' => true,
+                'fill' => true,
+                'stroke' => true,
+                'stroke-width' => true,
+            ];
+            
+            $allowed['circle'] = [
+                'cx' => true,
+                'cy' => true,
+                'r' => true,
+                'fill' => true,
+                'stroke' => true,
+                'stroke-width' => true,
+            ];
+            
+            $allowed['rect'] = [
+                'x' => true,
+                'y' => true,
+                'width' => true,
+                'height' => true,
+                'rx' => true,
+                'ry' => true,
+                'fill' => true,
+                'stroke' => true,
+                'stroke-width' => true,
+            ];
         }
         
-        // Логирование
-        self::log_security_event('Scheduled security check completed', array(
-            'issues_found' => count($scan_results['issues'] ?? [])
-        ));
+        return $allowed;
     }
-    
+
     /**
-     * Выполнение сканирования безопасности
+     * Проверка CSRF nonce
      */
-    public static function perform_security_scan(): array {
-        $issues = array();
-        $checks = array();
+    public function verify_nonce_callback(): void {
+        $nonce = sanitize_text_field( $_POST['nonce'] ?? '' );
+        $action = sanitize_text_field( $_POST['action_name'] ?? '' );
         
-        // Проверка базовых настроек
-        $checks['wp_version'] = array(
-            'title' => 'WordPress Version',
-            'status' => self::check_wp_version(),
-            'description' => 'Check if WordPress version is hidden'
-        );
-        
-        $checks['file_permissions'] = array(
-            'title' => 'File Permissions',
-            'status' => self::check_file_permissions(),
-            'description' => 'Check file and directory permissions'
-        );
-        
-        $checks['admin_user'] = array(
-            'title' => 'Admin User',
-            'status' => self::check_admin_user(),
-            'description' => 'Check for default admin username'
-        );
-        
-        $checks['debug_mode'] = array(
-            'title' => 'Debug Mode',
-            'status' => self::check_debug_mode(),
-            'description' => 'Check if debug mode is disabled in production'
-        );
-        
-        $checks['file_edit'] = array(
-            'title' => 'File Editing',
-            'status' => self::check_file_editing(),
-            'description' => 'Check if file editing is disabled'
-        );
-        
-        // Сбор проблем
-        foreach ($checks as $check_key => $check) {
-            if ($check['status'] === 'warning' || $check['status'] === 'error') {
-                $issues[] = array(
-                    'type' => $check['status'],
-                    'title' => $check['title'],
-                    'description' => $check['description'],
-                    'check_key' => $check_key
-                );
-            }
+        if ( ! wp_verify_nonce( $nonce, $action ) ) {
+            wp_send_json_error( 'Invalid nonce' );
         }
         
-        return array(
-            'status' => empty($issues) ? 'secure' : 'issues_found',
-            'issues' => $issues,
-            'checks' => $checks,
-            'scan_time' => current_time('mysql')
-        );
+        wp_send_json_success();
     }
-    
+
     /**
-     * Генерация отчета по безопасности
+     * Логирование неудачных попыток входа
      */
-    public static function generate_security_report(): array {
-        $scan_results = self::perform_security_scan();
-        $recent_events = self::get_recent_security_events(50);
+    public function log_failed_login_attempts( string $username ): void {
+        $ip = $this->get_client_ip();
+        $timestamp = time();
         
-        return array(
-            'scan_results' => $scan_results,
-            'recent_events' => $recent_events,
-            'blocked_ips' => get_option('atk_blocked_ips', array()),
-            'security_score' => self::calculate_security_score($scan_results),
-            'report_time' => current_time('mysql')
-        );
+        // Сохраняем попытку в transient
+        $attempts = get_transient( "failed_login_attempts_$ip" ) ?: [];
+        $attempts[] = [
+            'timestamp' => $timestamp,
+            'username' => $username
+        ];
+        
+        // Удаляем старые попытки (старше 15 минут)
+        $attempts = array_filter( $attempts, function( $attempt ) {
+            return ( time() - $attempt['timestamp'] ) < 900; // 15 минут
+        } );
+        
+        set_transient( "failed_login_attempts_$ip", $attempts, 900 );
     }
-    
+
     /**
-     * Применение исправлений безопасности
+     * Проверка на brute force атаку
      */
-    public static function apply_security_fix(string $fix_type): array {
-        $result = array('status' => 'error', 'message' => 'Unknown fix type');
-        
-        switch ($fix_type) {
-            case 'hide_wp_version':
-                remove_action('wp_head', 'wp_generator');
-                add_filter('the_generator', '__return_empty_string');
-                $result = array('status' => 'success', 'message' => 'WordPress version hidden');
-                break;
-                
-            case 'disable_file_edit':
-                if (!defined('DISALLOW_FILE_EDIT')) {
-                    // Для уже работающего сайта нужно добавить в wp-config.php
-                    $result = array('status' => 'manual', 'message' => 'Add define(\'DISALLOW_FILE_EDIT\', true); to wp-config.php');
-                } else {
-                    $result = array('status' => 'success', 'message' => 'File editing already disabled');
-                }
-                break;
-                
-            case 'secure_admin_user':
-                // Проверка существования пользователя 'admin'
-                $admin_user = get_user_by('login', 'admin');
-                if ($admin_user) {
-                    $result = array('status' => 'manual', 'message' => 'Admin user found. Please rename manually for security.');
-                } else {
-                    $result = array('status' => 'success', 'message' => 'No default admin user found');
-                }
-                break;
+    public function check_brute_force_attack( $user ): ?WP_Error {
+        if ( is_wp_error( $user ) ) {
+            return $user;
         }
         
-        return $result;
-    }
-    
-    // Вспомогательные методы проверок
-    private static function check_wp_version(): string {
-        return has_action('wp_head', 'wp_generator') ? 'warning' : 'ok';
-    }
-    
-    private static function check_file_permissions(): string {
-        $uploads_dir = wp_upload_dir();
-        $perms = fileperms($uploads_dir['basedir']);
-        return ($perms & 0007) ? 'warning' : 'ok';
-    }
-    
-    private static function check_admin_user(): string {
-        return get_user_by('login', 'admin') ? 'warning' : 'ok';
-    }
-    
-    private static function check_debug_mode(): string {
-        return (defined('WP_DEBUG') && WP_DEBUG && !defined('WP_DEBUG_DISPLAY')) ? 'warning' : 'ok';
-    }
-    
-    private static function check_file_editing(): string {
-        return defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT ? 'ok' : 'warning';
-    }
-    
-    /**
-     * Получение IP клиента
-     */
-    private static function get_client_ip(): string {
-        $ip_keys = array('HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CLIENT_IP', 'REMOTE_ADDR');
+        $ip = $this->get_client_ip();
+        $attempts = get_transient( "failed_login_attempts_$ip" ) ?: [];
         
-        foreach ($ip_keys as $key) {
-            if (!empty($_SERVER[$key])) {
-                $ip = $_SERVER[$key];
-                if (strpos($ip, ',') !== false) {
-                    $ip = trim(explode(',', $ip)[0]);
-                }
-                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-                    return $ip;
-                }
+        // Если больше 5 неудачных попыток за 15 минут - блокируем
+        if ( count( $attempts ) >= 5 ) {
+            return new WP_Error( 
+                'too_many_attempts', 
+                'Слишком много попыток входа. Пожалуйста, повторите попытку позже.' 
+            );
+        }
+        
+        return $user;
+    }
+
+    /**
+     * Безопасная загрузка файлов
+     */
+    public function secure_file_upload( array $file ): array {
+        $allowed_types = [
+            'jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx'
+        ];
+        
+        $file_ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+        
+        if ( ! in_array( $file_ext, $allowed_types ) ) {
+            $file['error'] = 'Недопустимый тип файла. Разрешены только: ' . implode( ', ', $allowed_types );
+        }
+        
+        // Проверяем размер файла (максимум 5MB)
+        if ( $file['size'] > 5 * 1024 * 1024 ) {
+            $file['error'] = 'Файл слишком большой. Максимальный размер 5MB.';
+        }
+        
+        return $file;
+    }
+
+    /**
+     * Добавление заголовка Frame Options
+     */
+    public function add_frame_options_header( array $headers ): array {
+        $headers['X-Frame-Options'] = 'SAMEORIGIN';
+        return $headers;
+    }
+
+    /**
+     * Получение IP-адреса клиента
+     */
+    private function get_client_ip(): string {
+        $ip_keys = [
+            'HTTP_CF_CONNECTING_IP',    // Cloudflare
+            'HTTP_X_FORWARDED_FOR',     // Load balancer
+            'HTTP_X_REAL_IP',           // Reverse proxy
+            'HTTP_CLIENT_IP',           // Proxy
+            'REMOTE_ADDR',              // Standard
+        ];
+        
+        foreach ( $ip_keys as $key ) {
+            if ( ! empty( $_SERVER[ $key ] ) ) {
+                $ips = explode( ',', $_SERVER[ $key ] );
+                return trim( $ips[0] );
             }
         }
         
         return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     }
-    
-    /**
-     * Логирование событий безопасности
-     */
-    public static function log_security_event(string $message, array $data = array()): void {
-        $log_entry = array(
-            'timestamp' => current_time('mysql'),
-            'message' => $message,
-            'data' => $data,
-            'ip' => self::get_client_ip(),
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
-        );
-        
-        $security_log = get_option('atk_security_log', array());
-        
-        // Ограничение размера лога
-        if (count($security_log) > 1000) {
-            array_shift($security_log);
-        }
-        
-        $security_log[] = $log_entry;
-        update_option('atk_security_log', $security_log, false);
-    }
-    
-    /**
-     * Получение последних событий безопасности
-     */
-    public static function get_recent_security_events(int $limit = 50): array {
-        $log = get_option('atk_security_log', array());
-        return array_slice($log, -$limit);
-    }
-    
-    /**
-     * Расчет оценки безопасности
-     */
-    private static function calculate_security_score(array $scan_results): int {
-        $total_checks = count($scan_results['checks']);
-        $issues_count = count($scan_results['issues']);
-        
-        if ($total_checks === 0) return 100;
-        
-        $score = 100 - (($issues_count / $total_checks) * 100);
-        return max(0, (int) $score);
-    }
 }
 
 // Инициализация
-ATK_VED_Advanced_Security::init();
+function atk_ved_init_advanced_security(): void {
+    ATK_VED_Advanced_Security::get_instance();
+}
+add_action( 'after_setup_theme', 'atk_ved_init_advanced_security' );
