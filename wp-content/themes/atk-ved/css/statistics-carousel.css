@@ -1,0 +1,384 @@
+/* ============================================================================
+   СЕКЦИЯ СТАТИСТИКИ С КАРУСЕЛЬЮ v3.3
+   ============================================================================ */
+
+.statistics-carousel-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.statistics-carousel-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0ea5e9, #0284c7, #0ea5e9, transparent);
+}
+
+.statistics-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Карусель статистики */
+.stats-carousel {
+    position: relative;
+}
+
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(2, 132, 199, 0.15);
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    padding: 50px 40px;
+    border: 1px solid rgba(2, 132, 199, 0.1);
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.carousel-slide {
+    min-width: 100%;
+    padding: 20px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+}
+
+.stat-icon {
+    font-size: 52px;
+    margin-bottom: 25px;
+    color: #0284c7;
+    animation: pulse 2.5s infinite;
+    filter: drop-shadow(0 4px 8px rgba(2, 132, 199, 0.2));
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.stat-number {
+    font-size: 72px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-suffix {
+    font-size: 36px;
+    font-weight: 700;
+    color: #0284c7;
+    margin-left: 8px;
+    vertical-align: super;
+}
+
+.stat-label {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 20px 0 15px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    background: linear-gradient(90deg, #0284c7, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-description {
+    font-size: 18px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Управление каруселью */
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.carousel-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #0284c7;
+    color: #0284c7;
+    font-size: 26px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: all;
+    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2);
+}
+
+.carousel-btn:hover {
+    background: #0284c7;
+    color: #fff;
+    transform: scale(1.15);
+    box-shadow: 0 12px 25px rgba(2, 132, 199, 0.3);
+}
+
+.carousel-btn.prev {
+    left: 20px;
+}
+
+.carousel-btn.next {
+    right: 20px;
+}
+
+/* Индикаторы */
+.carousel-indicators {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+}
+
+.indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid #0284c7;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.2);
+}
+
+.indicator.active {
+    background: #0284c7;
+    transform: scale(1.3);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+}
+
+/* Галерея изображений */
+.stats-images {
+    position: relative;
+}
+
+.image-gallery {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(2, 132, 199, 0.2);
+    height: 420px;
+    border: 1px solid rgba(2, 132, 199, 0.15);
+}
+
+.gallery-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.gallery-item.active {
+    opacity: 1;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item.active img {
+    transform: scale(1.05);
+}
+
+/* Управление галереей */
+.gallery-controls {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.gallery-nav {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: all;
+    backdrop-filter: blur(10px);
+}
+
+.gallery-nav:hover {
+    background: rgba(2, 132, 199, 0.9);
+    transform: scale(1.15);
+    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.4);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .statistics-content {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    
+    .statistics-carousel-section {
+        padding: 70px 0;
+    }
+    
+    .carousel-container {
+        padding: 40px 30px;
+    }
+    
+    .stat-number {
+        font-size: 60px;
+    }
+    
+    .stat-label {
+        font-size: 22px;
+    }
+    
+    .image-gallery {
+        height: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .statistics-carousel-section {
+        padding: 60px 0;
+    }
+    
+    .carousel-container {
+        padding: 35px 25px;
+        border-radius: 20px;
+    }
+    
+    .stat-icon {
+        font-size: 44px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-number {
+        font-size: 52px;
+    }
+    
+    .stat-suffix {
+        font-size: 28px;
+    }
+    
+    .stat-label {
+        font-size: 20px;
+        margin: 15px 0 12px;
+    }
+    
+    .stat-description {
+        font-size: 16px;
+    }
+    
+    .carousel-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
+    
+    .image-gallery {
+        height: 320px;
+        border-radius: 20px;
+    }
+    
+    .gallery-nav {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .statistics-carousel-section {
+        padding: 50px 0;
+    }
+    
+    .carousel-container {
+        padding: 25px 20px;
+    }
+    
+    .stat-icon {
+        font-size: 38px;
+    }
+    
+    .stat-number {
+        font-size: 44px;
+    }
+    
+    .stat-suffix {
+        font-size: 24px;
+    }
+    
+    .stat-label {
+        font-size: 18px;
+    }
+    
+    .image-gallery {
+        height: 280px;
+    }
+    
+    .carousel-indicators {
+        bottom: 20px;
+    }
+    
+    .indicator {
+        width: 12px;
+        height: 12px;
+    }
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер SVG в PNG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e31e24;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 2px solid #e0e0e0;
+            margin: 20px 0;
+            display: block;
+        }
+        button {
+            background: #e31e24;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #c01a1f;
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .preview {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Конвертер логотипа SVG → PNG</h1>
+        
+        <div class="info">
+            <strong>Инструкция:</strong>
+            <ol>
+                <li>Выберите размер PNG</li>
+                <li>Нажмите "Создать PNG"</li>
+                <li>Нажмите "Скачать PNG"</li>
+                <li>Сохраните файл как <code>logo.png</code> в папку <code>images/</code></li>
+            </ol>
+        </div>
+
+        <div>
+            <label>
+                <strong>Размер:</strong>
+                <select id="sizeSelect">
+                    <option value="240,60">240x60 (оригинал)</option>
+                    <option value="480,120">480x120 (2x)</option>
+                    <option value="720,180">720x180 (3x)</option>
+                    <option value="960,240">960x240 (4x)</option>
+                </select>
+            </label>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="createPNG()">Создать PNG</button>
+            <button id="downloadBtn" onclick="downloadPNG()" style="display:none;">Скачать PNG</button>
+        </div>
+
+        <div class="preview">
+            <strong>Предварительный просмотр:</strong>
+            <div id="preview"></div>
+        </div>
+
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <script>
+        const svgContent = `<svg width="240" height="60" viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Envelope Icon -->
+  <g transform="translate(5, 15)">
+    <!-- Envelope body -->
+    <rect x="0" y="8" width="35" height="24" fill="none" stroke="#e31e24" stroke-width="2" rx="2"/>
+    <!-- Envelope flap -->
+    <path d="M0,8 L17.5,20 L35,8" fill="none" stroke="#e31e24" stroke-width="2"/>
+    <!-- Cross pattern -->
+    <line x1="5" y1="8" x2="17.5" y2="20" stroke="#3498db" stroke-width="1.5"/>
+    <line x1="30" y1="8" x2="17.5" y2="20" stroke="#3498db" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Text АТК-ВЭД -->
+  <text x="50" y="35" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#2c2c2c" letter-spacing="1">АТК-ВЭД</text>
+  
+  <!-- Tagline -->
+  <text x="50" y="50" font-family="Arial, sans-serif" font-size="10" font-weight="400" fill="#666" letter-spacing="0.5">профессиональное таможенное оформление</text>
+</svg>`;
+
+        let pngDataUrl = null;
+
+        function createPNG() {
+            const select = document.getElementById('sizeSelect');
+            const [width, height] = select.value.split(',').map(Number);
+            
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Белый фон
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+            
+            const img = new Image();
+            const blob = new Blob([svgContent], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(blob);
+            
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, width, height);
+                URL.revokeObjectURL(url);
+                
+                pngDataUrl = canvas.toDataURL('image/png');
+                
+                // Показываем превью
+                const preview = document.getElementById('preview');
+                preview.innerHTML = `<img src="${pngDataUrl}" style="max-width: 100%; border: 1px solid #e0e0e0; background: white;">`;
+                
+                // Показываем кнопку скачивания
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                
+                alert('PNG создан! Теперь нажмите "Скачать PNG"');
+            };
+            
+            img.src = url;
+        }
+
+        function downloadPNG() {
+            if (!pngDataUrl) {
+                alert('Сначала создайте PNG!');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.download = 'logo.png';
+            link.href = pngDataUrl;
+            link.click();
+        }
+
+        // Автоматически создаем при загрузке
+        window.onload = function() {
+            setTimeout(createPNG, 500);
+        };
+    </script>
+</body>
+</html>

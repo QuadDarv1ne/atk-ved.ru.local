@@ -1,0 +1,384 @@
+/**
+ * Секция отслеживания груза
+ */
+
+.tracking-section {
+    padding: 100px 0;
+    background: #fff;
+}
+
+.tracking-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-top: 60px;
+}
+
+.tracking-info {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.tracking-feature {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.tracking-feature-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-radius: 12px;
+}
+
+.tracking-feature-content h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c2c2c;
+}
+
+.tracking-feature-content p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.tracking-form-wrapper {
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8e8e8;
+}
+
+.tracking-form .form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.tracking-form .form-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.tracking-form .form-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin: 0;
+}
+
+.tracking-form .form-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tracking-form input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.tracking-form input:focus {
+    outline: none;
+    border-color: #e31e24;
+    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+}
+
+.tracking-form button {
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.tracking-form button svg {
+    transition: transform 0.3s ease;
+}
+
+.tracking-form button:hover svg {
+    transform: translateX(5px);
+}
+
+#tracking-result {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+#tracking-result.active {
+    opacity: 1;
+    max-height: 2000px;
+    margin-top: 30px;
+}
+
+.tracking-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+.tracking-result-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 2px solid #e8e8e8;
+    overflow: hidden;
+}
+
+.tracking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #e8e8e8;
+}
+
+.tracking-number-display {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tracking-number-display .label {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tracking-number-display .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c2c2c;
+    font-family: monospace;
+}
+
+.tracking-status {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tracking-status.in-transit {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.tracking-status.delivered {
+    background: #d4edda;
+    color: #155724;
+}
+
+.tracking-progress {
+    padding: 25px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e8e8e8;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e31e24 0%, #ff4444 100%);
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #666;
+}
+
+.progress-info strong {
+    color: #2c2c2c;
+}
+
+.tracking-history {
+    padding: 25px;
+    border-top: 2px solid #e8e8e8;
+}
+
+.tracking-history h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2c2c2c;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e8e8e8;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 25px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -26px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 3px solid #e8e8e8;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.timeline-item.active .timeline-marker {
+    border-color: #e31e24;
+    background: #e31e24;
+    box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.2);
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #e8e8e8;
+}
+
+.timeline-item.active .timeline-content {
+    border-left-color: #e31e24;
+    background: #fff5f5;
+}
+
+.timeline-date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 5px;
+}
+
+.timeline-location {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 3px;
+}
+
+.timeline-status {
+    font-size: 13px;
+    color: #666;
+}
+
+.tracking-actions {
+    display: flex;
+    gap: 10px;
+    padding: 25px;
+    border-top: 2px solid #e8e8e8;
+    background: #f8f9fa;
+}
+
+.tracking-actions button {
+    flex: 1;
+}
+
+.tracking-error {
+    text-align: center;
+    padding: 30px;
+    background: #fff3cd;
+    border-radius: 8px;
+    border: 2px solid #ffc107;
+}
+
+.tracking-error .error-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.tracking-error .error-message {
+    font-size: 16px;
+    color: #856404;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tracking-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tracking-section {
+        padding: 60px 0;
+    }
+    
+    .tracking-form-wrapper {
+        padding: 25px;
+    }
+    
+    .tracking-form .form-group {
+        flex-direction: column;
+    }
+    
+    .tracking-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .progress-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .tracking-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .tracking-feature {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .tracking-feature-icon {
+        margin: 0 auto;
+    }
+}
