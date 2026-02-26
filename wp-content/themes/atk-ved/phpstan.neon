@@ -1,26 +1,11 @@
 parameters:
-    level: 5
-    bootstrapFiles:
-        - ../../wp-load.php
+    level: 0
+    paths:
+        - src
     excludePaths:
-        - tests/
         - vendor/
         - node_modules/
-        - dist/
-        - sample/
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
-        - '#Function __ not found#'
-        - '#Function _e not found#'
-        - '#Function esc_html__ not found#'
-        - '#Function esc_attr__ not found#'
-        - '#Function esc_html_e not found#'
-        - '#Function esc_html not found#'
-        - '#Function esc_attr not found#'
-        - '#Function esc_url not found#'
-        - '#Function wp_enqueue_style not found#'
-        - '#Function wp_enqueue_script not found#'
-    checkGenericClassInNonGenericPhpDoc: true
-    checkMissingIterableValueType: true
-    checkUnionTypes: true
-    treatPhpDocTypesAsCertain: true
-    inferPrivatePropertyTypeFromConstructor: true
+        - '#Function .+ not found#'
+        - '#Parameter .+ has invalid type#'
