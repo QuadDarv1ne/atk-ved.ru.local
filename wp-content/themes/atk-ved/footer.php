@@ -20,9 +20,32 @@
  $show_newsletter = get_theme_mod( 'atk_ved_show_newsletter', true );
 ?>
 
-    </main><!-- #main-content -->
 
-    <footer class="site-footer" role="contentinfo" itemscope itemtype="https://schema.org/Organization">
+<?php
+/**
+ * The Footer Template
+ * Optimized with Schema.org markup and Accessibility improvements
+ *
+ * @package ATK_VED
+ */
+
+// Получаем настройки темы
+ $phone      = get_theme_mod( 'atk_ved_phone', '' );
+ $email      = get_theme_mod( 'atk_ved_email', '' );
+ $address    = get_theme_mod( 'atk_ved_address', '' );
+ $whatsapp   = get_theme_mod( 'atk_ved_whatsapp', '' );
+ $telegram   = get_theme_mod( 'atk_ved_telegram', '' );
+ $vk         = get_theme_mod( 'atk_ved_vk', '' );
+ $logo_id    = get_theme_mod( 'atk_ved_logo_white' ); // Получаем ID вложения для лучшей оптимизации
+ $logo_url   = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : get_template_directory_uri() . '/images/logo-white.png';
+
+// Проверяем, нужно ли показывать блок рассылки
+ $show_newsletter = get_theme_mod( 'atk_ved_show_newsletter', true );
+?>
+
+</main><!-- #main-content -->
+
+<footer class="site-footer" role="contentinfo" itemscope itemtype="https://schema.org/Organization">
 
         <!-- Блок Рассылки -->
         <?php if ( $show_newsletter ) : ?>

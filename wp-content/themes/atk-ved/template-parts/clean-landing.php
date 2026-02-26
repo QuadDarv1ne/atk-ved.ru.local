@@ -39,32 +39,32 @@ defined('ABSPATH') || exit;
             <?php
             $services = [
                 [
-                    'icon' => '🔍',
+                    'icon' => '<i class="bi bi-search"></i>',
                     'title' => 'Поиск товаров',
                     'desc' => 'Находим нужные товары на китайских площадках по вашим требованиям'
                 ],
                 [
-                    'icon' => '✓',
+                    'icon' => '<i class="bi bi-check-circle-fill"></i>',
                     'title' => 'Проверка качества',
                     'desc' => 'Контролируем качество до отправки, делаем фото и видеоотчёты'
                 ],
                 [
-                    'icon' => '🚢',
+                    'icon' => '<i class="bi bi-truck"></i>',
                     'title' => 'Доставка грузов',
                     'desc' => 'Организуем доставку авиа, морем, ЖД или авто'
                 ],
                 [
-                    'icon' => '📋',
+                    'icon' => '<i class="bi bi-file-text"></i>',
                     'title' => 'Таможенное оформление',
                     'desc' => 'Берём на себя таможенное оформление и сертификацию'
                 ],
                 [
-                    'icon' => '🏭',
+                    'icon' => '<i class="bi bi-building"></i>',
                     'title' => 'Складская логистика',
                     'desc' => 'Хранение и обработка грузов на наших складах в Китае'
                 ],
                 [
-                    'icon' => '💬',
+                    'icon' => '<i class="bi bi-chat-dots"></i>',
                     'title' => 'Консультации',
                     'desc' => 'Консультируем по всем вопросам работы с Китаем'
                 ]
@@ -99,21 +99,21 @@ defined('ABSPATH') || exit;
         
         <div class="delivery-grid-clean">
             <div class="delivery-card-clean">
-                <div class="delivery-icon-clean">✈️</div>
+                <div class="delivery-icon-clean"><i class="bi bi-airplane"></i></div>
                 <h3 class="delivery-title-clean">Авиа</h3>
                 <p class="delivery-time-clean">7-10 дней</p>
                 <p class="delivery-price-clean">от $5/кг</p>
             </div>
             
             <div class="delivery-card-clean">
-                <div class="delivery-icon-clean">🚂</div>
+                <div class="delivery-icon-clean"><i class="bi bi-train-front"></i></div>
                 <h3 class="delivery-title-clean">Ж/Д</h3>
                 <p class="delivery-time-clean">20-25 дней</p>
                 <p class="delivery-price-clean">от $2/кг</p>
             </div>
             
             <div class="delivery-card-clean">
-                <div class="delivery-icon-clean">🚢</div>
+                <div class="delivery-icon-clean"><i class="bi bi-ship"></i></div>
                 <h3 class="delivery-title-clean">Море</h3>
                 <p class="delivery-time-clean">35-45 дней</p>
                 <p class="delivery-price-clean">от $1/кг</p>
@@ -277,10 +277,10 @@ defined('ABSPATH') || exit;
                 </p>
                 
                 <ul class="contact-benefits">
-                    <li>✓ Расчёт стоимости за 15 минут</li>
-                    <li>✓ Скидка 10% на первую доставку</li>
-                    <li>✓ Персональный менеджер</li>
-                    <li>✓ Полная поддержка 24/7</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Расчёт стоимости за 15 минут</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Скидка 10% на первую доставку</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Персональный менеджер</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Полная поддержка 24/7</li>
                 </ul>
             </div>
             

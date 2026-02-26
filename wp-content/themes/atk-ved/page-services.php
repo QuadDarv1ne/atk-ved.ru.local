@@ -26,26 +26,26 @@ get_header();
             
             <div class="service-detail">
                 <div class="service-detail__content">
-                    <div class="service-detail__icon">✈️</div>
+                    <div class="service-detail__icon"><i class="bi bi-airplane"></i></div>
                     <h2>Авиадоставка из Китая</h2>
                     <p class="service-detail__lead">Самый быстрый способ доставки грузов — от 5 до 10 дней</p>
                     <div class="service-detail__features">
                         <div class="feature-item">
-                            <span class="feature-item__icon">⚡</span>
+                            <span class="feature-item__icon"><i class="bi bi-lightning-charge-fill"></i></span>
                             <div>
                                 <h4>Скорость</h4>
                                 <p>5-10 дней от склада в Китае до вашего склада</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-item__icon">📦</span>
+                            <span class="feature-item__icon"><i class="bi bi-box-seam"></i></span>
                             <div>
                                 <h4>Подходит для</h4>
                                 <p>Срочные грузы, дорогостоящие товары, малые партии</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-item__icon">💰</span>
+                            <span class="feature-item__icon"><i class="bi bi-cash-stack"></i></span>
                             <div>
                                 <h4>Стоимость</h4>
                                 <p>От 8 $/кг, зависит от объёма и веса груза</p>
@@ -57,26 +57,26 @@ get_header();
 
             <div class="service-detail service-detail--reverse">
                 <div class="service-detail__content">
-                    <div class="service-detail__icon">🚢</div>
+                    <div class="service-detail__icon"><i class="bi bi-ship"></i></div>
                     <h2>Морская доставка</h2>
                     <p class="service-detail__lead">Экономичный вариант для крупных партий — 30-45 дней</p>
                     <div class="service-detail__features">
                         <div class="feature-item">
-                            <span class="feature-item__icon">💵</span>
+                            <span class="feature-item__icon"><i class="bi bi-currency-dollar"></i></span>
                             <div>
                                 <h4>Экономия</h4>
                                 <p>Самый выгодный тариф — от 2 $/кг</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-item__icon">📦</span>
+                            <span class="feature-item__icon"><i class="bi bi-box-seam"></i></span>
                             <div>
                                 <h4>Подходит для</h4>
                                 <p>Крупные партии, негабаритные грузы, контейнерные перевозки</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-item__icon">🚢</span>
+                            <span class="feature-item__icon"><i class="bi bi-ship"></i></span>
                             <div>
                                 <h4>Варианты</h4>
                                 <p>FCL (полный контейнер) или LCL (сборный груз)</p>
@@ -88,26 +88,26 @@ get_header();
 
             <div class="service-detail">
                 <div class="service-detail__content">
-                    <div class="service-detail__icon">🚂</div>
+                    <div class="service-detail__icon"><i class="bi bi-train-front"></i></div>
                     <h2>Железнодорожная доставка</h2>
                     <p class="service-detail__lead">Оптимальное соотношение цены и скорости — 15-20 дней</p>
                     <div class="service-detail__features">
                         <div class="feature-item">
-                            <span class="feature-item__icon">⚖️</span>
+                            <span class="feature-item__icon"><i class="bi bi-balance-scale"></i></span>
                             <div>
                                 <h4>Баланс</h4>
                                 <p>Быстрее моря, дешевле авиа — от 4 $/кг</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-item__icon">📦</span>
+                            <span class="feature-item__icon"><i class="bi bi-box-seam"></i></span>
                             <div>
                                 <h4>Подходит для</h4>
                                 <p>Средние партии, регулярные поставки</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-item__icon">🌍</span>
+                            <span class="feature-item__icon"><i class="bi bi-globe"></i></span>
                             <div>
                                 <h4>Маршруты</h4>
                                 <p>Через Казахстан или Монголию</p>
@@ -127,7 +127,7 @@ get_header();
             <div class="services-grid">
                 
                 <div class="service-card">
-                    <div class="service-card__icon">📋</div>
+                    <div class="service-card__icon"><i class="bi bi-file-text"></i></div>
                     <h3>Таможенное оформление</h3>
                     <p>Полное сопровождение груза через таможню. Подготовка документов, декларирование, уплата пошлин.</p>
                     <ul>
@@ -139,7 +139,7 @@ get_header();
                 </div>
 
                 <div class="service-card">
-                    <div class="service-card__icon">🏭</div>
+                    <div class="service-card__icon"><i class="bi bi-building"></i></div>
                     <h3>Поиск поставщиков</h3>
                     <p>Помощь в поиске надёжных производителей в Китае. Проверка фабрик, переговоры, контроль качества.</p>
                     <ul>
@@ -151,7 +151,7 @@ get_header();
                 </div>
 
                 <div class="service-card">
-                    <div class="service-card__icon">📦</div>
+                    <div class="service-card__icon"><i class="bi bi-box-seam"></i></div>
                     <h3>Складское хранение</h3>
                     <p>Собственные склады в Китае и России. Консолидация грузов, упаковка, маркировка.</p>
                     <ul>
@@ -163,7 +163,7 @@ get_header();
                 </div>
 
                 <div class="service-card">
-                    <div class="service-card__icon">🔍</div>
+                    <div class="service-card__icon"><i class="bi bi-search"></i></div>
                     <h3>Инспекция товаров</h3>
                     <p>Проверка качества продукции перед отправкой. Фото и видео отчёты, замеры, тестирование.</p>
                     <ul>
@@ -175,7 +175,7 @@ get_header();
                 </div>
 
                 <div class="service-card">
-                    <div class="service-card__icon">🛡️</div>
+                    <div class="service-card__icon"><i class="bi bi-shield-fill-check"></i></div>
                     <h3>Страхование грузов</h3>
                     <p>Защита вашего груза от рисков утери или повреждения. Полная компенсация по страховке.</p>
                     <ul>
@@ -187,7 +187,7 @@ get_header();
                 </div>
 
                 <div class="service-card">
-                    <div class="service-card__icon">🚚</div>
+                    <div class="service-card__icon"><i class="bi bi-truck"></i></div>
                     <h3>Доставка по России</h3>
                     <p>Развозка грузов по всей России после таможенного оформления. До двери или до склада.</p>
                     <ul>

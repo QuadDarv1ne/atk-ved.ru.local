@@ -9,7 +9,7 @@
                required>
     </label>
     <button type="submit" class="search-submit">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon"><i class="bi bi-search"></i></span>
         <span class="search-text">Найти</span>
     </button>
 </form>

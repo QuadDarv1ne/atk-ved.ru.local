@@ -38,8 +38,8 @@ class Enqueue {
         // 2. Reset & Fixes
         wp_enqueue_style( 'atk-fixes', get_template_directory_uri() . '/css/fixes.css', [ 'atk-variables' ], $v );
         
-        // 3. Bootstrap (опционально, если нужен)
-        // wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', [], '5.3.2' );
+        // 3. Bootstrap Icons (только иконки, легковесно)
+        wp_enqueue_style( 'bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css', [], '1.11.3' );
         
         // 4. Main Theme Style
         wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-variables', 'atk-fixes' ], $v );
@@ -143,7 +143,6 @@ class Enqueue {
 
         // Основные скрипты (без jQuery)
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [], $v, true );
-        wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance.js', [], $v, true );
         wp_enqueue_script( 'atk-components', get_template_directory_uri() . '/js/components.js', [], $v, true );
         wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
         wp_enqueue_script( 'atk-back-to-top', get_template_directory_uri() . '/js/back-to-top.js', [], $v, true );
@@ -158,7 +157,7 @@ class Enqueue {
         // Формы с background sync
         wp_enqueue_script( 'atk-forms', get_template_directory_uri() . '/js/forms.js', [], $v, true );
 
-        // Bootstrap JS
+        // Bootstrap JS (только если нужны модальные окна, дропдауны и т.д.)
         wp_enqueue_script( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', [], '5.3.2', true );
 
         // Lazy loading изображений
@@ -167,7 +166,7 @@ class Enqueue {
             
             // Web Vitals мониторинг (только на продакшене)
             if ( ! WP_DEBUG ) {
-                wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance-metrics.js', [], $v, true );
+                wp_enqueue_script( 'atk-performance-metrics', get_template_directory_uri() . '/js/performance-metrics.js', [], $v, true );
             }
         }
 

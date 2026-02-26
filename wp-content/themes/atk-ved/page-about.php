@@ -69,22 +69,22 @@ get_header();
             <h2>Наши ценности</h2>
             <div class="values-grid">
                 <div class="value-card">
-                    <div class="value-card__icon">🎯</div>
+                    <div class="value-card__icon"><i class="bi bi-bullseye"></i></div>
                     <h3>Надёжность</h3>
                     <p>Выполняем обязательства в срок. Каждый груз застрахован и отслеживается на всех этапах.</p>
                 </div>
                 <div class="value-card">
-                    <div class="value-card__icon">💡</div>
+                    <div class="value-card__icon"><i class="bi bi-lightbulb-fill"></i></div>
                     <h3>Прозрачность</h3>
                     <p>Честные цены без скрытых комиссий. Вы всегда знаете, за что платите.</p>
                 </div>
                 <div class="value-card">
-                    <div class="value-card__icon">⚡</div>
+                    <div class="value-card__icon"><i class="bi bi-lightning-charge-fill"></i></div>
                     <h3>Скорость</h3>
                     <p>Оптимизированные маршруты и быстрое таможенное оформление. Ваш груз не простаивает.</p>
                 </div>
                 <div class="value-card">
-                    <div class="value-card__icon">🤝</div>
+                    <div class="value-card__icon"><i class="bi bi-people-fill"></i></div>
                     <h3>Партнёрство</h3>
                     <p>Мы не просто перевозчики — мы ваши партнёры в развитии бизнеса.</p>
                 </div>
@@ -100,21 +100,21 @@ get_header();
             <div class="team-grid">
                 <div class="team-member">
                     <div class="team-member__photo">
-                        <div class="team-member__placeholder">👤</div>
+                        <div class="team-member__placeholder"><i class="bi bi-person-circle"></i></div>
                     </div>
                     <h3>Отдел логистики</h3>
                     <p>Планирование маршрутов и контроль доставки</p>
                 </div>
                 <div class="team-member">
                     <div class="team-member__photo">
-                        <div class="team-member__placeholder">👤</div>
+                        <div class="team-member__placeholder"><i class="bi bi-person-circle"></i></div>
                     </div>
                     <h3>Таможенные брокеры</h3>
                     <p>Оформление документов и прохождение таможни</p>
                 </div>
                 <div class="team-member">
                     <div class="team-member__photo">
-                        <div class="team-member__placeholder">👤</div>
+                        <div class="team-member__placeholder"><i class="bi bi-person-circle"></i></div>
                     </div>
                     <h3>Менеджеры</h3>
                     <p>Консультации и поддержка клиентов 24/7</p>

@@ -52,6 +52,13 @@
     font-size: 14px;
     font-weight: 500;
     color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hero-badges .badge i {
+    font-size: 16px;
 }
 
 .hero-title {
@@ -263,6 +270,10 @@
     color: #e31e24;
 }
 
+.service-icon i {
+    font-size: 32px;
+}
+
 .service-card-enhanced h3 {
     font-size: 18px;
     font-weight: 600;
@@ -379,6 +390,15 @@
 .contact-benefits li {
     padding: 10px 0;
     font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-benefits li i {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+    flex-shrink: 0;
 }
 
 .contact-form-wrapper {
@@ -551,13 +571,19 @@
 }
 
 .step-time {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     padding: 6px 12px;
     background: rgba(227,30,36,.1);
     color: #e31e24;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
+}
+
+.step-time i {
+    font-size: 14px;
 }
 
 .step-arrow {
@@ -696,5 +722,70 @@
     .faq-answer-content {
         padding: 0 20px 20px;
         font-size: 14px;
+    }
+}
+
+/* ========== ADVANTAGES ICONS ========== */
+.advantages-grid-enhanced {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.advantage-card-enhanced {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    text-align: center;
+    transition: all .3s ease;
+}
+
+.advantage-card-enhanced:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,.1);
+    transform: translateY(-5px);
+    border-color: #e31e24;
+}
+
+.adv-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(227,30,36,.1), rgba(227,30,36,.05));
+    border-radius: 50%;
+    font-size: 32px;
+    color: #e31e24;
+    margin: 0 auto 20px;
+}
+
+.adv-icon i {
+    font-size: 32px;
+}
+
+.advantage-card-enhanced h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 12px;
+}
+
+.advantage-card-enhanced p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+}
+
+@media (max-width: 1024px) {
+    .advantages-grid-enhanced {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .advantages-grid-enhanced {
+        grid-template-columns: 1fr;
     }
 }

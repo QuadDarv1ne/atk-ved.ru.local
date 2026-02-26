@@ -70,6 +70,18 @@
 .contact-method__icon {
     font-size: 32px;
     flex-shrink: 0;
+    color: #e31e24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: rgba(227,30,36,.1);
+    border-radius: 50%;
+}
+
+.contact-method__icon i {
+    font-size: 28px;
 }
 
 .contact-method__content h3 {

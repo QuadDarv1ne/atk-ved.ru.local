@@ -7,6 +7,12 @@
 
 defined('ABSPATH') || exit;
 
+// ВРЕМЕННАЯ ОТЛАДКА
+error_log('INDEX.PHP LOADED');
+error_log('is_home: ' . (is_home() ? 'yes' : 'no'));
+error_log('is_front_page: ' . (is_front_page() ? 'yes' : 'no'));
+error_log('have_posts: ' . (have_posts() ? 'yes' : 'no'));
+
 get_header();
 ?>
 

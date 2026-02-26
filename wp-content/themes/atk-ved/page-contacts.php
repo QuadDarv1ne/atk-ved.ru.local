@@ -32,7 +32,7 @@ get_header();
                     <h2>Как с нами связаться</h2>
                     
                     <div class="contact-method">
-                        <div class="contact-method__icon">📞</div>
+                        <div class="contact-method__icon"><i class="bi bi-telephone-fill"></i></div>
                         <div class="contact-method__content">
                             <h3>Телефон</h3>
                             <a href="tel:<?php echo esc_attr(str_replace([' ', '(', ')', '-'], '', $company['phone'])); ?>">
@@ -43,7 +43,7 @@ get_header();
                     </div>
 
                     <div class="contact-method">
-                        <div class="contact-method__icon">✉️</div>
+                        <div class="contact-method__icon"><i class="bi bi-envelope-fill"></i></div>
                         <div class="contact-method__content">
                             <h3>Email</h3>
                             <a href="mailto:<?php echo esc_attr($company['email']); ?>">
@@ -55,7 +55,7 @@ get_header();
 
                     <?php if (!empty($company['whatsapp'])): ?>
                     <div class="contact-method">
-                        <div class="contact-method__icon">💬</div>
+                        <div class="contact-method__icon"><i class="bi bi-whatsapp"></i></div>
                         <div class="contact-method__content">
                             <h3>WhatsApp</h3>
                             <a href="<?php echo esc_url($company['whatsapp']); ?>" target="_blank" rel="noopener">
@@ -68,7 +68,7 @@ get_header();
 
                     <?php if (!empty($company['telegram'])): ?>
                     <div class="contact-method">
-                        <div class="contact-method__icon">✈️</div>
+                        <div class="contact-method__icon"><i class="bi bi-telegram"></i></div>
                         <div class="contact-method__content">
                             <h3>Telegram</h3>
                             <a href="<?php echo esc_url($company['telegram']); ?>" target="_blank" rel="noopener">
@@ -80,7 +80,7 @@ get_header();
                     <?php endif; ?>
 
                     <div class="contact-method">
-                        <div class="contact-method__icon">📍</div>
+                        <div class="contact-method__icon"><i class="bi bi-geo-alt-fill"></i></div>
                         <div class="contact-method__content">
                             <h3>Адрес офиса</h3>
                             <p><?php echo esc_html($company['address']); ?></p>

@@ -275,4 +275,5 @@ get_header();
 </main>
 
 <?php
-get_footer();
+get_template_part('footer-simple');
+

@@ -202,6 +202,19 @@
     text-align: center;
 }
 
+.no-results-icon {
+    font-size: 64px;
+    color: #e31e24;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-results-icon i {
+    font-size: 64px;
+}
+
 .no-results .page-title {
     margin-bottom: 20px;
 }

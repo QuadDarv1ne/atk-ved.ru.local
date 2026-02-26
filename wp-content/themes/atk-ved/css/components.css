@@ -185,3 +185,28 @@
 .blog-card-image,.product-card-image{height:200px}
 .card-modern,.service-premium-card{padding:24px;border-radius:12px}
 }
+
+/* ========== DELIVERY ICONS (Clean Landing) ========== */
+.delivery-icon-clean {
+    font-size: 48px;
+    color: #e31e24;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delivery-icon-clean i {
+    font-size: 48px;
+}
+
+/* ========== SEARCH ICON ========== */
+.search-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon i {
+    font-size: 18px;
+}

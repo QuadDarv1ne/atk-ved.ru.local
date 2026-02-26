@@ -74,7 +74,16 @@ if ( file_exists( $composer_autoload ) ) {
 
 // Initialize Theme Core
 if ( class_exists( '\ATKVed\Theme' ) ) {
-    \ATKVed\Theme::getInstance();
+    try {
+        \ATKVed\Theme::getInstance();
+    } catch ( \Throwable $e ) {
+        error_log( 'Theme initialization error: ' . $e->getMessage() );
+        if ( WP_DEBUG ) {
+            wp_die( 'Theme Error: ' . esc_html( $e->getMessage() ) );
+        }
+    }
+} else {
+    error_log( 'ATKVed\Theme class not found. Autoloader may have failed.' );
 }
 
 // Load Module Loader
