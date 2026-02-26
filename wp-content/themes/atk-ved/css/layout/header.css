@@ -1,0 +1,321 @@
+/**
+ * Header Styles (Optimized & Responsive)
+ * @package ATK_VED
+ */
+
+:root {
+    /* Определим базовые переменные для гибкости, если их нет в основном файле */
+    --header-height-desktop: 80px;
+    --header-height-mobile: 70px;
+    --header-height-small: 60px;
+}
+
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.96);
+    z-index: var(--z-header, 1000);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid transparent;
+    
+    /* Поддержка "челки" и Safe Area на iOS/Android */
+    padding-top: env(safe-area-inset-top);
+}
+
+.site-header.scrolled {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    border-bottom-color: var(--border, #eee);
+}
+
+.header-container {
+    max-width: var(--container-xl, 1280px);
+    margin: 0 auto;
+    padding: 0 var(--space-md, 20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-height-desktop);
+    gap: var(--space-md, 20px);
+}
+
+/* --- LOGO --- */
+.site-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    /* Важное правило: логотип никогда не должен сжиматься */
+    flex-shrink: 0; 
+    z-index: 10;
+}
+
+.site-logo:hover {
+    opacity: 0.8;
+}
+
+.site-logo img {
+    /* Плавное изменение размера логотипа */
+    height: clamp(35px, 5vw, 50px);
+    width: auto;
+    display: block;
+}
+
+.site-logo-text {
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-weight: 700;
+    color: var(--text, #333);
+    white-space: nowrap; /* Текст логотипа не переносится */
+}
+
+.site-logo-text span {
+    color: var(--primary, #e31e24);
+}
+
+/* --- HEADER ACTIONS --- */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md, 20px);
+    flex-shrink: 0; /* Кнопки действий не сжимаются */
+}
+
+.header-phone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text, #333);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.header-phone:hover {
+    color: var(--primary, #e31e24);
+}
+
+.header-phone-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-100, #fce4e5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary, #e31e24);
+    flex-shrink: 0;
+}
+
+.header-phone-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-phone-label {
+    font-size: 12px;
+    color: var(--text-light, #888);
+    line-height: 1.2;
+}
+
+.header-phone-number {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.header-cta {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--primary, #e31e24), #ff4d4f);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-full, 50px);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.header-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(227,30,36,0.3);
+}
+
+/* --- MOBILE TOGGLE --- */
+.mobile-menu-toggle {
+    display: none; /* По умолчанию скрыт */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    position: relative;
+    /* Увеличиваем зону клика */
+    margin: -10px;
+    padding: 10px;
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2.5px;
+    background: var(--text, #333);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* --- ACCESSIBILITY --- */
+.site-logo:focus-visible,
+.header-phone:focus-visible,
+.header-cta:focus-visible,
+.mobile-menu-toggle:focus-visible {
+    outline: 2px solid var(--primary, #e31e24);
+    outline-offset: 3px;
+}
+
+/* =========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================= */
+
+/* 1. LAPTOP (маленькие ноутбуки и горизонтальные планшеты) */
+/* Скрываем текст подписи телефона, оставляем номер и иконку */
+@media (max-width: 1100px) {
+    .header-container {
+        padding: 0 15px;
+        gap: 15px;
+    }
+    
+    .header-phone-text {
+        gap: 2px;
+    }
+    
+    .header-phone-label {
+        display: none;
+    }
+    
+    .header-phone-number {
+        font-size: 15px;
+    }
+    
+    .header-cta {
+        padding: 10px 20px;
+    }
+}
+
+/* 2. TABLET (Планшеты в вертикальном режиме) */
+/* Скрываем текст номера телефона, оставляем только иконку */
+@media (max-width: 900px) {
+    .header-container {
+        height: 75px;
+    }
+    
+    .header-phone-text {
+        display: none;
+    }
+    
+    .header-phone-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .site-logo img {
+        height: 40px;
+    }
+}
+
+/* 3. MOBILE (Телефоны) */
+/* Показываем бургер, скрываем телефон, адаптируем кнопку */
+@media (max-width: 768px) {
+    .header-container {
+        height: var(--header-height-mobile);
+        padding: 0 15px;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+        order: 3; /* Бургер всегда справа (или слева, как хотите) */
+    }
+    
+    .header-phone {
+        display: none; /* Телефон убираем в меню */
+    }
+    
+    .header-cta {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+    
+    .site-logo-text {
+        font-size: 18px;
+    }
+}
+
+/* 4. SMALL MOBILE (Маленькие телефоны < 375px) */
+/* Максимально сжимаем элементы, чтобы все влезло */
+@media (max-width: 360px) {
+    .header-container {
+        height: var(--header-height-small);
+        padding: 0 10px;
+        gap: 10px;
+    }
+    
+    .site-logo img {
+        height: 32px;
+    }
+    
+    .site-logo-text {
+        font-size: 16px;
+    }
+    
+    .header-cta {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+}
+
+/* 5. LARGE SCREENS (> 1400px) */
+/* Можно увеличить контейнер или отступы для очень широких экранов */
+@media (min-width: 1400px) {
+    .header-container {
+        padding: 0 var(--space-lg, 40px);
+    }
+}
+
+/* 6. USER PREFERENCES */
+@media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-logo,
+    .header-cta,
+    .mobile-menu-toggle span {
+        transition: none !important;
+    }
+    .header-cta:hover {
+        transform: none;
+    }
+}

@@ -59,7 +59,7 @@ if ( defined( 'ATK_VED_MIN_PHP_VERSION' ) && version_compare( PHP_VERSION, ATK_V
 
 // Initialize theme
 if ( class_exists( '\ATKVed\Theme' ) ) {
-    \ATKVed\Theme::get_instance();
+    \ATKVed\Theme::getInstance();
 }
 
 // Оптимизированная загрузка модулей через Module Loader

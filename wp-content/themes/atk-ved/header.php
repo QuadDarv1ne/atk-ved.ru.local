@@ -32,6 +32,9 @@
             </nav>
 
             <div class="header-actions">
+                <button class="theme-toggle" type="button" aria-label="Переключить тему">
+                    <span class="theme-icon"></span>
+                </button>
                 <button class="cta-button" onclick="document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})" type="button">
                     <?php esc_html_e('Оставить заявку','atk-ved'); ?>
                 </button>

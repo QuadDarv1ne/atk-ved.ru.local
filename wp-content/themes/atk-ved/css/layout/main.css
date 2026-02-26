@@ -1,0 +1,407 @@
+/**
+ * Main Content Layout (Optimized)
+ * @package ATK_VED
+ */
+
+:root {
+    --header-height: 80px;
+    --header-height-mobile: 70px;
+    --sidebar-width: 320px; /* Определили ширину сайдбара переменной */
+}
+
+/* Main Content Wrapper */
+.site-main {
+    min-height: 60vh;
+    padding-top: var(--header-height);
+}
+
+/* Page Header */
+.page-header {
+    padding: var(--space-3xl, 60px) 0 var(--space-2xl, 40px);
+    background: var(--bg-light, #f8f9fa);
+    text-align: center;
+}
+
+.page-title {
+    /* Плавное изменение размера: мин 28px, предпочтительно 5vw, макс 48px */
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--text, #333);
+    margin-bottom: var(--space-sm, 10px);
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: clamp(16px, 2vw, 18px);
+    color: var(--text-light, #666);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+    padding: var(--space-md, 20px) 0;
+    background: var(--bg-light, #f8f9fa);
+}
+
+.breadcrumbs-container {
+    max-width: var(--container-xl, 1280px);
+    margin: 0 auto;
+    padding: 0 var(--space-md, 20px);
+}
+
+.breadcrumbs-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Перенос на маленьких экранах */
+    gap: 8px 4px; /* Вертикальный и горизонтальный отступ */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+.breadcrumbs-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breadcrumbs-item::after {
+    content: '/';
+    color: var(--text-light, #888);
+    font-size: 12px;
+}
+
+.breadcrumbs-item:last-child::after {
+    display: none;
+}
+
+.breadcrumbs-link {
+    color: var(--text-light, #888);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    white-space: nowrap; /* Не разрывать слова */
+}
+
+.breadcrumbs-link:hover {
+    color: var(--primary, #e31e24);
+}
+
+.breadcrumbs-current {
+    color: var(--text, #333);
+    font-weight: 600;
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Обрезка длинного текущего пункта */
+}
+
+/* Content Container */
+.content-container {
+    max-width: var(--container-xl, 1280px);
+    margin: 0 auto;
+    padding: var(--space-3xl, 60px) var(--space-md, 20px);
+}
+
+.content-narrow {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.content-wide {
+    max-width: 1600px;
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr var(--sidebar-width);
+    gap: var(--space-2xl, 40px);
+}
+
+/* Sidebar Left Layout Logic */
+.content-grid.sidebar-left {
+    grid-template-columns: var(--sidebar-width) 1fr;
+}
+
+/* На мобильных меняем порядок: Контент (1) -> Сайдбар (2) 
+   Это работает, если в HTML сайдбар идет перед контентом (для SEO/десктопа) */
+.content-main {
+    min-width: 0; /* Fix overflow */
+    order: 1; 
+}
+
+.content-sidebar {
+    position: sticky;
+    /* Учитываем высоту хедера + отступ */
+    top: calc(var(--header-height) + 20px); 
+    height: fit-content;
+    order: 2;
+}
+
+/* Section Spacing */
+.section {
+    padding: var(--space-3xl, 60px) 0;
+}
+
+.section-sm {
+    padding: var(--space-2xl, 40px) 0;
+}
+
+.section-lg {
+    padding: clamp(60px, 10vw, 100px) 0;
+}
+
+.section-gray {
+    background: var(--bg-light, #f8f9fa);
+}
+
+.section-dark {
+    background: var(--bg-dark, #1f1f1f);
+    color: #fff;
+}
+
+/* Section Header */
+.section-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl, 40px);
+}
+
+.section-header.left {
+    text-align: left;
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--primary-100, #fce4e5);
+    color: var(--primary, #e31e24);
+    border-radius: var(--radius-full, 50px);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-sm, 10px);
+}
+
+.section-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    color: var(--text, #333);
+    margin-bottom: var(--space-sm, 10px);
+    line-height: 1.2;
+}
+
+.section-dark .section-title {
+    color: #fff;
+}
+
+.section-subtitle {
+    font-size: clamp(16px, 2vw, 18px);
+    color: var(--text-light, #666);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.section-dark .section-subtitle {
+    color: rgba(255,255,255,0.8);
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: var(--border, #eee);
+    margin: var(--space-2xl, 40px) 0;
+}
+
+.divider-thick {
+    height: 2px;
+}
+
+.divider-gradient {
+    background: linear-gradient(90deg, transparent, var(--primary, #e31e24), transparent);
+    height: 2px;
+}
+
+/* Spacer Utilities */
+.spacer-sm { height: var(--space-lg, 30px); }
+.spacer-md { height: var(--space-2xl, 40px); }
+.spacer-lg { height: var(--space-3xl, 60px); }
+
+/* Content Typography */
+.content-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-light, #666);
+}
+
+.content-text h2 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    color: var(--text, #333);
+    margin: var(--space-xl, 30px) 0 var(--space-md, 20px);
+}
+
+.content-text h3 {
+    font-size: clamp(20px, 2.5vw, 24px);
+    font-weight: 700;
+    color: var(--text, #333);
+    margin: var(--space-lg, 20px) 0 var(--space-sm, 10px);
+}
+
+.content-text p {
+    margin-bottom: var(--space-md, 20px);
+}
+
+.content-text ul,
+.content-text ol {
+    margin: var(--space-md, 20px) 0;
+    padding-left: var(--space-lg, 30px);
+}
+
+.content-text li {
+    margin-bottom: 8px;
+}
+
+.content-text a {
+    color: var(--primary, #e31e24);
+    text-decoration: underline; /* Лучше сразу показывать ссылки */
+    text-underline-offset: 3px;
+    transition: opacity 0.3s ease;
+}
+
+.content-text a:hover {
+    opacity: 0.7;
+}
+
+.content-text img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Убираем отступ снизу */
+    border-radius: var(--radius-lg, 12px);
+    margin: var(--space-lg, 20px) 0;
+}
+
+.content-text blockquote {
+    padding: var(--space-lg, 20px) var(--space-xl, 30px);
+    margin: var(--space-xl, 30px) 0;
+    border-left: 4px solid var(--primary, #e31e24);
+    background: var(--bg-light, #f8f9fa);
+    border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px) 0;
+    font-style: italic;
+    color: var(--text, #333);
+}
+
+/* Accessibility */
+:focus-visible {
+    outline: 2px solid var(--primary, #e31e24);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================= */
+
+/* 1. LAPTOP (< 1200px) */
+/* Сайдбар становится чуть уже */
+@media (max-width: 1200px) {
+    .content-grid {
+        grid-template-columns: 1fr 280px;
+    }
+    .content-grid.sidebar-left {
+        grid-template-columns: 280px 1fr;
+    }
+}
+
+/* 2. TABLET LANDSCAPE (< 1024px) */
+/* Сайдбар уходит вниз (для sidebar-right) или под контент (для sidebar-left) */
+@media (max-width: 1024px) {
+    .content-grid,
+    .content-grid.sidebar-left {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl, 30px);
+    }
+    
+    /* Восстанавливаем порядок по умолчанию для мобильных (Контент первый) */
+    /* Если верстка sidebar-left, то в HTML сайдбар идет первым.
+       Поэтому мы принудительно ставим контент (order: 1) первым.
+       Для sidebar-right (сайдбар в HTML после контента) это не меняет ничего.
+    */
+    .content-main {
+        order: -1; /* Контент всегда первый */
+    }
+    
+    .content-sidebar {
+        position: static; /* Отключаем sticky */
+        order: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Виджеты в ряд, если место есть */
+        gap: var(--space-lg, 20px);
+    }
+    
+    /* Если виджеты должны быть в колонку даже на планшете */
+    .content-sidebar > * {
+        margin-bottom: 0; /* Убираем лишние отступы, если используем grid gap */
+    }
+}
+
+/* 3. MOBILE (< 768px) */
+@media (max-width: 768px) {
+    :root {
+        --header-height: var(--header-height-mobile); /* 70px */
+    }
+
+    .site-main {
+        padding-top: var(--header-height-mobile);
+    }
+    
+    .page-header {
+        padding: var(--space-2xl, 40px) 0 var(--space-lg, 20px);
+    }
+    
+    .content-container {
+        padding: var(--space-xl, 30px) var(--space-md, 20px);
+    }
+    
+    .section {
+        padding: var(--space-2xl, 40px) 0;
+    }
+    
+    .section-lg {
+        padding: var(--space-3xl, 60px) 0;
+    }
+    
+    /* Сайдбар снова в одну колонку */
+    .content-sidebar {
+        grid-template-columns: 1fr;
+    }
+    
+    .content-text blockquote {
+        padding: var(--space-md, 20px);
+        margin-left: calc(-1 * var(--space-md, 20px));
+        margin-right: calc(-1 * var(--space-md, 20px));
+        border-radius: 0;
+    }
+}
+
+/* 4. SMALL MOBILE (< 480px) */
+@media (max-width: 480px) {
+    .breadcrumbs-list {
+        font-size: 12px;
+    }
+    
+    .section-badge {
+        font-size: 11px;
+        padding: 4px 12px;
+    }
+}
+
+/* 5. USER PREFERENCES */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}

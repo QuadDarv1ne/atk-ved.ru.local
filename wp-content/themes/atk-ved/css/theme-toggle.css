@@ -1,0 +1,64 @@
+/**
+ * Theme Toggle Button
+ * @package ATK_VED
+ */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-left: var(--space-sm);
+}
+
+.theme-toggle:hover {
+    background: var(--bg-light);
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.theme-icon svg {
+    width: 100%;
+    height: 100%;
+    transition: var(--transition);
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .theme-toggle {
+    background: var(--bg-dark);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background: var(--bg-light);
+    border-color: var(--primary);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .theme-toggle {
+        width: 36px;
+        height: 36px;
+        margin-left: var(--space-xs);
+    }
+}

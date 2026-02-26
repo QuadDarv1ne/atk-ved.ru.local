@@ -32,34 +32,66 @@ class Enqueue {
 
         // === Стили ===
 
-        // Bootstrap
-        wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', [], '5.3.2' );
-
-        // Базовые стили
+        // 1. CSS Variables (первым делом)
         wp_enqueue_style( 'atk-variables', get_template_directory_uri() . '/css/variables.css', [], $v );
-        wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'bootstrap', 'atk-variables' ], $v );
-        wp_enqueue_style( 'atk-base', get_template_directory_uri() . '/css/base.css', [], $v );
+        
+        // 2. Reset & Fixes
+        wp_enqueue_style( 'atk-fixes', get_template_directory_uri() . '/css/fixes.css', [ 'atk-variables' ], $v );
+        
+        // 3. Bootstrap (опционально, если нужен)
+        // wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', [], '5.3.2' );
+        
+        // 4. Main Theme Style
+        wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-variables', 'atk-fixes' ], $v );
+        
+        // 5. Utilities
+        wp_enqueue_style( 'atk-utilities', get_template_directory_uri() . '/css/utilities.css', [ 'atk-style' ], $v );
+        
+        // 6. Base Styles
+        wp_enqueue_style( 'atk-base', get_template_directory_uri() . '/css/base.css', [ 'atk-utilities' ], $v );
+        
+        // 7. Animations
+        wp_enqueue_style( 'atk-animations', get_template_directory_uri() . '/css/animations.css', [ 'atk-base' ], $v );
+        
+        // 8. Layout Components
+        wp_enqueue_style( 'atk-header', get_template_directory_uri() . '/css/layout/header.css', [ 'atk-base' ], $v );
+        wp_enqueue_style( 'atk-menu', get_template_directory_uri() . '/css/layout/menu.css', [ 'atk-header' ], $v );
+        wp_enqueue_style( 'atk-main', get_template_directory_uri() . '/css/layout/main.css', [ 'atk-base' ], $v );
+        wp_enqueue_style( 'atk-footer', get_template_directory_uri() . '/css/layout/footer.css', [ 'atk-base' ], $v );
+        
+        // 9. UI Components
+        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui.css', [ 'atk-base' ], $v );
+        wp_enqueue_style( 'atk-modern-ui', get_template_directory_uri() . '/css/modern-ui.css', [ 'atk-ui' ], $v );
+        
+        // 10. Feature Components
+        wp_enqueue_style( 'atk-components', get_template_directory_uri() . '/css/components.css', [ 'atk-ui' ], $v );
+        wp_enqueue_style( 'atk-carousel', get_template_directory_uri() . '/css/components/carousel.css', [ 'atk-components' ], $v );
+        wp_enqueue_style( 'atk-contacts', get_template_directory_uri() . '/css/components/contacts.css', [ 'atk-components' ], $v );
+        wp_enqueue_style( 'atk-faq', get_template_directory_uri() . '/css/components/faq.css', [ 'atk-components' ], $v );
+        
+        // 11. Accessibility
+        wp_enqueue_style( 'atk-a11y', get_template_directory_uri() . '/css/a11y.css', [ 'atk-base' ], $v );
+        
+        // 12. Theme Toggle
+        wp_enqueue_style( 'atk-theme-toggle', get_template_directory_uri() . '/css/theme-toggle.css', [ 'atk-base' ], $v );
+        
+        // 13. Dark Theme
+        wp_enqueue_style( 'atk-theme-dark', get_template_directory_uri() . '/css/theme-dark.css', [ 'atk-variables' ], $v );
         
         // Критический CSS inline
         $this->enqueue_critical_css();
 
-        // UI и доступность
-        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui.css', [], $v );
-        wp_enqueue_style( 'atk-a11y', get_template_directory_uri() . '/css/a11y.css', [], $v );
-
-        // Главная страница
+        // 12. Page-specific styles
         if ( is_front_page() ) {
-            wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [], $v );
-            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing.css', [], $v );
+            wp_enqueue_style( 'atk-hero-section', get_template_directory_uri() . '/css/sections/hero.css', [ 'atk-base' ], $v );
+            wp_enqueue_style( 'atk-cards-modern', get_template_directory_uri() . '/css/cards-modern.css', [ 'atk-components' ], $v );
+            wp_enqueue_style( 'atk-front-page', get_template_directory_uri() . '/css/front-page.css', [ 'atk-hero-section' ], $v );
         }
-
-        // Компоненты
-        wp_enqueue_style( 'atk-components', get_template_directory_uri() . '/css/components.css', [], $v );
 
         // Страницы калькулятора/трекинга
         if ( $this->is_calc_page() ) {
-            wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [], $v );
-            wp_enqueue_style( 'atk-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', [], $v );
+            wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [ 'atk-base' ], $v );
+            wp_enqueue_style( 'atk-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', [ 'atk-base' ], $v );
             wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator.js', [ 'jquery' ], $v, true );
             wp_enqueue_script( 'atk-calc-fe', get_template_directory_uri() . '/js/calculator-frontend.js', [ 'jquery', 'atk-calc' ], $v, true );
             wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking.js', [ 'jquery' ], $v, true );
@@ -72,6 +104,9 @@ class Enqueue {
 
         // === Скрипты ===
 
+        // Theme Toggle (загружается первым в head для предотвращения мигания)
+        wp_enqueue_script( 'atk-theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', [], $v, false );
+
         // Лоадер в head
         wp_enqueue_script( 'atk-loader', get_template_directory_uri() . '/js/loader.js', [], $v, false );
 
@@ -82,11 +117,15 @@ class Enqueue {
 
         // Основные скрипты (без jQuery)
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [], $v, true );
+        wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance.js', [], $v, true );
+        wp_enqueue_script( 'atk-components', get_template_directory_uri() . '/js/components.js', [], $v, true );
         wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui.js', [], $v, true );
         wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
+        wp_enqueue_script( 'atk-modern-interactions', get_template_directory_uri() . '/js/modern-interactions.js', [], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {
+            wp_enqueue_script( 'atk-landing-premium', get_template_directory_uri() . '/js/landing-premium.js', [], $v, true );
             wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/counters.js', [], $v, true );
             wp_enqueue_script( 'atk-share', get_template_directory_uri() . '/js/share.js', [], $v, true );
         }

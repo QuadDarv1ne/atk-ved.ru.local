@@ -1,0 +1,199 @@
+/**
+ * Navigation Menu Styles
+ * @package ATK_VED
+ */
+
+.main-navigation {
+    display: flex;
+    align-items: center;
+}
+
+.main-menu {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-menu > li {
+    position: relative;
+}
+
+.main-menu > li > a {
+    display: block;
+    padding: 10px 0;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.main-menu > li > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.main-menu > li > a:hover,
+.main-menu > li.current-menu-item > a {
+    color: var(--primary);
+}
+
+.main-menu > li > a:hover::after,
+.main-menu > li.current-menu-item > a::after {
+    width: 100%;
+}
+
+/* Dropdown Menu */
+.main-menu li.menu-item-has-children > a::before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.main-menu li.menu-item-has-children:hover > a::before {
+    transform: rotate(180deg);
+}
+
+.sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-radius: var(--radius-md);
+    padding: 10px 0;
+    list-style: none;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.main-menu li:hover > .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.sub-menu li {
+    margin: 0;
+}
+
+.sub-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.sub-menu a:hover {
+    background: var(--bg-light);
+    color: var(--primary);
+    padding-left: 25px;
+}
+
+/* Mobile Menu */
+@media (max-width: 1024px) {
+    .main-navigation {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 320px;
+        height: 100vh;
+        background: #fff;
+        box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+        padding: 100px 30px 30px;
+        overflow-y: auto;
+        transition: right 0.4s ease;
+        z-index: 999;
+    }
+    
+    .main-navigation.active {
+        right: 0;
+    }
+    
+    .main-menu {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+    
+    .main-menu > li {
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .main-menu > li > a {
+        padding: 18px 0;
+        font-size: 16px;
+    }
+    
+    .main-menu > li > a::after {
+        display: none;
+    }
+    
+    .sub-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        padding: 0 0 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .main-menu li.menu-item-has-children.open > .sub-menu {
+        max-height: 500px;
+    }
+    
+    .main-menu li.menu-item-has-children > a::before {
+        float: right;
+        margin-top: 8px;
+    }
+}
+
+/* Menu Overlay */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 998;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (min-width: 1025px) {
+    .menu-overlay {
+        display: none;
+    }
+}
