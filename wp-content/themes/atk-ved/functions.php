@@ -34,11 +34,14 @@ $atk_includes = [
     // Безопасность
     '/inc/security.php',
     '/inc/security-advanced.php',
+    '/inc/plugin-management.php',
     '/inc/recaptcha.php',
     '/inc/cookie-banner.php',
     // Оптимизация
     '/inc/logger.php',
     '/inc/pwa.php',
+    '/inc/image-optimization.php',
+    '/inc/cache-manager.php',
     // SEO
     '/inc/seo.php',
     '/inc/sitemap.php',
@@ -53,7 +56,7 @@ $atk_includes = [
     '/inc/acf-blocks.php',
     // REST API
     '/inc/rest-api.php',
-    '/inc/rest-cache.php',   // ← убран дубль
+    '/inc/rest-cache.php',
     // Виджеты
     '/inc/callback-widget.php',
     '/inc/chat-widget.php',

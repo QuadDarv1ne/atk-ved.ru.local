@@ -14,6 +14,44 @@ function atk_ved_remove_wp_version(): string {
 }
 add_filter('the_generator', 'atk_ved_remove_wp_version');
 
+// Дополнительное скрытие версии WordPress
+function atk_ved_remove_version_from_scripts_and_styles() {
+    if (!is_admin()) {
+        global $wp_version;
+        
+        // Удаляем версию из RSS-лент
+        add_filter('the_generator', '__return_empty_string', 999);
+        
+        // Удаляем версию из тегов script и style
+        if (is_a($wp_version, 'stdClass')) {
+            $wp_version = null;
+        }
+        
+        // Удаляем версию из RSS заголовков
+        remove_action('wp_head', 'feed_links_extra', 3);
+        remove_action('wp_head', 'rsd_link');
+        remove_action('wp_head', 'wlwmanifest_link');
+        remove_action('wp_head', 'index_rel_link');
+        remove_action('wp_head', 'parent_post_rel_link', 10, 0);
+        remove_action('wp_head', 'start_post_rel_link', 10, 0);
+        remove_action('wp_head', 'adjacent_posts_rel_link', 10, 0);
+        remove_action('wp_head', 'wp_generator');
+        
+        // Удаляем версию из script и style тегов
+        add_filter('style_loader_src', 'atk_ved_remove_version_from_url', 9999);
+        add_filter('script_loader_src', 'atk_ved_remove_version_from_url', 9999);
+    }
+}
+add_action('init', 'atk_ved_remove_version_from_scripts_and_styles');
+
+// Функция для удаления версии из URL
+function atk_ved_remove_version_from_url($src) {
+    if (strpos($src, 'ver=') !== false) {
+        $src = remove_query_arg('ver', $src);
+    }
+    return $src;
+}
+
 // Отключение редактирования файлов из админки
 if (!defined('DISALLOW_FILE_EDIT')) {
     define('DISALLOW_FILE_EDIT', true);
@@ -364,3 +402,32 @@ function atk_ved_auto_logout() {
     }
 }
 add_action('init', 'atk_ved_auto_logout');
+
+// WordPress Hardening - дополнительные меры безопасности
+function atk_ved_wordpress_hardening() {
+    // Отключение возможности установки плагинов/тем из админки
+    if (!defined('DISALLOW_FILE_MODS')) {
+        define('DISALLOW_FILE_MODS', true);
+    }
+    
+    // Ограничение количества ревизий
+    if (!defined('WP_POST_REVISIONS')) {
+        define('WP_POST_REVISIONS', 3);
+    }
+    
+    // Защита от clickjacking
+    add_action('send_headers', function() {
+        header('X-Frame-Options: DENY');
+    });
+    
+    // Защита от MIME-типов
+    add_action('send_headers', function() {
+        header('X-Content-Type-Options: nosniff');
+    });
+    
+    // Безопасная загрузка скриптов
+    add_action('send_headers', function() {
+        header('Content-Security-Policy: default-src \'self\'; script-src \'self\' https://*.googleapis.com https://*.gstatic.com; style-src \'self\' https://*.googleapis.com \'unsafe-inline\'; img-src \'self\' data: https:; font-src \'self\' https://*.gstatic.com;');
+    });
+}
+add_action('init', 'atk_ved_wordpress_hardening');
