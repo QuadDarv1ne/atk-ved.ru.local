@@ -10,10 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Load version configuration (single source of truth)
-require_once get_template_directory() . '/version.php';
-
-// Load Composer autoloader for theme
+// Load Composer autoloader for theme (includes version.php and helpers.php)
 $composer_autoload = get_template_directory() . '/vendor/autoload.php';
 if ( file_exists( $composer_autoload ) ) {
     require_once $composer_autoload;
