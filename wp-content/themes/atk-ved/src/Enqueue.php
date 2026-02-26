@@ -56,7 +56,8 @@ class Enqueue {
             wp_enqueue_style( 'atk-hero', get_template_directory_uri() . '/css/hero-counters.css', [], $v );
             wp_enqueue_style( 'atk-stats', get_template_directory_uri() . '/css/statistics.css', [], $v );
             wp_enqueue_style( 'atk-ux-improvements', get_template_directory_uri() . '/css/ux-improvements.css', [ 'atk-landing' ], $v );
-            wp_enqueue_style( 'atk-clean-design', get_template_directory_uri() . '/css/clean-design.css', [ 'atk-ui' ], $v );
+            // Современный чистый дизайн - загружается последним для перекрытия старых стилей
+            wp_enqueue_style( 'atk-modern-clean', get_template_directory_uri() . '/css/modern-clean.css', [ 'atk-ux-improvements' ], $v, 'all' );
         }
 
         // Модальные окна и формы
