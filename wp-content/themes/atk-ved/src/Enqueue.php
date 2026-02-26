@@ -34,34 +34,36 @@ class Enqueue {
 
         // === Стили ===
 
-        // Дизайн-система
+        // Базовые стили (критичные)
         wp_enqueue_style( 'atk-design-tokens', get_template_directory_uri() . '/css/design-tokens.css', [], $v );
         wp_enqueue_style( 'atk-modern-design', get_template_directory_uri() . '/css/modern-design.css', [ 'atk-design-tokens' ], $v );
         wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-modern-design' ], $v );
-        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui-components.css', [ 'atk-modern-design' ], $v );
-        wp_enqueue_style( 'atk-ui-extra', get_template_directory_uri() . '/css/additional-components.css', [ 'atk-ui' ], $v );
-        wp_enqueue_style( 'atk-animations', get_template_directory_uri() . '/css/animations-enhanced.css', [], $v );
-        wp_enqueue_style( 'atk-dark-mode', get_template_directory_uri() . '/css/dark-mode-toggle.css', [], $v );
-        wp_enqueue_style( 'atk-a11y', get_template_directory_uri() . '/css/accessibility.css', [], $v );
-        wp_enqueue_style( 'atk-ui-enhanced', get_template_directory_uri() . '/css/ui-enhancements.css', [ 'atk-ui' ], $v );
-
+        
         // Критический CSS inline
         $this->enqueue_critical_css();
 
-        // Условные стили для главной
+        // UI компоненты
+        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui-components.css', [ 'atk-style' ], $v );
+        wp_enqueue_style( 'atk-ui-enhanced', get_template_directory_uri() . '/css/ui-enhancements.css', [ 'atk-ui' ], $v );
+        
+        // Анимации и доступность
+        wp_enqueue_style( 'atk-animations', get_template_directory_uri() . '/css/animations-enhanced.css', [], $v );
+        wp_enqueue_style( 'atk-a11y', get_template_directory_uri() . '/css/accessibility.css', [], $v );
+
+        // Главная страница
         if ( is_front_page() ) {
-            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing-sections.css', [], '3.3' );
+            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing-sections.css', [ 'atk-ui' ], $v );
             wp_enqueue_style( 'atk-hero', get_template_directory_uri() . '/css/hero-counters.css', [], $v );
             wp_enqueue_style( 'atk-stats', get_template_directory_uri() . '/css/statistics.css', [], $v );
-            wp_enqueue_style( 'atk-stats-carousel', get_template_directory_uri() . '/css/statistics-carousel.css', [], '3.3' );
-            wp_enqueue_style( 'atk-animations-adv', get_template_directory_uri() . '/css/advanced-animations.css', [], '3.3' );
-            wp_enqueue_style( 'atk-ux-improvements', get_template_directory_uri() . '/css/ux-improvements.css', [], '1.0' );
+            wp_enqueue_style( 'atk-ux-improvements', get_template_directory_uri() . '/css/ux-improvements.css', [ 'atk-landing' ], $v );
         }
 
-        // Общие компоненты
+        // Модальные окна и формы
         wp_enqueue_style( 'atk-modal', get_template_directory_uri() . '/css/modal.css', [], $v );
+        wp_enqueue_style( 'atk-callback', get_template_directory_uri() . '/css/callback-modal.css', [ 'atk-modal' ], $v );
         wp_enqueue_style( 'atk-form', get_template_directory_uri() . '/css/form-loader.css', [], $v );
-        wp_enqueue_style( 'atk-callback', get_template_directory_uri() . '/css/callback-modal.css', [], $v );
+        
+        // Слайдеры и галереи
         wp_enqueue_style( 'atk-reviews', get_template_directory_uri() . '/css/reviews-slider.css', [], $v );
         wp_enqueue_style( 'atk-gallery', get_template_directory_uri() . '/css/gallery.css', [], $v );
 
@@ -84,14 +86,11 @@ class Enqueue {
         // Основные скрипты
         wp_enqueue_script( 'atk-main', get_template_directory_uri() . '/js/main.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui-components.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui-extra', get_template_directory_uri() . '/js/additional-components.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-ui-enhanced', get_template_directory_uri() . '/js/ui-components-enhanced.js', [ 'jquery', 'atk-main' ], $v, true );
         wp_enqueue_script( 'atk-modal', get_template_directory_uri() . '/js/modal.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-callback', get_template_directory_uri() . '/js/callback-modal.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-reviews', get_template_directory_uri() . '/js/reviews-slider.js', [ 'jquery' ], $v, true );
         wp_enqueue_script( 'atk-gallery', get_template_directory_uri() . '/js/gallery.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-enhance', get_template_directory_uri() . '/js/enhancements.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-tracking-js', get_template_directory_uri() . '/js/tracking.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui-enhanced', get_template_directory_uri() . '/js/ui-components-enhanced.js', [ 'jquery', 'atk-main' ], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {
