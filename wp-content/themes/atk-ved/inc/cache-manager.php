@@ -211,7 +211,7 @@ class ATK_VED_Cache_Manager {
     /**
      * Очистка кэша поста
      */
-    public function clear_post_cache( int $post_id, WP_Post $post = null ): void {
+    public function clear_post_cache( int $post_id, ?WP_Post $post = null ): void {
         if ( ! $post ) {
             $post = get_post( $post_id );
         }

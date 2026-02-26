@@ -80,7 +80,7 @@ add_filter( 'login_headerurl', 'project_core_login_logo_url' );
 function project_core_login_logo_url_title() {
     return get_bloginfo( 'name' );
 }
-add_filter( 'login_headertitle', 'project_core_login_logo_url_title' );
+add_filter( 'login_headertext', 'project_core_login_logo_url_title' );
 
 /**
  * Custom login logo styles

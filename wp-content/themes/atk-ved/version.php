@@ -22,24 +22,34 @@ declare(strict_types=1);
  * - MINOR: New features (backward compatible)
  * - PATCH: Bug fixes (backward compatible)
  */
-define('ATK_VED_VERSION', '3.3.0');
+if ( ! defined( 'ATK_VED_VERSION' ) ) {
+	define( 'ATK_VED_VERSION', '3.3.0' );
+}
 
 /**
  * Version history
  */
-define('ATK_VED_VERSION_HISTORY', [
-    '3.3.0' => '2026-02-26 — Полное улучшение проекта (тесты, Docker, CI/CD)',
-    '3.2.0' => '2026-02-26 — UI/UX Улучшения',
-    '3.1.0' => '2026-02-25 — Оптимизация производительности',
-    '3.0.0' => '2026-02-20 — Мажорное обновление',
-]);
+if ( ! defined( 'ATK_VED_VERSION_HISTORY' ) ) {
+	define( 'ATK_VED_VERSION_HISTORY', [
+		'3.3.0' => '2026-02-26 — Полное улучшение проекта (тесты, Docker, CI/CD)',
+		'3.2.0' => '2026-02-26 — UI/UX Улучшения',
+		'3.1.0' => '2026-02-25 — Оптимизация производительности',
+		'3.0.0' => '2026-02-20 — Мажорное обновление',
+	] );
+}
 
 /**
  * Minimum requirements
  */
-define('ATK_VED_MIN_PHP_VERSION', '8.1');
-define('ATK_VED_MIN_WP_VERSION', '6.0');
-define('ATK_VED_MIN_MYSQL_VERSION', '5.7');
+if ( ! defined( 'ATK_VED_MIN_PHP_VERSION' ) ) {
+	define( 'ATK_VED_MIN_PHP_VERSION', '8.1' );
+}
+if ( ! defined( 'ATK_VED_MIN_WP_VERSION' ) ) {
+	define( 'ATK_VED_MIN_WP_VERSION', '6.0' );
+}
+if ( ! defined( 'ATK_VED_MIN_MYSQL_VERSION' ) ) {
+	define( 'ATK_VED_MIN_MYSQL_VERSION', '5.7' );
+}
 
 /**
  * Theme directories and URLs

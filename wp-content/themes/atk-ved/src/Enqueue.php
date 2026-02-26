@@ -30,79 +30,80 @@ class Enqueue {
      * @return void
      */
     public function enqueue_scripts(): void {
-        $v = Base::VERSION;
+        $v = defined( 'ATK_VED_VERSION' ) ? ATK_VED_VERSION : Base::VERSION;
 
         // === Стили ===
 
         // Дизайн-система
-        wp_enqueue_style( 'atk-design-tokens', Base::uri() . '/css/design-tokens.css', [], '3.3' );
-        wp_enqueue_style( 'atk-modern-design', Base::uri() . '/css/modern-design.css', [ 'atk-design-tokens' ], '3.3' );
+        wp_enqueue_style( 'atk-design-tokens', get_template_directory_uri() . '/css/design-tokens.css', [], $v );
+        wp_enqueue_style( 'atk-modern-design', get_template_directory_uri() . '/css/modern-design.css', [ 'atk-design-tokens' ], $v );
         wp_enqueue_style( 'atk-style', get_stylesheet_uri(), [ 'atk-modern-design' ], $v );
-        wp_enqueue_style( 'atk-ui', Base::uri() . '/css/ui-components.css', [ 'atk-modern-design' ], $v );
-        wp_enqueue_style( 'atk-ui-extra', Base::uri() . '/css/additional-components.css', [ 'atk-ui' ], $v );
-        wp_enqueue_style( 'atk-animations', Base::uri() . '/css/animations-enhanced.css', [], '3.3' );
-        wp_enqueue_style( 'atk-dark-mode', Base::uri() . '/css/dark-mode-toggle.css', [], '3.3' );
-        wp_enqueue_style( 'atk-a11y', Base::uri() . '/css/accessibility.css', [], $v );
-        wp_enqueue_style( 'atk-ui-enhanced', Base::uri() . '/css/ui-enhancements.css', [ 'atk-ui' ], $v );
+        wp_enqueue_style( 'atk-ui', get_template_directory_uri() . '/css/ui-components.css', [ 'atk-modern-design' ], $v );
+        wp_enqueue_style( 'atk-ui-extra', get_template_directory_uri() . '/css/additional-components.css', [ 'atk-ui' ], $v );
+        wp_enqueue_style( 'atk-animations', get_template_directory_uri() . '/css/animations-enhanced.css', [], $v );
+        wp_enqueue_style( 'atk-dark-mode', get_template_directory_uri() . '/css/dark-mode-toggle.css', [], $v );
+        wp_enqueue_style( 'atk-a11y', get_template_directory_uri() . '/css/accessibility.css', [], $v );
+        wp_enqueue_style( 'atk-ui-enhanced', get_template_directory_uri() . '/css/ui-enhancements.css', [ 'atk-ui' ], $v );
 
         // Критический CSS inline
         $this->enqueue_critical_css();
 
         // Условные стили для главной
         if ( is_front_page() ) {
-            wp_enqueue_style( 'atk-landing', Base::uri() . '/css/landing-sections.css', [], '3.3' );
-            wp_enqueue_style( 'atk-hero', Base::uri() . '/css/hero-counters.css', [], $v );
-            wp_enqueue_style( 'atk-stats', Base::uri() . '/css/statistics.css', [], $v );
-            wp_enqueue_style( 'atk-stats-carousel', Base::uri() . '/css/statistics-carousel.css', [], '3.3' );
-            wp_enqueue_style( 'atk-animations-adv', Base::uri() . '/css/advanced-animations.css', [], '3.3' );
+            wp_enqueue_style( 'atk-landing', get_template_directory_uri() . '/css/landing-sections.css', [], '3.3' );
+            wp_enqueue_style( 'atk-hero', get_template_directory_uri() . '/css/hero-counters.css', [], $v );
+            wp_enqueue_style( 'atk-stats', get_template_directory_uri() . '/css/statistics.css', [], $v );
+            wp_enqueue_style( 'atk-stats-carousel', get_template_directory_uri() . '/css/statistics-carousel.css', [], '3.3' );
+            wp_enqueue_style( 'atk-animations-adv', get_template_directory_uri() . '/css/advanced-animations.css', [], '3.3' );
+            wp_enqueue_style( 'atk-ux-improvements', get_template_directory_uri() . '/css/ux-improvements.css', [], '1.0' );
         }
 
         // Общие компоненты
-        wp_enqueue_style( 'atk-modal', Base::uri() . '/css/modal.css', [], $v );
-        wp_enqueue_style( 'atk-form', Base::uri() . '/css/form-loader.css', [], $v );
-        wp_enqueue_style( 'atk-callback', Base::uri() . '/css/callback-modal.css', [], $v );
-        wp_enqueue_style( 'atk-reviews', Base::uri() . '/css/reviews-slider.css', [], $v );
-        wp_enqueue_style( 'atk-gallery', Base::uri() . '/css/gallery.css', [], $v );
+        wp_enqueue_style( 'atk-modal', get_template_directory_uri() . '/css/modal.css', [], $v );
+        wp_enqueue_style( 'atk-form', get_template_directory_uri() . '/css/form-loader.css', [], $v );
+        wp_enqueue_style( 'atk-callback', get_template_directory_uri() . '/css/callback-modal.css', [], $v );
+        wp_enqueue_style( 'atk-reviews', get_template_directory_uri() . '/css/reviews-slider.css', [], $v );
+        wp_enqueue_style( 'atk-gallery', get_template_directory_uri() . '/css/gallery.css', [], $v );
 
         // Страницы калькулятора/трекинга
         if ( $this->is_calc_page() ) {
-            wp_enqueue_style( 'atk-calculator', Base::uri() . '/css/calculator.css', [], $v );
-            wp_enqueue_style( 'atk-tracking', Base::uri() . '/css/shipment-tracking.css', [], $v );
+            wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [], $v );
+            wp_enqueue_style( 'atk-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', [], $v );
         }
 
         // 404
         if ( is_404() ) {
-            wp_enqueue_style( 'atk-404', Base::uri() . '/css/404.css', [], $v );
+            wp_enqueue_style( 'atk-404', get_template_directory_uri() . '/css/404.css', [], $v );
         }
 
         // === Скрипты ===
 
         // Лоадер в head
-        wp_enqueue_script( 'atk-loader', Base::uri() . '/js/loader.js', [], $v, false );
+        wp_enqueue_script( 'atk-loader', get_template_directory_uri() . '/js/loader.js', [], $v, false );
 
         // Основные скрипты
-        wp_enqueue_script( 'atk-main', Base::uri() . '/js/main.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui', Base::uri() . '/js/ui-components.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui-extra', Base::uri() . '/js/additional-components.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-modal', Base::uri() . '/js/modal.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-callback', Base::uri() . '/js/callback-modal.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-reviews', Base::uri() . '/js/reviews-slider.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-gallery', Base::uri() . '/js/gallery.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-enhance', Base::uri() . '/js/enhancements.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-tracking-js', Base::uri() . '/js/tracking.js', [ 'jquery' ], $v, true );
-        wp_enqueue_script( 'atk-ui-enhanced', Base::uri() . '/js/ui-components-enhanced.js', [ 'jquery', 'atk-main' ], $v, true );
+        wp_enqueue_script( 'atk-main', get_template_directory_uri() . '/js/main.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-ui', get_template_directory_uri() . '/js/ui-components.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-ui-extra', get_template_directory_uri() . '/js/additional-components.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-modal', get_template_directory_uri() . '/js/modal.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-callback', get_template_directory_uri() . '/js/callback-modal.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-reviews', get_template_directory_uri() . '/js/reviews-slider.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-gallery', get_template_directory_uri() . '/js/gallery.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-enhance', get_template_directory_uri() . '/js/enhancements.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-tracking-js', get_template_directory_uri() . '/js/tracking.js', [ 'jquery' ], $v, true );
+        wp_enqueue_script( 'atk-ui-enhanced', get_template_directory_uri() . '/js/ui-components-enhanced.js', [ 'jquery', 'atk-main' ], $v, true );
 
         // Главная страница
         if ( is_front_page() ) {
-            wp_enqueue_script( 'atk-counters', Base::uri() . '/js/hero-counters.js', [ 'jquery' ], $v, true );
-            wp_enqueue_script( 'atk-stats', Base::uri() . '/js/statistics.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/hero-counters.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-stats', get_template_directory_uri() . '/js/statistics.js', [ 'jquery' ], $v, true );
         }
 
         // Калькулятор и трекинг
         if ( $this->is_calc_page() ) {
-            wp_enqueue_script( 'atk-calc', Base::uri() . '/js/calculator.js', [ 'jquery' ], $v, true );
-            wp_enqueue_script( 'atk-calc-fe', Base::uri() . '/js/calculator-frontend.js', [ 'jquery', 'atk-calc' ], $v, true );
-            wp_enqueue_script( 'atk-ship', Base::uri() . '/js/shipment-tracking.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator.js', [ 'jquery' ], $v, true );
+            wp_enqueue_script( 'atk-calc-fe', get_template_directory_uri() . '/js/calculator-frontend.js', [ 'jquery', 'atk-calc' ], $v, true );
+            wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking.js', [ 'jquery' ], $v, true );
         }
 
         // Локализация JS
@@ -119,7 +120,7 @@ class Enqueue {
         $critical_css  = get_transient( $transient_key );
 
         if ( false === $critical_css ) {
-            $critical_file = Base::dir() . '/css/critical.css';
+            $critical_file = get_template_directory() . '/css/critical.css';
             $critical_css  = file_exists( $critical_file ) ? file_get_contents( $critical_file ) : '';
             set_transient( $transient_key, $critical_css, DAY_IN_SECONDS );
         }
@@ -163,11 +164,11 @@ class Enqueue {
         if ( is_front_page() ) {
             printf(
                 '<link rel="preload" href="%s" as="style">' . "\n",
-                esc_url( Base::uri() . '/css/modern-design.css' )
+                esc_url( get_template_directory_uri() . '/css/modern-design.css' )
             );
             printf(
                 '<link rel="preload" href="%s" as="script">' . "\n",
-                esc_url( Base::uri() . '/js/main.js' )
+                esc_url( get_template_directory_uri() . '/js/main.js' )
             );
         }
 

@@ -18,7 +18,6 @@
 
     <!-- Дополнительные правила -->
     <rule ref="WordPress.Security.EscapeOutput" />
-    <rule ref="WordPress.PHP.DisallowShortTernary" />
     <rule ref="WordPress.Arrays.MultipleStatementAlignment" />
 
     <!-- Игнорирование специфичных ошибок -->

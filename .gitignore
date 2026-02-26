@@ -1,24 +1,24 @@
 # =============================================================================
-# WORDPRESS CORE (если не в composer)
+# WORDPRESS CORE
 # =============================================================================
 /wp-admin/
 /wp-includes/
 /wp-config.php
 /wp-content/*.php
-/readme.html
-/readme.txt
-/license.txt
-/install.php
-/wp-settings.php
-/xmlrpc.php
-/wp-links-opml.php
-/wp-trackback.php
+readme.html
+readme.txt
+license.txt
+xmlrpc.php
+wp-links-opml.php
+wp-trackback.php
 
 # =============================================================================
 # DEPENDENCIES
 # =============================================================================
 /vendor/
 /node_modules/
+composer.lock
+package-lock.json
 
 # =============================================================================
 # BUILD OUTPUT
@@ -30,15 +30,14 @@
 *.map
 
 # =============================================================================
-# WORDPRESS PLUGINS (все кроме исключений)
+# WORDPRESS PLUGINS (все кроме кастомных)
 # =============================================================================
 /wp-content/plugins/*
-# Исключения — плагины в composer
 !/wp-content/plugins/
 /wp-content/plugins/.gitkeep
 
 # =============================================================================
-# WORDPRESS THEMES (все кроме активной)
+# WORDPRESS THEMES (только активная тема)
 # =============================================================================
 /wp-content/themes/*/
 !/wp-content/themes/atk-ved/
@@ -59,6 +58,8 @@
 /wp-content/cache/
 /wp-content/backups/
 /wp-content/backup-db/
+/wp-content/upgrade/
+/wp-content/w3tc-config/
 *.cache
 *.tmp
 *.temp
@@ -67,10 +68,14 @@
 # LOGS
 # =============================================================================
 *.log
-logs/
+/logs/
+/wp-content/logs/
 debug.log
 error_log
 php_errorlog
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # =============================================================================
 # DATABASE
@@ -80,23 +85,28 @@ php_errorlog
 *.db
 *.sqlite
 /database/
+/docker/mysql/*.sql
 
 # =============================================================================
-# ENVIRONMENT
+# ENVIRONMENT & SECRETS
 # =============================================================================
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 *.pem
 *.key
+*.crt
 /config/secrets/
 /config/credentials/
+auth.json
 
 # =============================================================================
 # IDE & EDITORS
 # =============================================================================
 /.idea/
 /.vscode/
+/.kiro/
+/.qoder/
 *.swp
 *.swo
 *~
@@ -105,6 +115,7 @@ php_errorlog
 .DS_Store
 Thumbs.db
 desktop.ini
+*.sublime-*
 
 # =============================================================================
 # TESTING & CI
@@ -113,6 +124,15 @@ desktop.ini
 /.phpunit.result.cache
 /coverage/
 /vendor/bin/phpunit
+phpunit.xml
+!phpunit.xml.dist
+
+# =============================================================================
+# DOCKER & LOCAL DEV
+# =============================================================================
+/docker/mysql/data/
+docker-compose.override.yml
+.docker/
 
 # =============================================================================
 # MISC
@@ -121,8 +141,12 @@ desktop.ini
 *.backup
 *.old
 *.orig
-*.sage/
 /wordpress/
 /wp/
-/salts.php
-docs/ACCOUNT's.md
+test-*.php
+test-*.html
+start-*.bat
+start-*.ps1
+setup.php
+/archive/
+/img-project/

@@ -1,3 +1,15 @@
+# BEGIN MIME Types
+<IfModule mod_mime.c>
+    AddType text/css css
+    AddType application/javascript js
+    AddType image/svg+xml svg
+    AddType font/woff2 woff2
+    AddType font/woff woff
+    AddType font/ttf ttf
+    AddType font/otf otf
+</IfModule>
+# END MIME Types
+
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
@@ -115,7 +127,7 @@ AddOutputFilterByType DEFLATE font/woff2
     RedirectMatch 403 /\.env
     RedirectMatch 403 /wp-content/upgrade
     RedirectMatch 403 /wp-content/cache
-    RedirectMatch 403 /wp-includes
+    # RedirectMatch 403 /wp-includes  # Закомментировано для работы WordPress
 </IfModule>
 # END Security - Block Access to Sensitive Files
 

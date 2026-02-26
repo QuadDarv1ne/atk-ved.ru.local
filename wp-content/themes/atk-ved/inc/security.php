@@ -317,7 +317,7 @@ function atk_ved_block_suspicious_requests(): void {
 
 	// Дополнительная проверка POST данных
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_php_file_get_contents
 		$post_data = file_get_contents( 'php://input' );
 		foreach ( $suspicious_patterns as $pattern ) {
@@ -338,7 +338,7 @@ add_action( 'init', 'atk_ved_block_suspicious_requests' );
  */
 function atk_ved_verify_referer(): void {
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$referer = $_SERVER['HTTP_REFERER'] ?? '';
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -375,7 +375,7 @@ add_action( 'init', 'atk_ved_add_csrf_token' );
  */
 function atk_ved_verify_csrf_token(): bool {
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 		if ( ! isset( $_POST['csrf_token'] ) || ! isset( $_SESSION['csrf_token'] ) ) {
 			return false;
 		}

@@ -177,7 +177,7 @@ class ATK_VED_Enhanced_Cache {
     
     private $cache_expiration = 3600; // 1 час
     
-    public function get_cached_data(string $key, callable $callback, int $expiration = null) {
+    public function get_cached_data(string $key, callable $callback, ?int $expiration = null) {
         if ($expiration !== null) {
             $this->cache_expiration = $expiration;
         }
@@ -215,7 +215,7 @@ class ATK_VED_Enhanced_Image_Optimizer {
     /**
      * Генерация оптимизированных srcset для изображений
      */
-    public function generate_optimized_srcset(int $attachment_id, array $sizes = null): string {
+    public function generate_optimized_srcset(int $attachment_id, ?array $sizes = null): string {
         if (!$sizes) {
             $sizes = [
                 'thumbnail' => 150,

@@ -18,15 +18,34 @@ if ( ! defined( 'ATK_VED_URI' ) ) {
     define( 'ATK_VED_URI', get_template_directory_uri() );
 }
 
+// Load theme version
+$version_file = get_template_directory() . '/version.php';
+if ( file_exists( $version_file ) ) {
+    require_once $version_file;
+}
+
 // Load Composer autoloader for theme
 $composer_autoload = get_template_directory() . '/vendor/autoload.php';
 if ( file_exists( $composer_autoload ) ) {
     require_once $composer_autoload;
-} else {
-    // Fallback: manually include version.php if Composer autoloader doesn't exist
-    $version_file = get_template_directory() . '/version.php';
-    if ( file_exists( $version_file ) ) {
-        require_once $version_file;
+}
+
+// Manually include core classes (fallback if no Composer autoload)
+$core_files = [
+    '/src/Base.php',
+    '/src/Setup.php',
+    '/src/Enqueue.php',
+    '/src/Ajax.php',
+    '/src/Shortcodes.php',
+    '/src/Customizer.php',
+    '/src/Theme.php',
+    '/src/Loader.php',
+];
+
+foreach ( $core_files as $file ) {
+    $path = get_template_directory() . $file;
+    if ( file_exists( $path ) ) {
+        require_once $path;
     }
 }
 
@@ -38,28 +57,9 @@ if ( defined( 'ATK_VED_MIN_PHP_VERSION' ) && version_compare( PHP_VERSION, ATK_V
     return;
 }
 
-// Initialize theme loader if class exists
-if ( class_exists( '\ATKVed\Loader' ) ) {
-    \ATKVed\Loader::init();
-} else {
-    // Fallback: manually include necessary files if autoloader is not available
-    $fallback_includes = [
-        '/src/Base.php',
-        '/src/Theme.php',
-        '/src/Loader.php',
-    ];
-    
-    foreach ( $fallback_includes as $file ) {
-        $path = get_template_directory() . $file;
-        if ( file_exists( $path ) ) {
-            require_once $path;
-        }
-    }
-    
-    // Initialize theme if loader class exists after manual includes
-    if ( class_exists( '\ATKVed\Loader' ) ) {
-        \ATKVed\Loader::init();
-    }
+// Initialize theme
+if ( class_exists( '\ATKVed\Theme' ) ) {
+    \ATKVed\Theme::get_instance();
 }
 
 $atk_includes = [
