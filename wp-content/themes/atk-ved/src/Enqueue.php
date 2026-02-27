@@ -197,8 +197,37 @@ class Enqueue {
             }
         }
 
+        // Добавить defer для некритичных скриптов
+        add_filter( 'script_loader_tag', [ $this, 'add_defer_attribute' ], 10, 2 );
+
         // Локализация JS
         $this->localize_script();
+    }
+
+    /**
+     * Добавить defer атрибут для некритичных скриптов
+     *
+     * @param string $tag HTML тег скрипта
+     * @param string $handle Handle скрипта
+     * @return string Модифицированный тег
+     */
+    public function add_defer_attribute( string $tag, string $handle ): string {
+        // Список скриптов для defer
+        $defer_scripts = [
+            'atk-performance-metrics',
+            'atk-share',
+            'atk-counters',
+            'atk-map',
+            'atk-advanced-lazy',
+            'atk-accessibility',
+            'bootstrap',
+        ];
+
+        if ( in_array( $handle, $defer_scripts, true ) ) {
+            return str_replace( ' src', ' defer src', $tag );
+        }
+
+        return $tag;
     }
 
     /**

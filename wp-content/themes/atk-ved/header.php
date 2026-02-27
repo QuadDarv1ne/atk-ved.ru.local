@@ -6,6 +6,13 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#e31e24">
     
+    <!-- Resource Hints для ускорения загрузки -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link rel="dns-prefetch" href="//mc.yandex.ru">
+    <link rel="dns-prefetch" href="//maps.googleapis.com">
+    
     <!-- Favicon -->
     <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/favicon/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/favicon/favicon.ico" sizes="any">
