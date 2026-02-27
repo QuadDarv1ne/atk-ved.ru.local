@@ -17,6 +17,24 @@ function atk_ved_handle_contact_form() {
         wp_send_json_error(['message' => $security_check['message']]);
     }
 
+    // Проверка reCAPTCHA v3
+    $recaptcha_response = $_POST['recaptcha_response'] ?? '';
+    if (!empty($recaptcha_response)) {
+        $recaptcha_result = atk_ved_verify_recaptcha($recaptcha_response);
+        
+        if (!$recaptcha_result['valid']) {
+            wp_send_json_error(['message' => 'Ошибка проверки reCAPTCHA. Попробуйте ещё раз.']);
+        }
+        
+        // Если score < 0.5, это подозрительно
+        if ($recaptcha_result['score'] < 0.5) {
+            atk_ved_log_security_event('recaptcha_low_score', [
+                'score' => $recaptcha_result['score'],
+                'form' => 'contact'
+            ]);
+        }
+    }
+
     // Получение данных
     $name = sanitize_text_field($_POST['name'] ?? '');
     $phone = sanitize_text_field($_POST['phone'] ?? '');

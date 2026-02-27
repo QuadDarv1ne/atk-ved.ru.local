@@ -239,6 +239,10 @@ class Enqueue {
             'siteUrl'   => home_url( '/' ),
             'metrikaId' => (int) get_theme_mod( 'atk_ved_metrika_id', 0 ),
             'gaId'      => sanitize_text_field( get_theme_mod( 'atk_ved_ga_id', '' ) ),
+            'recaptcha' => [
+                'siteKey' => sanitize_text_field( get_theme_mod( 'atk_ved_recaptcha_site_key', '' ) ),
+                'enabled' => get_theme_mod( 'atk_ved_recaptcha_enabled', false ),
+            ],
             'calculator' => [
                 'nonce'  => wp_create_nonce( 'atk_ved_calculator_nonce' ),
                 'action' => 'atk_ved_calculate_delivery',
