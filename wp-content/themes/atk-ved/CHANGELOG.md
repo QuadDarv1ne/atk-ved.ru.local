@@ -5,21 +5,30 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/),
 и этот проект придерживается [Semantic Versioning](https://semver.org/lang/ru/).
 
+## [Unreleased]
+
 ## [3.5.0] - 2026-02-27
 
 ### Добавлено
-- Полная поддержка vanilla JavaScript без jQuery зависимостей
-- Расширенное тестирование форм и доступности
-- Rate limiting и honeypot защита для форм
-- SEO: Open Graph, Twitter Card, Schema.org разметка
-- robots.txt с правилами индексации
-- Подробная документация тестирования
+- ✅ Калькулятор доставки с backend (calculator-backend.js, calculator.php)
+- ✅ Система отслеживания грузов (shipment-tracking-vanilla.js, shipment-tracking.php)
+- ✅ SEO meta descriptions для всех страниц
+- ✅ reCAPTCHA v3 для защиты форм
+- ✅ Полная поддержка vanilla JavaScript без jQuery зависимостей
+- ✅ Расширенное тестирование форм и доступности
+- ✅ Rate limiting и honeypot защита для форм
+- ✅ SEO: Open Graph, Twitter Card, Schema.org разметка
+- ✅ robots.txt с правилами индексации
+- ✅ Resource hints (preconnect, dns-prefetch)
+- ✅ Defer для некритичных скриптов (7 файлов)
+- ✅ Viewport fix для iOS
 
 ### Изменено
 - **BREAKING**: Полностью удалён jQuery из проекта
 - Все скрипты переписаны на vanilla JavaScript
 - Enqueue.php использует только vanilla-версии скриптов
 - Обновлён composer.json с актуальными зависимостями
+- Обновлён package.json до v3.5.0
 - PHPStan уровень 5 с расширенной конфигурацией
 
 ### Удалено
@@ -31,7 +40,15 @@
 ### Производительность
 - Экономия ~35KB на каждой странице (полное удаление jQuery)
 - Уменьшение количества HTTP запросов
-- Улучшение времени загрузки JS
+- Resource hints для Google Fonts и аналитики
+- Defer для 7 некритичных скриптов
+- Viewport fix для корректного 100vh на iOS
+
+### Безопасность
+- reCAPTCHA v3 для всех форм
+- Nonce проверка
+- Honeypot поля
+- Rate limiting
 
 ## [3.4.0] - 2026-02-26
 
