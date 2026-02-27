@@ -41,7 +41,7 @@ final class Theme
      *
      * @return self
      */
-    public static function getInstance(): self
+    public static function get_instance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -240,7 +240,7 @@ final class Theme
      */
     public static function getCompanyInfo(): array
     {
-        return self::getInstance()->get('company')->getInfo();
+        return self::get_instance()->get('company')->getInfo();
     }
 
     /**
@@ -250,7 +250,7 @@ final class Theme
      */
     public static function getSocialLinks(): array
     {
-        return self::getInstance()->get('company')->getSocialLinks();
+        return self::get_instance()->get('company')->getSocialLinks();
     }
 
     /**
@@ -260,6 +260,6 @@ final class Theme
      */
     public static function getTrustBadges(): array
     {
-        return self::getInstance()->get('company')->getTrustBadges();
+        return self::get_instance()->get('company')->getTrustBadges();
     }
 }

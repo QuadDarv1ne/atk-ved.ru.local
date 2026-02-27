@@ -90,13 +90,23 @@ class Enqueue {
         }
 
         // Blog and archives
-        if ( is_home() || is_archive() || is_search() ) {
+        if ( is_home() || is_archive() ) {
             wp_enqueue_style( 'atk-blog', get_template_directory_uri() . '/css/blog.css', [ 'atk-base' ], $v );
         }
 
         // Single Post
         if ( is_single() ) {
             wp_enqueue_style( 'atk-single', get_template_directory_uri() . '/css/single.css', [ 'atk-base' ], $v );
+        }
+
+        // Search Page
+        if ( is_search() ) {
+            wp_enqueue_style( 'atk-search', get_template_directory_uri() . '/css/search.css', [ 'atk-base' ], $v );
+        }
+
+        // Default Page
+        if ( is_page() && ! is_page_template() ) {
+            wp_enqueue_style( 'atk-page', get_template_directory_uri() . '/css/page.css', [ 'atk-base' ], $v );
         }
 
         // Страницы калькулятора/трекинга
@@ -109,7 +119,7 @@ class Enqueue {
 
         // 404
         if ( is_404() ) {
-            wp_enqueue_style( 'atk-404', get_template_directory_uri() . '/css/404.css', [], $v );
+            wp_enqueue_style( 'atk-404', get_template_directory_uri() . '/css/404.css', [ 'atk-base' ], $v );
         }
 
         // Privacy Policy
@@ -129,7 +139,7 @@ class Enqueue {
 
         // Contacts Page
         if ( is_page_template( 'page-contacts.php' ) ) {
-            wp_enqueue_style( 'atk-contacts', get_template_directory_uri() . '/css/contacts.css', [ 'atk-base' ], $v );
+            wp_enqueue_style( 'atk-contacts-page', get_template_directory_uri() . '/css/contacts.css', [ 'atk-base' ], $v );
             wp_enqueue_script( 'atk-contact-form', get_template_directory_uri() . '/js/contact-form.js', [], $v, true );
         }
 

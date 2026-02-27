@@ -39,32 +39,32 @@ defined('ABSPATH') || exit;
             <?php
             $services = [
                 [
-                    'icon' => '<i class="bi bi-search"></i>',
+                    'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
                     'title' => 'Поиск товаров',
                     'desc' => 'Находим нужные товары на китайских площадках по вашим требованиям'
                 ],
                 [
-                    'icon' => '<i class="bi bi-check-circle-fill"></i>',
+                    'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
                     'title' => 'Проверка качества',
                     'desc' => 'Контролируем качество до отправки, делаем фото и видеоотчёты'
                 ],
                 [
-                    'icon' => '<i class="bi bi-truck"></i>',
+                    'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
                     'title' => 'Доставка грузов',
                     'desc' => 'Организуем доставку авиа, морем, ЖД или авто'
                 ],
                 [
-                    'icon' => '<i class="bi bi-file-text"></i>',
+                    'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
                     'title' => 'Таможенное оформление',
                     'desc' => 'Берём на себя таможенное оформление и сертификацию'
                 ],
                 [
-                    'icon' => '<i class="bi bi-building"></i>',
+                    'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
                     'title' => 'Складская логистика',
                     'desc' => 'Хранение и обработка грузов на наших складах в Китае'
                 ],
                 [
-                    'icon' => '<i class="bi bi-chat-dots"></i>',
+                    'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
                     'title' => 'Консультации',
                     'desc' => 'Консультируем по всем вопросам работы с Китаем'
                 ]
@@ -99,21 +99,33 @@ defined('ABSPATH') || exit;
         
         <div class="delivery-grid-clean">
             <div class="delivery-card-clean">
-                <div class="delivery-icon-clean"><i class="bi bi-airplane"></i></div>
+                <div class="delivery-icon-clean">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+                    </svg>
+                </div>
                 <h3 class="delivery-title-clean">Авиа</h3>
                 <p class="delivery-time-clean">7-10 дней</p>
                 <p class="delivery-price-clean">от $5/кг</p>
             </div>
             
             <div class="delivery-card-clean">
-                <div class="delivery-icon-clean"><i class="bi bi-train-front"></i></div>
+                <div class="delivery-icon-clean">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h6"/>
+                    </svg>
+                </div>
                 <h3 class="delivery-title-clean">Ж/Д</h3>
                 <p class="delivery-time-clean">20-25 дней</p>
                 <p class="delivery-price-clean">от $2/кг</p>
             </div>
             
             <div class="delivery-card-clean">
-                <div class="delivery-icon-clean"><i class="bi bi-ship"></i></div>
+                <div class="delivery-icon-clean">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/>
+                    </svg>
+                </div>
                 <h3 class="delivery-title-clean">Море</h3>
                 <p class="delivery-time-clean">35-45 дней</p>
                 <p class="delivery-price-clean">от $1/кг</p>
@@ -277,10 +289,30 @@ defined('ABSPATH') || exit;
                 </p>
                 
                 <ul class="contact-benefits">
-                    <li><i class="bi bi-check-circle-fill"></i> Расчёт стоимости за 15 минут</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Скидка 10% на первую доставку</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Персональный менеджер</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Полная поддержка 24/7</li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Расчёт стоимости за 15 минут
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Скидка 10% на первую доставку
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Персональный менеджер
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Полная поддержка 24/7
+                    </li>
                 </ul>
             </div>
             

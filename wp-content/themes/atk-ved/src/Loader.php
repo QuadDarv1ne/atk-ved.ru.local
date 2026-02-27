@@ -41,7 +41,7 @@ final class Loader {
      * @return void
      */
     private static function load_composer_autoloader(): void {
-        $autoload_path = Base::src_dir() . self::COMPOSER_AUTOLOAD;
+        $autoload_path = Base::dir() . self::COMPOSER_AUTOLOAD;
 
         if ( file_exists( $autoload_path ) ) {
             require_once $autoload_path;

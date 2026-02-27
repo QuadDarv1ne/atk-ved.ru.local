@@ -1,0 +1,208 @@
+/**
+ * Стили для обычной страницы
+ * 
+ * @package ATK_VED
+ */
+
+.default-page {
+    padding: 80px 0;
+    background: var(--bg-primary, #fff);
+}
+
+.default-page .container {
+    max-width: 900px;
+}
+
+.page-article {
+    background: var(--bg-secondary, #fafafa);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.page-header {
+    padding: 60px 60px 40px;
+    background: var(--bg-primary, #fff);
+    text-align: center;
+}
+
+.page-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text-primary, #2c2c2c);
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.page-thumbnail {
+    width: 100%;
+    overflow: hidden;
+}
+
+.page-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.page-content {
+    padding: 60px;
+    background: var(--bg-primary, #fff);
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--text-primary, #2c2c2c);
+}
+
+.page-content p {
+    margin-bottom: 20px;
+}
+
+.page-content h2,
+.page-content h3,
+.page-content h4 {
+    font-weight: 700;
+    color: var(--text-primary, #2c2c2c);
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.page-content h2 {
+    font-size: 32px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color, #e0e0e0);
+}
+
+.page-content h3 {
+    font-size: 26px;
+}
+
+.page-content h4 {
+    font-size: 22px;
+}
+
+.page-content ul,
+.page-content ol {
+    margin: 20px 0;
+    padding-left: 30px;
+}
+
+.page-content li {
+    margin-bottom: 10px;
+}
+
+.page-content a {
+    color: var(--primary-color, #e31e24);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.page-content a:hover {
+    color: #c41519;
+}
+
+.page-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 30px 0;
+}
+
+.page-content blockquote {
+    margin: 30px 0;
+    padding: 20px 30px;
+    background: var(--bg-secondary, #fafafa);
+    border-left: 4px solid var(--primary-color, #e31e24);
+    border-radius: 8px;
+    font-style: italic;
+    color: var(--text-secondary, #666);
+}
+
+.page-content code {
+    background: var(--bg-secondary, #fafafa);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.page-content pre {
+    background: var(--bg-secondary, #fafafa);
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+.page-content pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .default-page {
+        padding: 60px 0;
+    }
+
+    .page-header {
+        padding: 40px 30px 30px;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+
+    .page-content {
+        padding: 40px 30px;
+        font-size: 16px;
+    }
+
+    .page-content h2 {
+        font-size: 24px;
+    }
+
+    .page-content h3 {
+        font-size: 20px;
+    }
+
+    .page-content h4 {
+        font-size: 18px;
+    }
+}
+
+/* Темная тема */
+[data-theme="dark"] .default-page {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] .page-article {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .page-header,
+[data-theme="dark"] .page-content {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .page-content h2,
+[data-theme="dark"] .page-content h3,
+[data-theme="dark"] .page-content h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-content {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-content h2 {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .page-content blockquote,
+[data-theme="dark"] .page-content code,
+[data-theme="dark"] .page-content pre {
+    background: var(--bg-primary);
+}
