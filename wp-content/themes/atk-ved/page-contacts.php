@@ -17,8 +17,24 @@ get_header();
     <!-- Hero -->
     <section class="contacts-hero">
         <div class="container">
-            <h1>Контакты</h1>
-            <p>Свяжитесь с нами удобным способом</p>
+            <div class="hero-content">
+                <h1><?php _e('Свяжитесь с нами', 'atk-ved'); ?></h1>
+                <p><?php _e('Мы всегда на связи и готовы помочь с вашими вопросами', 'atk-ved'); ?></p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-value">15 <?php _e('мин', 'atk-ved'); ?></span>
+                        <span class="stat-label"><?php _e('Время ответа', 'atk-ved'); ?></span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">24/7</span>
+                        <span class="stat-label"><?php _e('Онлайн-поддержка', 'atk-ved'); ?></span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">5+</span>
+                        <span class="stat-label"><?php _e('Способов связи', 'atk-ved'); ?></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -32,13 +48,17 @@ get_header();
                     <h2>Как с нами связаться</h2>
                     
                     <div class="contact-method">
-                        <div class="contact-method__icon"><i class="bi bi-telephone-fill"></i></div>
+                        <div class="contact-method__icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
                         <div class="contact-method__content">
-                            <h3>Телефон</h3>
-                            <a href="tel:<?php echo esc_attr(str_replace([' ', '(', ')', '-'], '', $company['phone'])); ?>">
+                            <h3><?php _e('Телефон', 'atk-ved'); ?></h3>
+                            <a href="tel:<?php echo esc_attr(str_replace([' ', '(', ')', '-'], '', $company['phone'])); ?>" class="contact-link">
                                 <?php echo esc_html($company['phone']); ?>
                             </a>
-                            <p>Пн-Пт: 9:00 - 18:00 (МСК)</p>
+                            <p class="contact-note"><?php _e('Пн-Пт: 9:00 - 18:00 (МСК)', 'atk-ved'); ?></p>
                         </div>
                     </div>
 
