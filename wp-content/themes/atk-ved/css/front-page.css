@@ -789,3 +789,61 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ========== MISSING SERVICE CARD STYLES ========== */
+.service-card-enhanced {
+    position: relative;
+}
+
+.service-number {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 48px;
+    font-weight: 800;
+    color: rgba(227, 30, 36, 0.1);
+    line-height: 1;
+}
+
+.service-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 12px;
+}
+
+.service-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.service-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    color: #e31e24;
+    border: 2px solid #e31e24;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .3s ease;
+}
+
+.service-btn:hover {
+    background: #e31e24;
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.service-btn svg {
+    transition: transform .3s ease;
+}
+
+.service-btn:hover svg {
+    transform: translateX(3px);
+}

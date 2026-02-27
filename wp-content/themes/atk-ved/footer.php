@@ -90,14 +90,20 @@
                     <!-- Колонка: О компании -->
                     <div class="footer-col footer-col--about">
                         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-logo" aria-label="<?php esc_attr_e( 'АТК ВЭД — на главную', 'atk-ved' ); ?>" itemprop="url">
-                            <img 
-                                src="<?php echo esc_url( $logo_url ); ?>" 
-                                alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" 
-                                width="160" 
-                                height="48" 
-                                loading="lazy"
-                                itemprop="logo"
-                            >
+                            <?php if (file_exists(get_template_directory() . '/images/logo-white.png')) : ?>
+                                <img 
+                                    src="<?php echo esc_url( $logo_url ); ?>" 
+                                    alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" 
+                                    width="160" 
+                                    height="48" 
+                                    loading="lazy"
+                                    itemprop="logo"
+                                >
+                            <?php else : ?>
+                                <span style="font-size: 20px; font-weight: bold; color: #fff;">
+                                    <?php echo esc_html(get_bloginfo('name')); ?>
+                                </span>
+                            <?php endif; ?>
                         </a>
                         <p class="footer-desc" itemprop="description">
                             <?php esc_html_e( 'Товары для маркетплейсов из Китая оптом. Полный цикл работы от поиска до доставки с гарантией качества.', 'atk-ved' ); ?>
@@ -245,9 +251,19 @@
                     </nav>
                     
                     <div class="payment-methods" aria-label="<?php esc_attr_e( 'Принимаемые карты', 'atk-ved' ); ?>">
-                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/images/payments/visa.svg"    alt="Visa"           width="38" height="24" loading="lazy">
-                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/images/payments/mir.svg"     alt="МИР"            width="38" height="24" loading="lazy">
-                        <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/images/payments/swift.svg"   alt="SWIFT Transfer" width="38" height="24" loading="lazy">
+                        <?php 
+                        $payment_icons = [
+                            'visa' => 'Visa',
+                            'mir' => 'МИР',
+                            'swift' => 'SWIFT Transfer'
+                        ];
+                        foreach ($payment_icons as $icon => $alt) {
+                            $icon_path = get_template_directory() . '/images/payments/' . $icon . '.svg';
+                            if (file_exists($icon_path)) {
+                                echo '<img src="' . esc_url(get_template_directory_uri() . '/images/payments/' . $icon . '.svg') . '" alt="' . esc_attr($alt) . '" width="38" height="24" loading="lazy">';
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

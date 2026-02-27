@@ -160,25 +160,22 @@ add_filter('script_loader_tag', function($tag, $handle) {
 }, 10, 2);
 
 /**
- * Кэширование меню
+ * Кэширование меню - ВРЕМЕННО ОТКЛЮЧЕНО
+ * 
+ * Menu caching has been temporarily disabled to fix site loading issues.
+ * The serialize($args) approach was causing hangs with complex menu objects.
  */
+
+// Menu caching disabled - uncomment and fix if needed
+/*
 add_filter('pre_wp_nav_menu', function($output, $args) {
-    $cache_key = 'nav_menu_' . md5(serialize($args));
-    $cached = wp_cache_get($cache_key, 'atk_ved_menus');
-    
-    if ($cached !== false) {
-        return $cached;
-    }
-    
-    return $output;
+    // ... caching code here ...
 }, 10, 2);
 
 add_filter('wp_nav_menu', function($nav_menu, $args) {
-    $cache_key = 'nav_menu_' . md5(serialize($args));
-    wp_cache_set($cache_key, $nav_menu, 'atk_ved_menus', 3600);
-    
-    return $nav_menu;
+    // ... caching code here ...
 }, 10, 2);
+*/
 
 /**
  * Очистка кэша при обновлении меню

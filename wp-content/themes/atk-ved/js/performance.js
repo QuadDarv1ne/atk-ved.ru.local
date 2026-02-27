@@ -209,10 +209,10 @@
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
                 .then(registration => {
-                    console.log('SW registered:', registration);
+                    if (window.WP_DEBUG) console.log('SW registered:', registration);
                 })
                 .catch(error => {
-                    console.log('SW registration failed:', error);
+                    if (window.WP_DEBUG) console.log('SW registration failed:', error);
                 });
         });
     }
@@ -232,7 +232,7 @@
         
         // Listen for connection changes
         connection.addEventListener('change', () => {
-            console.log('Connection changed:', connection.effectiveType);
+            if (window.WP_DEBUG) console.log('Connection changed:', connection.effectiveType);
         });
     }
 
@@ -285,11 +285,13 @@
                 const connectTime = perfData.responseEnd - perfData.requestStart;
                 const renderTime = perfData.domComplete - perfData.domLoading;
                 
-                console.log('Performance Metrics:', {
-                    pageLoadTime: `${pageLoadTime}ms`,
-                    connectTime: `${connectTime}ms`,
-                    renderTime: `${renderTime}ms`
-                });
+                if (window.WP_DEBUG) {
+                    console.log('Performance Metrics:', {
+                        pageLoadTime: `${pageLoadTime}ms`,
+                        connectTime: `${connectTime}ms`,
+                        renderTime: `${renderTime}ms`
+                    });
+                }
                 
                 // Send to analytics if needed
                 if (window.gtag) {
@@ -306,7 +308,7 @@
     // Detect and handle slow connections
     if ('connection' in navigator && navigator.connection.saveData) {
         document.documentElement.classList.add('save-data');
-        console.log('Data Saver mode detected');
+        if (window.WP_DEBUG) console.log('Data Saver mode detected');
     }
 
     // Optimize third-party scripts
