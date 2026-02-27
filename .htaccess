@@ -102,8 +102,8 @@ AddOutputFilterByType DEFLATE font/woff2
     # Удаление заголовка версии сервера
     ServerSignature Off
     
-    # HTTPS заголовки (раскомментировать при использовании HTTPS)
-    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    # HTTPS заголовки (включено для production)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     
     # Дополнительная защита для загружаемых файлов
     <FilesMatch "\.(pdf|doc|docx|xls|xlsx|zip|rar)$">

@@ -160,12 +160,12 @@ function atk_ved_ajax_quick_view(): void {
     ?>
     <div class="quick-view-product">
         <div class="quick-view-image">
-            <?php echo $product->get_image('large'); ?>
+            <?php echo wp_kses_post($product->get_image('large')); ?>
         </div>
         <div class="quick-view-details">
-            <h2 class="product-title"><?php echo $product->get_name(); ?></h2>
-            <div class="product-price"><?php echo $product->get_price_html(); ?></div>
-            <div class="product-description"><?php echo $product->get_short_description(); ?></div>
+            <h2 class="product-title"><?php echo esc_html($product->get_name()); ?></h2>
+            <div class="product-price"><?php echo wp_kses_post($product->get_price_html()); ?></div>
+            <div class="product-description"><?php echo wp_kses_post($product->get_short_description()); ?></div>
             
             <?php if ($product->is_in_stock()): ?>
                 <div class="product-stock in-stock">
@@ -185,10 +185,10 @@ function atk_ved_ajax_quick_view(): void {
             <?php endif; ?>
             
             <div class="product-actions">
-                <button type="button" class="btn btn-primary add-to-cart-quick" data-product-id="<?php echo $product_id; ?>">
+                <button type="button" class="btn btn-primary add-to-cart-quick" data-product-id="<?php echo esc_attr($product_id); ?>">
                     <?php _e('Добавить в корзину', 'atk-ved'); ?>
                 </button>
-                <a href="<?php echo $product->get_permalink(); ?>" class="btn btn-secondary">
+                <a href="<?php echo esc_url($product->get_permalink()); ?>" class="btn btn-secondary">
                     <?php _e('Подробнее', 'atk-ved'); ?>
                 </a>
             </div>
@@ -278,14 +278,14 @@ function atk_ved_thank_you_page(): void {
     <script>
     if (typeof ym !== 'undefined') {
         ym(<?php echo esc_js(get_theme_mod('atk_ved_metrika_id', 0)); ?>, 'reachGoal', 'order_completed', {
-            order_id: '<?php echo $order_id; ?>',
-            order_total: <?php echo $order->get_total(); ?>
+            order_id: '<?php echo esc_js($order_id); ?>',
+            order_total: <?php echo floatval($order->get_total()); ?>
         });
     }
     if (typeof gtag !== 'undefined') {
         gtag('event', 'purchase', {
-            'transaction_id': '<?php echo $order_id; ?>',
-            'value': <?php echo $order->get_total(); ?>,
+            'transaction_id': '<?php echo esc_js($order_id); ?>',
+            'value': <?php echo floatval($order->get_total()); ?>,
             'currency': 'RUB'
         });
     }

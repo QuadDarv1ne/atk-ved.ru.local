@@ -182,12 +182,12 @@ function atk_ved_tabs_shortcode(array $atts, string $content = ''): string {
     ?>
     <div class="<?php echo esc_attr($class); ?>" id="<?php echo esc_attr($atts['id']); ?>" role="tablist"
          <?php if ($atts['keyboard_navigation'] === '1'): ?>data-keyboard-navigation="true"<?php endif; ?>
-         aria-orientation="<?php echo $atts['vertical'] === '1' ? 'vertical' : 'horizontal'; ?>">
+         aria-orientation="<?php echo esc_attr($atts['vertical'] === '1' ? 'vertical' : 'horizontal'); ?>">
         <div class="tabs-header" role="tablist">
-            <?php echo $tabs_header; ?>
+            <?php echo wp_kses_post($tabs_header); ?>
         </div>
         <div class="tabs-content">
-            <?php echo $tabs_content; ?>
+            <?php echo wp_kses_post($tabs_content); ?>
         </div>
     </div>
     <?php
@@ -255,13 +255,13 @@ function atk_ved_accordion_shortcode(array $atts, string $content = ''): string 
             $is_active = isset($item_atts['active']) && $item_atts['active'] === '1';
             ?>
             
-            <div class="accordion-item <?php echo $is_active ? 'is-active' : ''; ?>" 
+            <div class="accordion-item <?php echo esc_attr($is_active ? 'is-active' : ''); ?>" 
                  id="<?php echo esc_attr($item_id); ?>">
                 
                 <button type="button" 
                         class="accordion-header" 
                         id="<?php echo esc_attr($item_id); ?>-header"
-                        aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>"
+                        aria-expanded="<?php echo esc_attr($is_active ? 'true' : 'false'); ?>"
                         aria-controls="<?php echo esc_attr($item_id); ?>-body"
                         <?php if ($atts['keyboard_navigation'] === '1'): ?>tabindex="0"<?php endif; ?>>
                     
@@ -373,13 +373,13 @@ function atk_ved_progress_bar_shortcode(array $atts): string {
         <?php if ($atts['label']): ?>
             <div class="progress-label">
                 <span><?php echo esc_html($atts['label']); ?></span>
-                <span><?php echo $percent; ?>%</span>
+                <span><?php echo esc_html($percent); ?>%</span>
             </div>
         <?php endif; ?>
         <div class="progress-bar-wrapper" style="height: <?php echo esc_attr($atts['height']); ?>px; background-color: #e0e0e0;">
             <div class="progress-bar <?php echo esc_attr($animation_class); ?>" 
                  style="width: 0%; height: 100%; background-color: <?php echo esc_attr($atts['color']); ?>;"
-                 data-percent="<?php echo $percent; ?>">
+                 data-percent="<?php echo esc_attr($percent); ?>">
             </div>
         </div>
     </div>

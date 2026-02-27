@@ -243,6 +243,7 @@ class ATK_VED_Enhanced_PWA {
             }
         ";
         
+        // Service Worker код - безопасно, так как это генерируемый JavaScript, а не пользовательский ввод
         echo $sw_content;
         exit;
     }
@@ -276,6 +277,7 @@ class ATK_VED_Enhanced_PWA {
             }
             </script>";
             
+            // Inline JavaScript для регистрации SW - безопасно, генерируемый код
             echo $script;
         }
     }

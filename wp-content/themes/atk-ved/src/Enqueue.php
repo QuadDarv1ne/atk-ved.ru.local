@@ -116,7 +116,7 @@ class Enqueue {
         if ( $this->is_calc_page() ) {
             wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [ 'atk-base' ], $v );
             wp_enqueue_style( 'atk-tracking', get_template_directory_uri() . '/css/shipment-tracking.css', [ 'atk-base' ], $v );
-            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator-vanilla.js', [], $v, true );
+            wp_enqueue_script( 'atk-calc', get_template_directory_uri() . '/js/calculator-backend.js', [ 'atk-core' ], $v, true );
             wp_enqueue_script( 'atk-ship', get_template_directory_uri() . '/js/shipment-tracking-vanilla.js', [], $v, true );
         }
 
@@ -239,6 +239,10 @@ class Enqueue {
             'siteUrl'   => home_url( '/' ),
             'metrikaId' => (int) get_theme_mod( 'atk_ved_metrika_id', 0 ),
             'gaId'      => sanitize_text_field( get_theme_mod( 'atk_ved_ga_id', '' ) ),
+            'calculator' => [
+                'nonce'  => wp_create_nonce( 'atk_ved_calculator_nonce' ),
+                'action' => 'atk_ved_calculate_delivery',
+            ],
             'newsletter' => [
                 'nonce'  => wp_create_nonce( 'atk_newsletter_nonce' ),
                 'action' => 'atk_ved_newsletter_subscribe',
@@ -248,6 +252,8 @@ class Enqueue {
                 'success'  => __( 'Спасибо! Вы подписались.', 'atk-ved' ),
                 'error'    => __( 'Ошибка. Попробуйте ещё раз.', 'atk-ved' ),
                 'badEmail' => __( 'Введите корректный email.', 'atk-ved' ),
+                'calcError' => __( 'Ошибка расчёта', 'atk-ved' ),
+                'calcLoading' => __( 'Рассчитываем...', 'atk-ved' ),
             ],
         ] );
     }
