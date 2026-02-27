@@ -5,6 +5,34 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/),
 и этот проект придерживается [Semantic Versioning](https://semver.org/lang/ru/).
 
+## [3.5.0] - 2026-02-27
+
+### Добавлено
+- Полная поддержка vanilla JavaScript без jQuery зависимостей
+- Расширенное тестирование форм и доступности
+- Rate limiting и honeypot защита для форм
+- SEO: Open Graph, Twitter Card, Schema.org разметка
+- robots.txt с правилами индексации
+- Подробная документация тестирования
+
+### Изменено
+- **BREAKING**: Полностью удалён jQuery из проекта
+- Все скрипты переписаны на vanilla JavaScript
+- Enqueue.php использует только vanilla-версии скриптов
+- Обновлён composer.json с актуальными зависимостями
+- PHPStan уровень 5 с расширенной конфигурацией
+
+### Удалено
+- shipment-tracking.js (заменён на shipment-tracking-vanilla.js)
+- calculator.js (заменён на calculator-vanilla.js)
+- calculator-frontend.js (дублирующий файл)
+- Все jQuery зависимости из проекта
+
+### Производительность
+- Экономия ~35KB на каждой странице (полное удаление jQuery)
+- Уменьшение количества HTTP запросов
+- Улучшение времени загрузки JS
+
 ## [3.4.0] - 2026-02-26
 
 ### Добавлено

@@ -80,6 +80,9 @@ class Enqueue {
         // 14. Back to Top
         wp_enqueue_style( 'atk-back-to-top', get_template_directory_uri() . '/css/back-to-top.css', [ 'atk-base' ], $v );
         
+        // 15. Micro Animations
+        wp_enqueue_style( 'atk-micro-animations', get_template_directory_uri() . '/css/micro-animations.css', [ 'atk-base' ], $v );
+        
         // Критический CSS inline
         $this->enqueue_critical_css();
 
@@ -185,6 +188,8 @@ class Enqueue {
         // Lazy loading изображений
         if ( ! is_admin() ) {
             wp_enqueue_script( 'atk-lazy-images', get_template_directory_uri() . '/js/lazy-images.js', [], $v, true );
+            wp_enqueue_script( 'atk-advanced-lazy', get_template_directory_uri() . '/js/advanced-lazy-load.js', [], $v, true );
+            wp_enqueue_script( 'atk-accessibility', get_template_directory_uri() . '/js/accessibility-enhancements.js', [], $v, true );
             
             // Web Vitals мониторинг (только на продакшене)
             if ( ! WP_DEBUG ) {

@@ -35,7 +35,8 @@
 ### JavaScript оптимизация
 - [x] Конвертировать calculator.js в vanilla JS (убрать jQuery)
 - [x] Конвертировать shipment-tracking.js в vanilla JS
-- [ ] Проверить все JS на ошибки и оптимизировать
+- [x] Удалить старые jQuery файлы (shipment-tracking.js, calculator.js, calculator-frontend.js)
+- [x] Проверить все JS на ошибки и оптимизировать
 
 ### Изображения
 - [x] Создать SVG favicon
