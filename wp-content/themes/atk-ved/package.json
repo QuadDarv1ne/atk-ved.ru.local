@@ -1,6 +1,6 @@
 {
   "name": "atk-ved-theme",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "АТК ВЭД — современная тема WordPress для логистической компании",
   "private": true,
   "author": "ATK VED Team",
@@ -14,8 +14,11 @@
     "minify:css": "for file in css/*.css; do [ -f \"$file\" ] && npx cssnano \"$file\" \"${file%.css}.min.css\"; done",
     "minify:js": "for file in js/*.js; do [ -f \"$file\" ] && npx terser \"$file\" -o \"${file%.js}.min.js\" -c -m; done",
     "minify": "npm run minify:css && npm run minify:js",
+    "build": "npm run minify && echo 'Build completed!'",
     "watch:css": "npx chokidar 'css/**/*.css' -c 'npm run minify:css'",
-    "watch:js": "npx chokidar 'js/**/*.js' -c 'npm run minify:js'"
+    "watch:js": "npx chokidar 'js/**/*.js' -c 'npm run minify:js'",
+    "watch": "npm run watch:css & npm run watch:js",
+    "clean": "find . -name '*.min.css' -delete && find . -name '*.min.js' -delete && echo 'Cleaned!'"
   },
   "devDependencies": {
     "cssnano": "^7.0.6",
@@ -37,6 +40,8 @@
     "marketplace",
     "no-jquery",
     "pwa",
-    "optimized"
+    "optimized",
+    "accessibility",
+    "wcag"
   ]
 }
