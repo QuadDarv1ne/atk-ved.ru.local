@@ -1,0 +1,290 @@
+/**
+ * Стили для страницы "Спасибо"
+ * 
+ * @package ATK_VED
+ */
+
+.thank-you-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 0;
+    background: linear-gradient(135deg, rgba(227,30,36,0.05) 0%, rgba(227,30,36,0.02) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.thank-you-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(227,30,36,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.thank-you-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    background: var(--bg-primary, #fff);
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+.thank-you-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    background: linear-gradient(135deg, #e31e24 0%, #c41519 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.thank-you-icon svg {
+    color: #fff;
+}
+
+.thank-you-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text-primary, #2c2c2c);
+    margin-bottom: 20px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+}
+
+.thank-you-text {
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--text-secondary, #666);
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+.thank-you-features {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease 0.4s both;
+}
+
+.thank-you-features .feature {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: rgba(227,30,36,0.05);
+    border-radius: 12px;
+    text-align: left;
+}
+
+.thank-you-features .feature svg {
+    flex-shrink: 0;
+    color: #e31e24;
+}
+
+.thank-you-features .feature span {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary, #2c2c2c);
+}
+
+.thank-you-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease 0.5s both;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cta-button:not(.secondary) {
+    background: linear-gradient(135deg, #e31e24 0%, #c41519 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(227,30,36,0.3);
+}
+
+.cta-button:not(.secondary):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(227,30,36,0.4);
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: var(--text-primary, #2c2c2c);
+    border: 2px solid var(--border-color, #e0e0e0);
+}
+
+.cta-button.secondary:hover {
+    border-color: #e31e24;
+    color: #e31e24;
+    transform: translateY(-2px);
+}
+
+.thank-you-contact {
+    padding-top: 40px;
+    border-top: 1px solid var(--border-color, #e0e0e0);
+    animation: fadeInUp 0.6s ease 0.6s both;
+}
+
+.thank-you-contact h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary, #2c2c2c);
+    margin-bottom: 20px;
+}
+
+.contact-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.contact-link.whatsapp {
+    background: #25D366;
+    color: #fff;
+}
+
+.contact-link.whatsapp:hover {
+    background: #20BA5A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(37,211,102,0.3);
+}
+
+.contact-link.telegram {
+    background: #0088cc;
+    color: #fff;
+}
+
+.contact-link.telegram:hover {
+    background: #0077b5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,136,204,0.3);
+}
+
+/* Анимации */
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .thank-you-section {
+        padding: 60px 20px;
+    }
+
+    .thank-you-content {
+        padding: 40px 30px;
+    }
+
+    .thank-you-title {
+        font-size: 32px;
+    }
+
+    .thank-you-text {
+        font-size: 16px;
+    }
+
+    .thank-you-actions {
+        flex-direction: column;
+    }
+
+    .cta-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .contact-links {
+        flex-direction: column;
+    }
+
+    .contact-link {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Темная тема */
+[data-theme="dark"] .thank-you-section {
+    background: linear-gradient(135deg, rgba(227,30,36,0.1) 0%, rgba(227,30,36,0.05) 100%);
+}
+
+[data-theme="dark"] .thank-you-content {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .thank-you-title,
+[data-theme="dark"] .thank-you-contact h3,
+[data-theme="dark"] .thank-you-features .feature span {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .thank-you-text {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .thank-you-features .feature {
+    background: rgba(227,30,36,0.1);
+}
+
+[data-theme="dark"] .cta-button.secondary {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .thank-you-contact {
+    border-top-color: var(--border-color);
+}

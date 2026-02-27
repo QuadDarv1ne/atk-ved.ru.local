@@ -94,6 +94,11 @@ class Enqueue {
             wp_enqueue_style( 'atk-blog', get_template_directory_uri() . '/css/blog.css', [ 'atk-base' ], $v );
         }
 
+        // Single Post
+        if ( is_single() ) {
+            wp_enqueue_style( 'atk-single', get_template_directory_uri() . '/css/single.css', [ 'atk-base' ], $v );
+        }
+
         // Страницы калькулятора/трекинга
         if ( $this->is_calc_page() ) {
             wp_enqueue_style( 'atk-calculator', get_template_directory_uri() . '/css/calculator.css', [ 'atk-base' ], $v );
@@ -126,6 +131,11 @@ class Enqueue {
         if ( is_page_template( 'page-contacts.php' ) ) {
             wp_enqueue_style( 'atk-contacts', get_template_directory_uri() . '/css/contacts.css', [ 'atk-base' ], $v );
             wp_enqueue_script( 'atk-contact-form', get_template_directory_uri() . '/js/contact-form.js', [], $v, true );
+        }
+
+        // Thank You Page
+        if ( is_page_template( 'page-thank-you.php' ) ) {
+            wp_enqueue_style( 'atk-thank-you', get_template_directory_uri() . '/css/thank-you.css', [ 'atk-base' ], $v );
         }
 
         // === Скрипты ===

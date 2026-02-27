@@ -25,3 +25,17 @@
         lastScroll = currentScroll;
     }, { passive: true });
 })();
+
+// 404 Page Back Button
+(function() {
+    const backBtn = document.querySelector('.js-back-btn');
+    if (!backBtn) return;
+
+    backBtn.addEventListener('click', () => {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    });
+})();
