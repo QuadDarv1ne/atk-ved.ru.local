@@ -123,7 +123,7 @@ function atk_ved_sanitize_sql($input): string {
 
 // Ограничение попыток входа
 function atk_ved_limit_login_attempts() {
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = atk_ved_get_client_ip();
     $attempts = get_transient('login_attempts_' . $ip);
     
     if ($attempts && $attempts >= 5) {
@@ -131,13 +131,13 @@ function atk_ved_limit_login_attempts() {
     }
 }
 add_action('wp_login_failed', function() {
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = atk_ved_get_client_ip();
     $attempts = get_transient('login_attempts_' . $ip) ?: 0;
     set_transient('login_attempts_' . $ip, $attempts + 1, 15 * MINUTE_IN_SECONDS);
 });
 
 add_action('wp_login', function() {
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $ip = atk_ved_get_client_ip();
     delete_transient('login_attempts_' . $ip);
 });
 
@@ -157,7 +157,7 @@ add_filter('login_errors', 'atk_ved_login_errors');
 
 // Защита wp-config.php
 function atk_ved_protect_wp_config() {
-    if (strpos($_SERVER['REQUEST_URI'], 'wp-config.php') !== false) {
+    if (strpos(atk_ved_get_request_uri(), 'wp-config.php') !== false) {
         header('HTTP/1.0 403 Forbidden');
         exit;
     }
@@ -174,14 +174,14 @@ add_action('init', 'atk_ved_protect_wp_config');
  */
 function atk_ved_prevent_hotlinking(): void {
     if (!is_admin()) {
-        $referer    = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+        $referer    = atk_ved_get_referer();
         $site_url   = home_url();
         $parsed_url = wp_parse_url($site_url);
         $host       = $parsed_url['host'] ?? '';
 
         if ($referer && strpos($referer, $host) === false) {
             // Проверка на изображения
-            $request_uri = $_SERVER['REQUEST_URI'];
+            $request_uri = atk_ved_get_request_uri();
             if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $request_uri)) {
                 header('HTTP/1.0 403 Forbidden');
                 atk_ved_log_security_event('Hotlinking blocked', $referer);
@@ -294,8 +294,7 @@ add_action( 'init', 'atk_ved_sanitize_url_params' );
  * @return void
  */
 function atk_ved_block_suspicious_requests(): void {
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+	$request_uri = atk_ved_get_request_uri();
 
 	$suspicious_patterns = [
 		'/eval\(/i',
@@ -316,8 +315,7 @@ function atk_ved_block_suspicious_requests(): void {
 	}
 
 	// Дополнительная проверка POST данных
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+	if ( atk_ved_get_request_method() === 'POST' ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_php_file_get_contents
 		$post_data = file_get_contents( 'php://input' );
 		foreach ( $suspicious_patterns as $pattern ) {
@@ -337,12 +335,9 @@ add_action( 'init', 'atk_ved_block_suspicious_requests' );
  * @return void
  */
 function atk_ved_verify_referer(): void {
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$referer = $_SERVER['HTTP_REFERER'] ?? '';
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$host = $_SERVER['HTTP_HOST'] ?? '';
+	if ( atk_ved_get_request_method() === 'POST' ) {
+		$referer = atk_ved_get_referer();
+		$host = atk_ved_get_http_host();
 
 		if ( $referer && ! strpos( $referer, $host ) ) {
 			atk_ved_log_security_event( 'Потенциально небезопасный referer', $referer );
@@ -374,8 +369,7 @@ add_action( 'init', 'atk_ved_add_csrf_token' );
  * @return bool
  */
 function atk_ved_verify_csrf_token(): bool {
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+	if ( atk_ved_get_request_method() === 'POST' ) {
 		if ( ! isset( $_POST['csrf_token'] ) || ! isset( $_SESSION['csrf_token'] ) ) {
 			return false;
 		}
@@ -428,8 +422,7 @@ function atk_ved_protect_important_files(): void {
 		'debug.log',
 	];
 
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+	$request_uri = atk_ved_get_request_uri();
 
 	foreach ( $protected_files as $file ) {
 		if ( strpos( $request_uri, $file ) !== false ) {

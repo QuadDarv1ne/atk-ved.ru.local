@@ -86,6 +86,42 @@ if ( class_exists( '\ATKVed\Theme' ) ) {
     error_log( 'ATKVed\Theme class not found. Autoloader may have failed.' );
 }
 
+// ============================================
+// 3. Sentry Error Tracking
+// ============================================
+if ( defined( 'SENTRY_DSN' ) && SENTRY_DSN && class_exists( '\Sentry\init' ) ) {
+    try {
+        \Sentry\init([
+            'dsn' => SENTRY_DSN,
+            'environment' => defined( 'WP_ENV' ) ? WP_ENV : 'production',
+            'traces_sample_rate' => 0.2,
+            'profiles_sample_rate' => 0.2,
+            'send_default_pii' => false,
+            'before_send' => function ( \Sentry\Event $event ): ?\Sentry\Event {
+                // Фильтрация чувствительных данных
+                if ( $event->getRequest() ) {
+                    $request = $event->getRequest();
+                    if ( isset( $request['data'] ) ) {
+                        unset( $request['data']['password'] );
+                        unset( $request['data']['pwd'] );
+                    }
+                }
+                return $event;
+            },
+        ]);
+        
+        // Добавить контекст
+        \Sentry\configureScope( function ( \Sentry\State\Scope $scope ): void {
+            $scope->setTag( 'wordpress_version', get_bloginfo( 'version' ) );
+            $scope->setTag( 'theme_version', defined( 'ATK_VED_VERSION' ) ? ATK_VED_VERSION : 'unknown' );
+            $scope->setTag( 'php_version', PHP_VERSION );
+        });
+        
+    } catch ( \Throwable $e ) {
+        error_log( 'Sentry initialization failed: ' . $e->getMessage() );
+    }
+}
+
 // Load Module Loader
  $module_loader = ATK_VED_DIR . '/inc/module-loader.php';
 if ( file_exists( $module_loader ) ) {
