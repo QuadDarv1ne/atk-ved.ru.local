@@ -43,6 +43,18 @@ get_header();
                         <span class="highlight"><?php _e('ИЗ КИТАЯ', 'atk-ved'); ?></span> <?php _e('ОПТОМ', 'atk-ved'); ?>
                     </h1>
 
+                    <div class="hero-cta">
+                        <a href="#contact" class="btn-hero btn-primary">
+                            <?php _e('Получить расчет', 'atk-ved'); ?>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        <a href="#services" class="btn-hero btn-secondary">
+                            <?php _e('Наши услуги', 'atk-ved'); ?>
+                        </a>
+                    </div>
+
                     <div class="hero-marketplaces">
                         <div class="marketplace-badge">
                             <span class="mp-icon">🛒</span>
@@ -78,6 +90,7 @@ get_header();
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title"><?php _e('НАШИ УСЛУГИ', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Полный спектр услуг для работы с Китаем', 'atk-ved'); ?></p>
             </div>
 
             <div class="services-grid-enhanced">
@@ -107,6 +120,7 @@ get_header();
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title"><?php _e('СПОСОБЫ И СРОКИ ДОСТАВКИ ГРУЗОВ', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Выберите оптимальный вариант для вашего груза', 'atk-ved'); ?></p>
             </div>
             
             <div class="delivery-table-wrapper">
@@ -155,6 +169,7 @@ get_header();
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title"><?php _e('ЭТАПЫ СОТРУДНИЧЕСТВА', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Простой процесс от заявки до получения товара', 'atk-ved'); ?></p>
             </div>
 
             <div class="process-grid">
@@ -185,6 +200,7 @@ get_header();
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title"><?php _e('ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ', 'atk-ved'); ?></h2>
+                <p class="section-subtitle"><?php _e('Ответы на популярные вопросы о работе с нами', 'atk-ved'); ?></p>
             </div>
 
             <div class="faq-grid">

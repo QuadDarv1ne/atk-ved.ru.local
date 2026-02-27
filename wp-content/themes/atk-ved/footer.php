@@ -13,30 +13,7 @@
  $whatsapp   = get_theme_mod( 'atk_ved_whatsapp', '' );
  $telegram   = get_theme_mod( 'atk_ved_telegram', '' );
  $vk         = get_theme_mod( 'atk_ved_vk', '' );
- $logo_id    = get_theme_mod( 'atk_ved_logo_white' ); // Получаем ID вложения для лучшей оптимизации
- $logo_url   = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : get_template_directory_uri() . '/images/logo-white.png';
-
-// Проверяем, нужно ли показывать блок рассылки
- $show_newsletter = get_theme_mod( 'atk_ved_show_newsletter', true );
-?>
-
-
-<?php
-/**
- * The Footer Template
- * Optimized with Schema.org markup and Accessibility improvements
- *
- * @package ATK_VED
- */
-
-// Получаем настройки темы
- $phone      = get_theme_mod( 'atk_ved_phone', '' );
- $email      = get_theme_mod( 'atk_ved_email', '' );
- $address    = get_theme_mod( 'atk_ved_address', '' );
- $whatsapp   = get_theme_mod( 'atk_ved_whatsapp', '' );
- $telegram   = get_theme_mod( 'atk_ved_telegram', '' );
- $vk         = get_theme_mod( 'atk_ved_vk', '' );
- $logo_id    = get_theme_mod( 'atk_ved_logo_white' ); // Получаем ID вложения для лучшей оптимизации
+ $logo_id    = get_theme_mod( 'atk_ved_logo_white' );
  $logo_url   = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : get_template_directory_uri() . '/images/logo-white.png';
 
 // Проверяем, нужно ли показывать блок рассылки
@@ -57,11 +34,9 @@
                         <p><?php esc_html_e( 'Подпишитесь и получайте эксклюзивные скидки и новости', 'atk-ved' ); ?></p>
                     </div>
                     
-                    <!-- Обернуто в form для поддержки Enter и валидации HTML5 -->
                     <form class="newsletter-form-wrap" action="#" method="post" aria-label="<?php esc_attr_e( 'Форма подписки', 'atk-ved' ); ?>">
                         <?php wp_nonce_field('atk_newsletter_form', 'newsletter_nonce'); ?>
                         
-                        <!-- Honeypot field -->
                         <input type="text" name="website" style="position:absolute;left:-9999px;width:1px;height:1px;" tabindex="-1" autocomplete="off" aria-hidden="true">
                         
                         <label for="footer-email" class="screen-reader-text"><?php esc_html_e( 'Ваш email адрес', 'atk-ved' ); ?></label>
@@ -79,7 +54,6 @@
                                 <?php esc_html_e( 'Подписаться', 'atk-ved' ); ?>
                             </button>
                         </div>
-                        <!-- aria-live для озвучивания ошибок скринридерами -->
                         <div id="newsletter-response" class="newsletter-response" aria-live="polite" hidden></div>
                     </form>
                 </div>
@@ -163,7 +137,7 @@
                         </nav>
                     </div>
 
-                    <!-- Колонка: Контакты (Schema.org) -->
+                    <!-- Колонка: Контакты -->
                     <div class="footer-col footer-col--contacts">
                         <h3 class="footer-col__title"><?php esc_html_e( 'Контакты', 'atk-ved' ); ?></h3>
 
@@ -197,7 +171,6 @@
                                 <span class="contact-icon" aria-hidden="true"><?php echo atk_ved_icon( 'map-pin' ); ?></span>
                                 <div>
                                     <span class="contact-label"><?php esc_html_e( 'Адрес', 'atk-ved' ); ?></span>
-                                    <!-- Schema.org адрес лучше оборачивать в метку -->
                                     <span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
                                         <span itemprop="streetAddress"><?php echo esc_html( $address ); ?></span>
                                     </span>
@@ -276,7 +249,7 @@
 
     </footer>
 
-    <!-- Кнопка "Наверх" с прогресс-баром -->
+    <!-- Кнопка "Наверх" -->
     <button 
         class="scroll-to-top js-scroll-top" 
         id="scrollToTop" 
