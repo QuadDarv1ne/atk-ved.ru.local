@@ -89,8 +89,8 @@ AddOutputFilterByType DEFLATE font/woff2
     # Referrer Policy
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Content Security Policy (улучшенная)
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://maps.googleapis.com https://mc.yandex.ru https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://mc.yandex.ru https://www.google-analytics.com; frame-src 'self' https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+    # Content Security Policy (временно упрощенная для отладки)
+    # Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:;"
     
     # Permissions Policy (бывший Feature Policy)
     Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()"

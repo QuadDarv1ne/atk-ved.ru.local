@@ -45,65 +45,9 @@ function atk_ved_set_security_headers() {
 add_action('send_headers', 'atk_ved_set_security_headers');
 
 /**
- * Удаление версии WordPress из заголовков
- */
-function atk_ved_remove_wp_version() {
-    return '';
-}
-add_filter('the_generator', 'atk_ved_remove_wp_version');
-
-/**
- * Удаление версии WordPress из RSS
- */
-remove_action('wp_head', 'wp_generator');
-
-/**
- * Удаление версии из скриптов и стилей
- */
-function atk_ved_remove_version_from_assets($src) {
-    if (strpos($src, 'ver=')) {
-        $src = remove_query_arg('ver', $src);
-    }
-    return $src;
-}
-add_filter('style_loader_src', 'atk_ved_remove_version_from_assets', 9999);
-add_filter('script_loader_src', 'atk_ved_remove_version_from_assets', 9999);
-
-/**
  * Отключение XML-RPC (защита от DDoS и брутфорса)
  */
 add_filter('xmlrpc_enabled', '__return_false');
-
-/**
- * Удаление RSD ссылки
- */
-remove_action('wp_head', 'rsd_link');
-
-/**
- * Удаление wlwmanifest ссылки
- */
-remove_action('wp_head', 'wlwmanifest_link');
-
-/**
- * Удаление shortlink
- */
-remove_action('wp_head', 'wp_shortlink_wp_head');
-
-/**
- * Отключение REST API для неавторизованных пользователей
- */
-function atk_ved_restrict_rest_api($result) {
-    if (!is_user_logged_in()) {
-        return new WP_Error(
-            'rest_disabled',
-            __('REST API отключен для неавторизованных пользователей.', 'atk-ved'),
-            ['status' => 401]
-        );
-    }
-    return $result;
-}
-// Раскомментируйте если нужно ограничить REST API
-// add_filter('rest_authentication_errors', 'atk_ved_restrict_rest_api');
 
 /**
  * Защита от перебора паролей - задержка после неудачной попытки
@@ -116,22 +60,18 @@ add_action('wp_login_failed', 'atk_ved_login_failed_delay');
 /**
  * Скрытие ошибок входа
  */
-function atk_ved_login_errors() {
+function atk_ved_login_errors_custom() {
     return __('Неверные учетные данные.', 'atk-ved');
 }
-add_filter('login_errors', 'atk_ved_login_errors');
-
-/**
- * Отключение редактирования файлов из админки
- */
-if (!defined('DISALLOW_FILE_EDIT')) {
-    define('DISALLOW_FILE_EDIT', true);
-}
+add_filter('login_errors', 'atk_ved_login_errors_custom');
 
 /**
  * Блокировка доступа к wp-config.php
  */
 function atk_ved_block_wp_config_access() {
+    // Временно отключено для отладки
+    return;
+    
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
     if (stripos($request_uri, 'wp-config.php') !== false) {
         wp_die(__('Доступ запрещен.', 'atk-ved'), 403);
@@ -143,6 +83,9 @@ add_action('init', 'atk_ved_block_wp_config_access');
  * Защита от SQL инъекций в URL
  */
 function atk_ved_block_sql_injection() {
+    // Временно отключено для отладки
+    return;
+    
     $query_string = $_SERVER['QUERY_STRING'] ?? '';
     
     $patterns = [
@@ -168,6 +111,9 @@ add_action('init', 'atk_ved_block_sql_injection');
  * Защита от XSS в GET параметрах
  */
 function atk_ved_sanitize_get_params() {
+    // Временно отключено для отладки
+    return;
+    
     if (!empty($_GET)) {
         foreach ($_GET as $key => $value) {
             if (is_string($value)) {
@@ -256,6 +202,9 @@ add_filter('wp_handle_upload_prefilter', 'atk_ved_check_svg_upload');
  * Защита от Directory Traversal
  */
 function atk_ved_block_directory_traversal() {
+    // Временно отключено для отладки
+    return;
+    
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
     
     if (preg_match('/\.\.\/|\.\.\\\\/', $request_uri)) {
@@ -281,6 +230,9 @@ add_filter('wp_cookie_constants', 'atk_ved_secure_cookies');
  * Логирование подозрительной активности
  */
 function atk_ved_log_suspicious_activity() {
+    // Временно отключено для отладки
+    return;
+    
     $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
     

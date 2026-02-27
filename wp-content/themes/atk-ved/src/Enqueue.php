@@ -153,6 +153,7 @@ class Enqueue {
             wp_enqueue_script( 'atk-landing-premium', get_template_directory_uri() . '/js/landing-premium.js', [], $v, true );
             wp_enqueue_script( 'atk-counters', get_template_directory_uri() . '/js/counters.js', [], $v, true );
             wp_enqueue_script( 'atk-share', get_template_directory_uri() . '/js/share.js', [], $v, true );
+            wp_enqueue_script( 'atk-map', get_template_directory_uri() . '/js/map.js', [], $v, true );
         }
 
         // Формы с background sync
