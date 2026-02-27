@@ -243,6 +243,10 @@ class Enqueue {
                 'nonce'  => wp_create_nonce( 'atk_ved_calculator_nonce' ),
                 'action' => 'atk_ved_calculate_delivery',
             ],
+            'tracking' => [
+                'nonce'  => wp_create_nonce( 'atk_ved_tracking_nonce' ),
+                'action' => 'atk_ved_track_shipment',
+            ],
             'newsletter' => [
                 'nonce'  => wp_create_nonce( 'atk_newsletter_nonce' ),
                 'action' => 'atk_ved_newsletter_subscribe',

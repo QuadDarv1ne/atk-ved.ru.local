@@ -40,14 +40,14 @@
             if (resultContent) resultContent.style.display = 'none';
 
             // Отправка
-            fetch(window.atkVed?.ajaxUrl || '/wp-admin/admin-ajax.php', {
+            fetch(atkVed.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'atk_ved_track_shipment',
-                    nonce: tracking.dataset.nonce,
+                    action: atkVed.tracking?.action || 'atk_ved_track_shipment',
+                    nonce: atkVed.tracking?.nonce || tracking.dataset.nonce,
                     tracking_number: trackingNumber
                 })
             })
