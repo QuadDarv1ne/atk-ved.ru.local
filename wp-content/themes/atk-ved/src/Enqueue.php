@@ -156,6 +156,9 @@ class Enqueue {
         // Theme Toggle (загружается первым в head для предотвращения мигания)
         wp_enqueue_script( 'atk-theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', [], $v, false );
 
+        // Viewport Fix для iOS (загружается рано)
+        wp_enqueue_script( 'atk-viewport-fix', get_template_directory_uri() . '/js/viewport-fix.js', [], $v, false );
+
         // Лоадер в head
         wp_enqueue_script( 'atk-loader', get_template_directory_uri() . '/js/loader.js', [], $v, false );
 
