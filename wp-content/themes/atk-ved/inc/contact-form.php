@@ -11,9 +11,10 @@ defined('ABSPATH') || exit;
  * Обработка формы обратной связи
  */
 function atk_ved_handle_contact_form() {
-    // Проверка nonce
-    if (!isset($_POST['contact_nonce']) || !wp_verify_nonce($_POST['contact_nonce'], 'atk_contact_form')) {
-        wp_send_json_error(['message' => 'Ошибка безопасности']);
+    // Проверка безопасности (nonce, honeypot, rate limiting)
+    $security_check = atk_ved_validate_form_security('contact', 'atk_contact_form', 'contact_nonce');
+    if (!$security_check['success']) {
+        wp_send_json_error(['message' => $security_check['message']]);
     }
 
     // Получение данных
@@ -30,11 +31,6 @@ function atk_ved_handle_contact_form() {
     // Проверка email если указан
     if (!empty($email) && !is_email($email)) {
         wp_send_json_error(['message' => 'Некорректный email']);
-    }
-
-    // Honeypot защита
-    if (!empty($_POST['website'])) {
-        wp_send_json_error(['message' => 'Спам обнаружен']);
     }
 
     // Подготовка письма
@@ -117,4 +113,101 @@ function atk_ved_save_contact_form_submission($name, $phone, $email, $message) {
  */
 function atk_ved_contact_form_nonce() {
     return wp_create_nonce('atk_contact_form');
+}
+
+/**
+ * Обработка формы подписки на рассылку
+ */
+function atk_ved_handle_newsletter_form() {
+    // Проверка безопасности (nonce, honeypot, rate limiting)
+    $security_check = atk_ved_validate_form_security('newsletter', 'atk_newsletter_form', 'newsletter_nonce');
+    if (!$security_check['success']) {
+        wp_send_json_error(['message' => $security_check['message']]);
+    }
+
+    // Получение данных
+    $email = sanitize_email($_POST['newsletter_email'] ?? '');
+
+    // Валидация
+    if (empty($email) || !is_email($email)) {
+        wp_send_json_error(['message' => 'Укажите корректный email']);
+    }
+
+    // Проверка на дубликаты
+    if (atk_ved_is_email_subscribed($email)) {
+        wp_send_json_error(['message' => 'Этот email уже подписан на рассылку']);
+    }
+
+    // Сохранение подписки
+    $saved = atk_ved_save_newsletter_subscription($email);
+
+    if ($saved) {
+        // Отправка уведомления администратору
+        $to = get_option('admin_email');
+        $subject = 'Новая подписка на рассылку - ' . get_bloginfo('name');
+        $body = "Новая подписка на рассылку:\n\n";
+        $body .= "Email: {$email}\n";
+        $body .= "Дата: " . current_time('d.m.Y H:i:s') . "\n";
+        $body .= "IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
+        
+        wp_mail($to, $subject, $body);
+        
+        wp_send_json_success(['message' => 'Спасибо за подписку! Проверьте почту для подтверждения.']);
+    } else {
+        wp_send_json_error(['message' => 'Ошибка подписки. Попробуйте позже.']);
+    }
+}
+add_action('wp_ajax_atk_newsletter_form', 'atk_ved_handle_newsletter_form');
+add_action('wp_ajax_nopriv_atk_newsletter_form', 'atk_ved_handle_newsletter_form');
+
+/**
+ * Проверка, подписан ли email
+ */
+function atk_ved_is_email_subscribed($email) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'atk_newsletter';
+    
+    $count = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_name WHERE email = %s",
+        $email
+    ));
+    
+    return $count > 0;
+}
+
+/**
+ * Сохранение подписки на рассылку
+ */
+function atk_ved_save_newsletter_subscription($email) {
+    global $wpdb;
+    
+    $table_name = $wpdb->prefix . 'atk_newsletter';
+    
+    // Создание таблицы если не существует
+    $charset_collate = $wpdb->get_charset_collate();
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        email varchar(255) NOT NULL,
+        ip varchar(45) DEFAULT NULL,
+        status varchar(20) DEFAULT 'pending',
+        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY email (email)
+    ) $charset_collate;";
+    
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+    
+    // Вставка данных
+    $result = $wpdb->insert(
+        $table_name,
+        [
+            'email' => $email,
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'status' => 'pending',
+        ],
+        ['%s', '%s', '%s']
+    );
+    
+    return $result !== false;
 }

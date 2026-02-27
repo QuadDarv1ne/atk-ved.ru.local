@@ -37,6 +37,7 @@ class ATK_VED_Module_Loader {
             'always' => true,
             'files' => [
                 '/inc/security.php',
+                '/inc/security-headers.php',
                 '/inc/advanced-security.php',
                 '/inc/logger.php',
             ],
@@ -82,6 +83,7 @@ class ATK_VED_Module_Loader {
                 '/inc/shipment-tracking.php',
                 '/inc/delivery-map.php',
                 '/inc/ajax-handlers.php',
+                '/inc/contact-form.php',
             ],
         ],
         

@@ -143,6 +143,7 @@ class Enqueue {
 
         // Основные скрипты (без jQuery)
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [], $v, true );
+        wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance.js', [], $v, true );
         wp_enqueue_script( 'atk-components', get_template_directory_uri() . '/js/components.js', [], $v, true );
         wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
         wp_enqueue_script( 'atk-back-to-top', get_template_directory_uri() . '/js/back-to-top.js', [], $v, true );

@@ -6,8 +6,10 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#e31e24">
     
-    <!-- Пример подключения иконки (favicon), если есть -->
-    <!-- <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/favicon.ico" sizes="32x32"> -->
+    <!-- Favicon -->
+    <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/favicon/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/favicon/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/favicon/favicon-180x180.png">
     
     <?php 
     // Google Analytics (раскомментируйте и замените G-XXXXXXXXXX на ваш ID)

@@ -99,7 +99,7 @@ get_header();
                         <?php wp_nonce_field('atk_contact_form', 'contact_nonce'); ?>
                         
                         <!-- Honeypot field -->
-                        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+                        <input type="text" name="website" style="position:absolute;left:-9999px;width:1px;height:1px;" tabindex="-1" autocomplete="off" aria-hidden="true">
                         
                         <div class="form-group">
                             <label for="contact-name">Ваше имя *</label>

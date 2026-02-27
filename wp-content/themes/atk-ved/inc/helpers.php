@@ -551,3 +551,88 @@ function atk_ved_create_slug( string $string ): string {
 	$string = trim( preg_replace( '/[\s-]+/', '-', $string ) );
 	return strtolower( $string );
 }
+
+/**
+ * Проверка rate limiting для форм
+ *
+ * @param string $form_type Тип формы (contact, newsletter)
+ * @param int    $limit     Максимальное количество попыток
+ * @param int    $period    Период в секундах
+ * @return bool true если лимит не превышен
+ */
+function atk_ved_check_rate_limit( string $form_type, int $limit = 3, int $period = 300 ): bool {
+	$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+	$transient_key = 'atk_rate_limit_' . $form_type . '_' . md5( $ip );
+	
+	$attempts = get_transient( $transient_key );
+	
+	if ( false === $attempts ) {
+		// Первая попытка
+		set_transient( $transient_key, 1, $period );
+		return true;
+	}
+	
+	if ( $attempts >= $limit ) {
+		// Лимит превышен
+		atk_ved_log_security_event( 'rate_limit_exceeded', "Form: {$form_type}, IP: {$ip}" );
+		return false;
+	}
+	
+	// Увеличиваем счетчик
+	set_transient( $transient_key, $attempts + 1, $period );
+	return true;
+}
+
+/**
+ * Проверка honeypot поля
+ *
+ * @param string $field_name Имя honeypot поля
+ * @return bool true если honeypot не заполнен (валидный запрос)
+ */
+function atk_ved_check_honeypot( string $field_name = 'website' ): bool {
+	if ( ! empty( $_POST[ $field_name ] ) ) {
+		$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+		atk_ved_log_security_event( 'honeypot_triggered', "Field: {$field_name}, IP: {$ip}" );
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Валидация формы с проверкой безопасности
+ *
+ * @param string $form_type Тип формы
+ * @param string $nonce_action Действие nonce
+ * @param string $nonce_field Имя поля nonce
+ * @return array{success: bool, message: string}
+ */
+function atk_ved_validate_form_security( string $form_type, string $nonce_action, string $nonce_field ): array {
+	// Проверка nonce
+	if ( ! isset( $_POST[ $nonce_field ] ) || ! wp_verify_nonce( $_POST[ $nonce_field ], $nonce_action ) ) {
+		return [
+			'success' => false,
+			'message' => 'Ошибка безопасности. Обновите страницу и попробуйте снова.'
+		];
+	}
+	
+	// Проверка honeypot
+	if ( ! atk_ved_check_honeypot() ) {
+		return [
+			'success' => false,
+			'message' => 'Обнаружена подозрительная активность.'
+		];
+	}
+	
+	// Проверка rate limiting
+	if ( ! atk_ved_check_rate_limit( $form_type ) ) {
+		return [
+			'success' => false,
+			'message' => 'Слишком много попыток. Попробуйте через 5 минут.'
+		];
+	}
+	
+	return [
+		'success' => true,
+		'message' => ''
+	];
+}

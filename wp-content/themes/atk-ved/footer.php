@@ -59,6 +59,11 @@
                     
                     <!-- Обернуто в form для поддержки Enter и валидации HTML5 -->
                     <form class="newsletter-form-wrap" action="#" method="post" aria-label="<?php esc_attr_e( 'Форма подписки', 'atk-ved' ); ?>">
+                        <?php wp_nonce_field('atk_newsletter_form', 'newsletter_nonce'); ?>
+                        
+                        <!-- Honeypot field -->
+                        <input type="text" name="website" style="position:absolute;left:-9999px;width:1px;height:1px;" tabindex="-1" autocomplete="off" aria-hidden="true">
+                        
                         <label for="footer-email" class="screen-reader-text"><?php esc_html_e( 'Ваш email адрес', 'atk-ved' ); ?></label>
                         <div class="newsletter-form">
                             <input 

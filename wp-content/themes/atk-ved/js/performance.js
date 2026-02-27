@@ -330,3 +330,104 @@
     }
 
 })();
+
+// Newsletter form handler
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.querySelector('.newsletter-form-wrap');
+    if (!newsletterForm) return;
+
+    newsletterForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('.js-newsletter-submit');
+        const responseDiv = document.getElementById('newsletter-response');
+        const emailInput = this.querySelector('[name="newsletter_email"]');
+
+        // Disable button
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
+
+        // Prepare form data
+        const formData = new FormData(this);
+        formData.append('action', 'atk_newsletter_form');
+
+        try {
+            const ajaxUrl = (window.atkVed && window.atkVed.ajaxUrl) || '/wp-admin/admin-ajax.php';
+            const response = await fetch(ajaxUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            // Show response
+            responseDiv.hidden = false;
+            responseDiv.textContent = data.data.message;
+            responseDiv.className = 'newsletter-response ' + (data.success ? 'success' : 'error');
+
+            if (data.success) {
+                emailInput.value = '';
+                setTimeout(() => {
+                    responseDiv.hidden = true;
+                }, 5000);
+            }
+        } catch (error) {
+            responseDiv.hidden = false;
+            responseDiv.textContent = 'Ошибка отправки. Попробуйте позже.';
+            responseDiv.className = 'newsletter-response error';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Подписаться';
+        }
+    });
+});
+
+// Contact form handler
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contact-form');
+    if (!contactForm) return;
+
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const messageDiv = this.querySelector('.form-message');
+
+        // Disable button
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
+
+        // Prepare form data
+        const formData = new FormData(this);
+        formData.append('action', 'atk_contact_form');
+
+        try {
+            const ajaxUrl = (window.atkVed && window.atkVed.ajaxUrl) || '/wp-admin/admin-ajax.php';
+            const response = await fetch(ajaxUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            // Show response
+            messageDiv.style.display = 'block';
+            messageDiv.textContent = data.data.message;
+            messageDiv.className = 'form-message ' + (data.success ? 'success' : 'error');
+
+            if (data.success) {
+                this.reset();
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        } catch (error) {
+            messageDiv.style.display = 'block';
+            messageDiv.textContent = 'Ошибка отправки. Попробуйте позже.';
+            messageDiv.className = 'form-message error';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Отправить заявку';
+        }
+    });
+});
