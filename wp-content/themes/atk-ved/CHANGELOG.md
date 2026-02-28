@@ -7,6 +7,54 @@
 
 ## [Unreleased]
 
+## [3.6.0] - 2026-02-28
+
+### Добавлено
+- ✅ Custom Post Types для услуг, этапов работы и FAQ
+- ✅ Система миграции хардкода в CPT через админ-панель (Инструменты → Миграция данных)
+- ✅ Хелперы для работы с CPT: `atk_ved_get_services()`, `atk_ved_get_process_steps()`, `atk_ved_get_faq()`
+- ✅ Функции рендеринга: `atk_ved_render_services()`, `atk_ved_render_process_steps()`, `atk_ved_render_faq()`
+- ✅ Skeleton Loaders - анимированные заглушки для контента во время загрузки
+- ✅ Toast Notifications - всплывающие уведомления для пользовательских действий
+- ✅ Мета-боксы для управления иконками и номерами в админ-панели
+- ✅ Автоматическое кэширование запросов к CPT (1 час)
+- ✅ Документация: CPT_MIGRATION_GUIDE.md, UI_ENHANCEMENTS_GUIDE.md
+- ✅ Примеры использования skeleton loaders (views/partials/skeleton-examples.php)
+
+### Изменено
+- Обновлён front-page.php - использует CPT вместо хардкода
+- Обновлён inc/module-loader.php - добавлены новые модули
+- Обновлён src/Enqueue.php - подключены новые CSS и JS файлы
+- Улучшена структура данных - теперь управляется через админ-панель
+
+### Файлы
+- `inc/data-migration.php` - Миграция и регистрация CPT
+- `inc/cpt-helpers.php` - Хелперы для работы с CPT
+- `css/skeleton-loaders.css` - Стили скелетонов (650+ строк)
+- `css/toast-notifications.css` - Стили уведомлений (550+ строк)
+- `js/toast-notifications.js` - JavaScript для уведомлений (450+ строк)
+- `views/partials/skeleton-examples.php` - Примеры использования
+- `CPT_MIGRATION_GUIDE.md` - Руководство по миграции
+- `UI_ENHANCEMENTS_GUIDE.md` - Руководство по UI компонентам
+
+### Производительность
+- Кэширование запросов к CPT (экономия запросов к БД)
+- GPU ускорение для skeleton анимаций
+- Оптимизированные CSS анимации
+- Эффективное управление памятью в Toast Manager
+
+### UX улучшения
+- Улучшенная воспринимаемая производительность (skeleton loaders)
+- Информативные уведомления вместо alert()
+- Удобное управление контентом через админ-панель
+- Поддержка темной темы для всех новых компонентов
+
+### Accessibility
+- ARIA атрибуты для toast уведомлений
+- Поддержка prefers-reduced-motion
+- Семантическая разметка skeleton loaders
+- Правильные цветовые контрасты
+
 ## [3.5.0] - 2026-02-27
 
 ### Добавлено

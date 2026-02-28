@@ -1,0 +1,500 @@
+/**
+ * Scroll Animations CSS
+ * 
+ * @package ATK_VED
+ * @since 3.6.0
+ */
+
+/* ============================================
+   CSS Variables
+   ============================================ */
+:root {
+    --animation-duration: 800ms;
+    --animation-delay: 0ms;
+    --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-distance: 50px;
+}
+
+/* ============================================
+   Base Animation Styles
+   ============================================ */
+.animate-on-scroll {
+    opacity: 0;
+    transition: opacity var(--animation-duration) var(--animation-easing) var(--animation-delay),
+                transform var(--animation-duration) var(--animation-easing) var(--animation-delay);
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.animate-in {
+    opacity: 1;
+    transform: none !important;
+}
+
+/* Отключаем анимации для пользователей с prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* ============================================
+   Fade Animations
+   ============================================ */
+.animate-fade-up {
+    transform: translateY(var(--animation-distance));
+}
+
+.animate-fade-down {
+    transform: translateY(calc(var(--animation-distance) * -1));
+}
+
+.animate-fade-left {
+    transform: translateX(var(--animation-distance));
+}
+
+.animate-fade-right {
+    transform: translateX(calc(var(--animation-distance) * -1));
+}
+
+/* ============================================
+   Zoom Animations
+   ============================================ */
+.animate-zoom-in {
+    transform: scale(0.8);
+}
+
+.animate-zoom-out {
+    transform: scale(1.2);
+}
+
+/* ============================================
+   Flip Animation
+   ============================================ */
+.animate-flip {
+    transform: perspective(1000px) rotateY(90deg);
+    transform-origin: center;
+}
+
+/* ============================================
+   Slide Animation
+   ============================================ */
+.animate-slide-up {
+    transform: translateY(100%);
+}
+
+/* ============================================
+   Bounce Animation
+   ============================================ */
+.animate-bounce-in {
+    transform: scale(0.3);
+    animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================
+   Counter Animation
+   ============================================ */
+[data-counter] {
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s ease;
+}
+
+[data-counter].counting {
+    color: var(--color-primary, #e31e24);
+}
+
+/* ============================================
+   Progress Bar Animation
+   ============================================ */
+[data-progress] {
+    position: relative;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+[data-progress]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #e31e24, #ff4757);
+    border-radius: 4px;
+    transition: width var(--duration, 1500ms) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-progress].animate-progress::before {
+    width: var(--progress, 0%);
+}
+
+/* Анимация блеска */
+[data-progress].animate-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progress-shine 2s infinite;
+}
+
+@keyframes progress-shine {
+    to {
+        left: 100%;
+    }
+}
+
+/* ============================================
+   Text Reveal Animation
+   ============================================ */
+[data-text-reveal] .reveal-item {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: reveal-text 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--char-index) * 0.03s);
+}
+
+@keyframes reveal-text {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Parallax Effect
+   ============================================ */
+[data-parallax] {
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+}
+
+/* ============================================
+   Stagger Animation
+   ============================================ */
+[data-stagger] > * {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+[data-stagger].animate-in > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   Ripple Effect
+   ============================================ */
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Подготовка кнопок для ripple */
+[data-ripple],
+.btn,
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================================
+   Image Reveal Animation
+   ============================================ */
+img[data-reveal] {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+img[data-reveal].image-loading {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+img[data-reveal].image-loaded {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Placeholder пока грузится */
+img[data-reveal].image-loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* ============================================
+   SVG Morph Animation
+   ============================================ */
+[data-morph] {
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+[data-morph].morph-active {
+    transform: scale(1.1) rotate(5deg);
+}
+
+[data-morph] path,
+[data-morph] circle,
+[data-morph] rect {
+    transition: all 0.3s ease;
+}
+
+/* ============================================
+   Hover Effects для карточек
+   ============================================ */
+.service-card,
+.review-card,
+.step-card,
+.stat-card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover,
+.review-card:hover,
+.step-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+/* Анимация иконок в карточках */
+.service-card__icon,
+.step-card__icon {
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.service-card:hover .service-card__icon,
+.step-card:hover .step-card__icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* ============================================
+   Button Hover Effects
+   ============================================ */
+.btn,
+.cta-button {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn::before,
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn:hover::before,
+.cta-button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover,
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(227, 30, 36, 0.3);
+}
+
+.btn:active,
+.cta-button:active {
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   Link Hover Effects
+   ============================================ */
+.main-nav a {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #e31e24;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-nav a:hover::after {
+    width: 100%;
+}
+
+/* ============================================
+   Form Input Animations
+   ============================================ */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.1);
+}
+
+/* ============================================
+   Loading Spinner Animation
+   ============================================ */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(227, 30, 36, 0.1);
+    border-top-color: #e31e24;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   Pulse Animation
+   ============================================ */
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ============================================
+   Shake Animation (для ошибок)
+   ============================================ */
+.shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+/* ============================================
+   Bounce Animation
+   ============================================ */
+.bounce {
+    animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* ============================================
+   Gradient Animation
+   ============================================ */
+.gradient-animate {
+    background: linear-gradient(270deg, #e31e24, #ff4757, #e31e24);
+    background-size: 400% 400%;
+    animation: gradient 3s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.animate-delay-100 { --animation-delay: 100ms; }
+.animate-delay-200 { --animation-delay: 200ms; }
+.animate-delay-300 { --animation-delay: 300ms; }
+.animate-delay-400 { --animation-delay: 400ms; }
+.animate-delay-500 { --animation-delay: 500ms; }
+
+.animate-duration-fast { --animation-duration: 400ms; }
+.animate-duration-normal { --animation-duration: 800ms; }
+.animate-duration-slow { --animation-duration: 1200ms; }
+
+/* ============================================
+   Performance Optimizations
+   ============================================ */
+.animate-on-scroll,
+[data-parallax],
+.btn,
+.service-card,
+.review-card {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}

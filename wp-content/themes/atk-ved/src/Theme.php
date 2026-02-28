@@ -41,13 +41,24 @@ final class Theme
      *
      * @return self
      */
-    public static function get_instance(): self
+    public static function getInstance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
         }
 
         return self::$instance;
+    }
+    
+    /**
+     * Alias for getInstance() for backward compatibility
+     *
+     * @deprecated Use getInstance() instead
+     * @return self
+     */
+    public static function get_instance(): self
+    {
+        return self::getInstance();
     }
 
     /**
@@ -240,7 +251,7 @@ final class Theme
      */
     public static function getCompanyInfo(): array
     {
-        return self::get_instance()->get('company')->getInfo();
+        return self::getInstance()->get('company')->getInfo();
     }
 
     /**
@@ -250,7 +261,7 @@ final class Theme
      */
     public static function getSocialLinks(): array
     {
-        return self::get_instance()->get('company')->getSocialLinks();
+        return self::getInstance()->get('company')->getSocialLinks();
     }
 
     /**
@@ -260,6 +271,6 @@ final class Theme
      */
     public static function getTrustBadges(): array
     {
-        return self::get_instance()->get('company')->getTrustBadges();
+        return self::getInstance()->get('company')->getTrustBadges();
     }
 }

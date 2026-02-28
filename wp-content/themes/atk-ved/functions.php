@@ -77,7 +77,7 @@ if ( class_exists( '\ATKVed\Theme' ) ) {
     try {
         \ATKVed\Theme::getInstance();
     } catch ( \Throwable $e ) {
-        error_log( 'Theme initialization error: ' . $e->getMessage() );
+        error_log( 'Theme initialization error: ' . esc_html( $e->getMessage() ) );
         if ( WP_DEBUG ) {
             wp_die( 'Theme Error: ' . esc_html( $e->getMessage() ) );
         }

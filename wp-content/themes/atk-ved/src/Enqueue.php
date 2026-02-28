@@ -83,6 +83,15 @@ class Enqueue {
         // 15. Micro Animations
         wp_enqueue_style( 'atk-micro-animations', get_template_directory_uri() . '/css/micro-animations.css', [ 'atk-base' ], $v );
         
+        // 16. Scroll Animations
+        wp_enqueue_style( 'atk-scroll-animations', get_template_directory_uri() . '/css/scroll-animations.css', [ 'atk-base' ], $v );
+        
+        // 17. Skeleton Loaders
+        wp_enqueue_style( 'atk-skeleton-loaders', get_template_directory_uri() . '/css/skeleton-loaders.css', [ 'atk-base' ], $v );
+        
+        // 18. Toast Notifications
+        wp_enqueue_style( 'atk-toast-notifications', get_template_directory_uri() . '/css/toast-notifications.css', [ 'atk-base' ], $v );
+        
         // Критический CSS inline
         $this->enqueue_critical_css();
 
@@ -169,6 +178,8 @@ class Enqueue {
 
         // Основные скрипты (без jQuery)
         wp_enqueue_script( 'atk-core', get_template_directory_uri() . '/js/core.js', [], $v, true );
+        wp_enqueue_script( 'atk-scroll-animations', get_template_directory_uri() . '/js/scroll-animations.js', [], $v, true );
+        wp_enqueue_script( 'atk-toast-notifications', get_template_directory_uri() . '/js/toast-notifications.js', [], $v, true );
         wp_enqueue_script( 'atk-performance', get_template_directory_uri() . '/js/performance.js', [], $v, true );
         wp_enqueue_script( 'atk-components', get_template_directory_uri() . '/js/components.js', [], $v, true );
         wp_enqueue_script( 'atk-interactions', get_template_directory_uri() . '/js/interactions.js', [], $v, true );
@@ -208,14 +219,14 @@ class Enqueue {
     }
 
     /**
-     * Добавить defer атрибут для некритичных скриптов
+     * Добавить defer/async атрибуты для некритичных скриптов
      *
      * @param string $tag HTML тег скрипта
      * @param string $handle Handle скрипта
      * @return string Модифицированный тег
      */
     public function add_defer_attribute( string $tag, string $handle ): string {
-        // Список скриптов для defer
+        // Список скриптов для defer (выполняются после парсинга HTML)
         $defer_scripts = [
             'atk-performance-metrics',
             'atk-share',
@@ -223,11 +234,23 @@ class Enqueue {
             'atk-map',
             'atk-advanced-lazy',
             'atk-accessibility',
+            'atk-landing-premium',
+            'atk-contact-form',
+            'atk-calc',
+            'atk-ship',
+        ];
+        
+        // Список скриптов для async (загружаются асинхронно)
+        $async_scripts = [
             'bootstrap',
         ];
 
         if ( in_array( $handle, $defer_scripts, true ) ) {
             return str_replace( ' src', ' defer src', $tag );
+        }
+        
+        if ( in_array( $handle, $async_scripts, true ) ) {
+            return str_replace( ' src', ' async src', $tag );
         }
 
         return $tag;

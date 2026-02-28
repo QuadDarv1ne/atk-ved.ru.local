@@ -36,7 +36,11 @@
     "phpcs": "phpcs --standard=PSR12 src/",
     "phpcbf": "phpcbf --standard=PSR12 src/",
     "phpstan": "phpstan analyse src/ --level=5",
-    "test": "phpunit",
+    "test": "phpunit --testdox",
+    "test:unit": "phpunit --testdox --testsuite=Unit",
+    "test:integration": "phpunit --testdox --testsuite=Integration",
+    "test:coverage": "phpunit --coverage-html coverage",
+    "test:all": "composer phpcs && composer phpstan && composer test",
     "post-autoload-dump": [
       "@php -r \"file_exists('vendor/autoload.php') && require 'vendor/autoload.php';\""
     ]

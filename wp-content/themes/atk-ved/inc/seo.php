@@ -116,6 +116,8 @@ function atk_ved_add_meta_tags() {
     <meta property="og:description" content="<?php echo esc_attr($description); ?>">
     <meta property="og:url" content="<?php echo esc_url($url); ?>">
     <meta property="og:image" content="<?php echo esc_url($image); ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="<?php echo esc_attr($site_name); ?>">
     <meta property="og:locale" content="ru_RU">
 
@@ -124,10 +126,78 @@ function atk_ved_add_meta_tags() {
     <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
     <meta name="twitter:description" content="<?php echo esc_attr($description); ?>">
     <meta name="twitter:image" content="<?php echo esc_url($image); ?>">
+    <?php
+    $twitter_handle = get_theme_mod('atk_ved_twitter_handle', '');
+    if (!empty($twitter_handle)): ?>
+    <meta name="twitter:site" content="@<?php echo esc_attr($twitter_handle); ?>">
+    <meta name="twitter:creator" content="@<?php echo esc_attr($twitter_handle); ?>">
+    <?php endif; ?>
 
     <?php
 }
 add_action('wp_head', 'atk_ved_add_meta_tags', 5);
+
+/**
+ * Добавляем hreflang теги для мультиязычности
+ */
+function atk_ved_add_hreflang_tags(): void {
+    // Получаем текущий URL
+    $current_url = home_url(add_query_arg(null, null));
+    
+    // Определяем доступные языки
+    $languages = [
+        'ru' => home_url('/'),
+        'en' => home_url('/en/'),
+        'kk' => home_url('/kk/'),
+        'zh' => home_url('/zh/'),
+    ];
+    
+    // Определяем текущий язык
+    $current_lang = 'ru'; // По умолчанию русский
+    
+    if (strpos($current_url, '/en/') !== false) {
+        $current_lang = 'en';
+    } elseif (strpos($current_url, '/kk/') !== false) {
+        $current_lang = 'kk';
+    } elseif (strpos($current_url, '/zh/') !== false) {
+        $current_lang = 'zh';
+    }
+    
+    // Получаем относительный путь
+    $relative_path = str_replace(home_url('/'), '', $current_url);
+    $relative_path = preg_replace('#^(en|kk|zh)/#', '', $relative_path);
+    
+    // Выводим hreflang теги
+    foreach ($languages as $lang => $base_url) {
+        $lang_url = $lang === 'ru' ? home_url('/' . $relative_path) : $base_url . $relative_path;
+        echo '<link rel="alternate" hreflang="' . esc_attr($lang) . '" href="' . esc_url($lang_url) . '">' . "\n";
+    }
+    
+    // x-default для основного языка
+    echo '<link rel="alternate" hreflang="x-default" href="' . esc_url(home_url('/' . $relative_path)) . '">' . "\n";
+}
+add_action('wp_head', 'atk_ved_add_hreflang_tags', 6);
+
+/**
+ * Добавляем canonical URL
+ */
+function atk_ved_add_canonical_url(): void {
+    if (is_singular()) {
+        $canonical = get_permalink();
+    } elseif (is_front_page()) {
+        $canonical = home_url('/');
+    } elseif (is_archive()) {
+        $canonical = get_pagenum_link();
+    } else {
+        $canonical = home_url(add_query_arg(null, null));
+    }
+    
+    // Удаляем параметры запроса для canonical
+    $canonical = strtok($canonical, '?');
+    
+    echo '<link rel="canonical" href="' . esc_url($canonical) . '">' . "\n";
+}
+add_action('wp_head', 'atk_ved_add_canonical_url', 4);
 
 /**
  * Добавляем поле SEO description в редактор

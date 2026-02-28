@@ -6,9 +6,18 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#e31e24">
     
+    <!-- Preload критических ресурсов -->
+    <link rel="preload" href="<?php echo esc_url(get_template_directory_uri() . '/css/variables.css'); ?>" as="style">
+    <link rel="preload" href="<?php echo esc_url(get_stylesheet_uri()); ?>" as="style">
+    <link rel="preload" href="<?php echo esc_url(get_template_directory_uri() . '/js/core.js'); ?>" as="script">
+    <?php if (is_front_page()): ?>
+    <link rel="preload" href="<?php echo esc_url(get_template_directory_uri() . '/images/png/logistics.png'); ?>" as="image">
+    <?php endif; ?>
+    
     <!-- Resource Hints для ускорения загрузки -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link rel="dns-prefetch" href="//mc.yandex.ru">
     <link rel="dns-prefetch" href="//maps.googleapis.com">

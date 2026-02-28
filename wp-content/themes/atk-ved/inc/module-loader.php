@@ -29,6 +29,8 @@ class ATK_VED_Module_Loader {
                 '/inc/helpers.php',
                 '/inc/translations.php',
                 '/inc/custom-post-types.php',
+                '/inc/caching.php',
+                '/inc/structured-data.php',
             ],
         ],
         
@@ -85,6 +87,8 @@ class ATK_VED_Module_Loader {
                 '/inc/delivery-map.php',
                 '/inc/ajax-handlers.php',
                 '/inc/contact-form.php',
+                '/inc/data-migration.php',
+                '/inc/cpt-helpers.php',
             ],
         ],
         
