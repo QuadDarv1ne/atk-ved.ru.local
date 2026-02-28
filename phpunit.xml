@@ -1,31 +1,43 @@
-<?php
-/**
- * PHPUnit Configuration for ATK VED Theme
- * 
- * @package ATK_VED
- * @since 2.4.0
- */
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutOutputDuringTests="true">
+    
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory>tests/Integration</directory>
+        </testsuite>
+    </testsuites>
 
-$tests_dir = dirname(__FILE__);
-$project_dir = dirname($tests_dir);
+    <source>
+        <include>
+            <directory suffix=".php">wp-content/themes/atk-ved/src</directory>
+            <directory suffix=".php">wp-content/themes/atk-ved/inc</directory>
+        </include>
+        <exclude>
+            <directory>wp-content/themes/atk-ved/vendor</directory>
+            <directory>wp-content/themes/atk-ved/node_modules</directory>
+        </exclude>
+    </source>
 
-require_once $tests_dir . '/bootstrap.php';
+    <coverage>
+        <report>
+            <html outputDirectory="coverage/html"/>
+            <text outputFile="php://stdout" showUncoveredFiles="false"/>
+        </report>
+    </coverage>
 
-class ATK_VED_PHPUnit_TestSuite extends PHPUnit\Framework\TestSuite {
-    public static function suite() {
-        $suite = new self('ATK VED Theme Tests');
-        
-        // Add test files
-        $test_files = array(
-            $tests_dir . '/UnitTest.php',
-        );
-        
-        foreach ($test_files as $file) {
-            if (file_exists($file)) {
-                require_once $file;
-            }
-        }
-        
-        return $suite;
-    }
-}
+    <php>
+        <env name="WP_ENV" value="testing"/>
+        <env name="WP_DEBUG" value="true"/>
+    </php>
+</phpunit>

@@ -260,12 +260,15 @@ $view->display($data);
 
 ## 📚 Документация
 
-- [INSTALL.md](wp-content/themes/atk-ved/INSTALL.md) - Подробная установка
-- [ARCHITECTURE.md](wp-content/themes/atk-ved/ARCHITECTURE.md) - Архитектура темы
-- [OPTIMIZATION.md](wp-content/themes/atk-ved/OPTIMIZATION.md) - Оптимизация
-- [MIGRATION.md](wp-content/themes/atk-ved/MIGRATION.md) - Миграция на v3.5.0
-- [CHANGELOG.md](wp-content/themes/atk-ved/CHANGELOG.md) - История изменений
-- [TODO.md](wp-content/themes/atk-ved/TODO.md) - Планы развития
+- [QUICKSTART.md](docs/QUICKSTART.md) - Быстрый старт (5 минут)
+- [INSTALLATION_RU.md](docs/INSTALLATION_RU.md) - Детальная установка
+- [DEVELOPER.md](docs/DEVELOPER.md) - Руководство разработчика
+- [TESTING.md](docs/TESTING.md) - Руководство по тестированию
+- [PERFORMANCE_OPTIMIZATION.md](docs/PERFORMANCE_OPTIMIZATION.md) - Оптимизация производительности
+- [SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md) - Аудит безопасности
+- [MONITORING_SETUP.md](docs/MONITORING_SETUP.md) - Настройка мониторинга
+- [CHANGELOG.md](CHANGELOG.md) - История изменений
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Как внести вклад
 
 ## 🤝 Вклад в проект
 

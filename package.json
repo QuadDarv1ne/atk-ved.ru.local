@@ -1,5 +1,25 @@
 {
+  "name": "atk-ved-theme",
+  "version": "3.5.0",
+  "description": "ATK VED WordPress Theme",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "minify:css": "cleancss -o style.min.css style.css",
+    "minify:js": "terser js/*.js -o js/bundle.min.js --compress --mangle",
+    "build": "npm run minify:css && npm run minify:js",
+    "lighthouse": "lighthouse http://localhost:8080 --output=html --output-path=./lighthouse-report.html"
+  },
   "dependencies": {
     "web-vitals": "^5.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.0",
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.27.0",
+    "lighthouse": "^11.6.0"
   }
 }
